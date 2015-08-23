@@ -1,0 +1,13 @@
+[Bb]in/
+[Oo]bj/
+TestResults/
+TestResult.xml
+AppPackages/
+*.cache
+*.suo
+*.user
+*.userprefs
+_ReSharper*/
+*.[Rr]e[Ss]harper
+_UpgradeReport.*
+packages/
