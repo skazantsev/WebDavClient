@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+
+namespace WebDav.Helpers
+{
+    internal static class LinqToXmlExtentions
+    {
+        public static string ToStringWithDeclaration(this XDocument doc)
+        {
+            if (doc == null)
+                throw new ArgumentNullException("doc");
+
+            return doc.Declaration + Environment.NewLine + doc;
+        }
+
+        public static string GetValueOrNull(this XElement element)
+        {
+            return element != null ? element.Value : null;
+        }
+
+        public static XElement LocalNameElement(this XElement parent, string localName)
+        {
+            return LocalNameElement(parent, localName, StringComparison.Ordinal);
+        }
+
+        public static XElement LocalNameElement(this XElement parent, string localName, StringComparison comparisonType)
+        {
+            return parent.Elements().FirstOrDefault(e => e.Name.LocalName.Equals(localName, comparisonType));
+        }
+
+        public static IEnumerable<XElement> LocalNameElements(this XElement parent, string localName)
+        {
+            return LocalNameElements(parent, localName, StringComparison.Ordinal);
+        }
+
+        public static IEnumerable<XElement> LocalNameElements(this XElement parent, string localName, StringComparison comparisonType)
+        {
+            return parent.Elements().Where(e => e.Name.LocalName.Equals(localName, comparisonType));
+        }
+    }
+}

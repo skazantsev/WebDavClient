@@ -49,11 +49,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\LinqToXmlExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropfindResponse.cs" />
+    <Compile Include="Request\PropfindRequestBuilder.cs" />
+    <Compile Include="Response\DefaultResourceProperties.cs" />
+    <Compile Include="Response\PropfindResponseParser.cs" />
+    <Compile Include="Response\ResourcePropertyParser.cs" />
+    <Compile Include="Response\ResourcePropertyType.cs" />
+    <Compile Include="Response\ResourceType.cs" />
     <Compile Include="WebDavClient.cs" />
     <Compile Include="WebDavClientParams.cs" />
     <Compile Include="Exceptions\WebDavException.cs" />
     <Compile Include="Helpers\WebDavMethod.cs" />
+    <Compile Include="WebDavResource.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

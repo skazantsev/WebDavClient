@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebDav.Exceptions;
 using WebDav.Helpers;
+using WebDav.Request;
+using WebDav.Response;
 
 namespace WebDav
 {
@@ -22,6 +24,31 @@ namespace WebDav
         public WebDavClient(WebDavClientParams @params)
         {
             _httpClient = ConfigureHttpClient(@params);
+        }
+
+        public Task<PropfindResponse> Propfind(string requestUri)
+        {
+            return Propfind(requestUri, new string[] {});
+        }
+
+        private async Task<PropfindResponse> Propfind(string requestUri, params string[] customProperties)
+        {
+            if (customProperties == null)
+                throw new ArgumentNullException("customProperties");
+
+            using (var request = new HttpRequestMessage(WebDavMethod.Propfind, requestUri))
+            {
+                request.Headers.Add("Depth", "1");
+                request.Content = new StringContent(PropfindRequestBuilder.BuildRequestBody(customProperties));
+                using (var response = await _httpClient.SendAsync(request).ConfigureAwait(false))
+                {
+                    if ((int) response.StatusCode != 207)
+                        throw new WebDavException((int) response.StatusCode, "Wrong PROPFIND response. Multi-Status code is expected.");
+
+                    var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    return PropfindResponseParser.Parse(responseContent);
+                }
+            }
         }
 
         public async Task Mkcol(string requestUri)

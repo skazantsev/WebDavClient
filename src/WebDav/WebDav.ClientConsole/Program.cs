@@ -31,6 +31,23 @@ namespace WebDav.ClientConsole
                     var fileOutput = await reader.ReadToEndAsync();
                     Console.WriteLine(fileOutput);
                 }
+
+                var response = await webDavClient.Propfind("http://localhost:88");
+                foreach (var res in response.Resources)
+                {
+                    Console.WriteLine("HREF: {0}", res.Href);
+                    Console.WriteLine("====================================================");
+                    Console.WriteLine("IsCollection: {0}", res.IsCollection);
+                    Console.WriteLine("CreationDate: {0}", res.CreationDate);
+                    Console.WriteLine("DisplayName: {0}", res.DisplayName);
+                    Console.WriteLine("ContentLanguage: {0}", res.ContentLanguage);
+                    Console.WriteLine("ContentLength: {0}", res.ContentLength);
+                    Console.WriteLine("ContentType: {0}", res.ContentType);
+                    Console.WriteLine("ETag: {0}", res.ETag);
+                    Console.WriteLine("LastModifiedDate: {0}", res.LastModifiedDate);
+                    Console.WriteLine();
+                }
+
                 Console.ReadLine();
             }
         }
