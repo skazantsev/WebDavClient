@@ -35,9 +35,11 @@ namespace WebDav.ClientConsole
                 var response = await webDavClient.Propfind("http://localhost:88");
                 foreach (var res in response.Resources)
                 {
+                    Console.WriteLine("====================================================");
                     Console.WriteLine("HREF: {0}", res.Href);
                     Console.WriteLine("====================================================");
                     Console.WriteLine("IsCollection: {0}", res.IsCollection);
+                    Console.WriteLine("IsHidden: {0}", res.IsHidden);
                     Console.WriteLine("CreationDate: {0}", res.CreationDate);
                     Console.WriteLine("DisplayName: {0}", res.DisplayName);
                     Console.WriteLine("ContentLanguage: {0}", res.ContentLanguage);

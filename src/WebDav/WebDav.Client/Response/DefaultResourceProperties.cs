@@ -15,7 +15,9 @@ namespace WebDav.Response
                 {"getcontenttype", ResourcePropertyType.String},
                 {"getetag", ResourcePropertyType.String},
                 {"getlastmodified", ResourcePropertyType.DateTime},
-                {"resourcetype", ResourcePropertyType.ResourceType}
+                {"resourcetype", ResourcePropertyType.ResourceType},
+                {"iscollection", ResourcePropertyType.Integer},
+                {"ishidden", ResourcePropertyType.Integer}
             };
         }
     }

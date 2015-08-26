@@ -39,7 +39,7 @@ namespace WebDav.Response
             return CreateResource(hrefValue, properties);
         }
 
-        private static WebDavResource CreateResource(string href, List<XElement> properties)
+        private static WebDavResource CreateResource(string href, IEnumerable<XElement> properties)
         {
             var elementFinder = GetResourcePropertyElementFinder(properties);
             var resource = new WebDavResource
@@ -52,7 +52,9 @@ namespace WebDav.Response
                 ContentType = (string)ResourcePropertyParser.Parse("getcontenttype", elementFinder),
                 ETag = (string)ResourcePropertyParser.Parse("getetag", elementFinder),
                 LastModifiedDate = (DateTime?)ResourcePropertyParser.Parse("getlastmodified", elementFinder),
-                IsCollection = (ResourceType)ResourcePropertyParser.Parse("resourcetype", elementFinder) == ResourceType.Collection
+                IsCollection = (int?)ResourcePropertyParser.Parse("iscollection", elementFinder) > 0 ||
+                    (ResourceType)ResourcePropertyParser.Parse("resourcetype", elementFinder) == ResourceType.Collection,
+                IsHidden = (int?)ResourcePropertyParser.Parse("ishidden", elementFinder) > 0
             };
 
             if (resource.IsCollection)

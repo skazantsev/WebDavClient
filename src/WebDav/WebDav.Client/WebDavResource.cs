@@ -6,6 +6,8 @@ namespace WebDav
     {
         public bool IsCollection { get; set; }
 
+        public bool IsHidden { get; set; }
+
         public string Href { get; set; }
 
         public DateTime? CreationDate { get; set; }
