@@ -8,16 +8,15 @@ namespace WebDav.Request
     {
         public static string BuildRequestBody(string[] customProperties)
         {
-            XNamespace webDavNs = "DAV:";
             var doc = new XDocument(new XDeclaration("1.0", "utf-8", null));
-            var propfind = new XElement(webDavNs + "propfind", new XAttribute(XNamespace.Xmlns + "D", webDavNs));
-            propfind.Add(new XElement(webDavNs + "allprop"));
+            var propfind = new XElement("{DAV:}propfind", new XAttribute(XNamespace.Xmlns + "D", "DAV:"));
+            propfind.Add(new XElement("{DAV:}allprop"));
             if (customProperties.Any())
             {
-                var include = new XElement(webDavNs + "include");
+                var include = new XElement("{DAV:}include");
                 foreach (var prop in customProperties)
                 {
-                    include.Add(new XElement(webDavNs + prop));
+                    include.Add(new XElement(XName.Get(prop, "DAV:")));
                 }
                 propfind.Add(include);
             }
