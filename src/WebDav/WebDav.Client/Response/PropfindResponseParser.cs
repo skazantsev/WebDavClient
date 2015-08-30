@@ -39,22 +39,21 @@ namespace WebDav.Response
             return CreateResource(hrefValue, properties);
         }
 
-        private static WebDavResource CreateResource(string href, IEnumerable<XElement> properties)
+        private static WebDavResource CreateResource(string href, List<XElement> properties)
         {
-            var elementFinder = GetResourcePropertyElementFinder(properties);
             var resource = new WebDavResource
             {
                 Href = href,
-                CreationDate = (DateTime?)ResourcePropertyParser.Parse("creationdate", elementFinder),
-                DisplayName = (string)ResourcePropertyParser.Parse("displayname", elementFinder),
-                ContentLanguage = (string)ResourcePropertyParser.Parse("getcontentlanguage", elementFinder),
-                ContentLength = (int?)ResourcePropertyParser.Parse("getcontentlength", elementFinder),
-                ContentType = (string)ResourcePropertyParser.Parse("getcontenttype", elementFinder),
-                ETag = (string)ResourcePropertyParser.Parse("getetag", elementFinder),
-                LastModifiedDate = (DateTime?)ResourcePropertyParser.Parse("getlastmodified", elementFinder),
-                IsCollection = (int?)ResourcePropertyParser.Parse("iscollection", elementFinder) > 0 ||
-                    (ResourceType)ResourcePropertyParser.Parse("resourcetype", elementFinder) == ResourceType.Collection,
-                IsHidden = (int?)ResourcePropertyParser.Parse("ishidden", elementFinder) > 0
+                CreationDate = PropertyParser.ParseDateTime(FindProp("creationdate", properties)),
+                DisplayName = PropertyParser.ParseString(FindProp("displayname", properties)),
+                ContentLanguage = PropertyParser.ParseString(FindProp("getcontentlanguage", properties)),
+                ContentLength = PropertyParser.ParseInteger(FindProp("getcontentlength", properties)),
+                ContentType = PropertyParser.ParseString(FindProp("getcontenttype", properties)),
+                ETag = PropertyParser.ParseString(FindProp("getetag", properties)),
+                LastModifiedDate = PropertyParser.ParseDateTime(FindProp("getlastmodified", properties)),
+                IsCollection = PropertyParser.ParseInteger(FindProp("iscollection", properties)) > 0 ||
+                    PropertyParser.ParseResourceType(FindProp("resourcetype", properties)) == ResourceType.Collection,
+                IsHidden = PropertyParser.ParseInteger(FindProp("ishidden", properties)) > 0
             };
 
             if (resource.IsCollection)
@@ -62,9 +61,9 @@ namespace WebDav.Response
             return resource;
         }
 
-        private static Func<string, XElement> GetResourcePropertyElementFinder(IEnumerable<XElement> properties)
+        private static XElement FindProp(string localName, IEnumerable<XElement> properties)
         {
-            return localName => properties.FirstOrDefault(x => x.Name.LocalName.Equals(localName, StringComparison.OrdinalIgnoreCase));
+            return properties.FirstOrDefault(x => x.Name.LocalName.Equals(localName, StringComparison.OrdinalIgnoreCase));
         }
 
         private static bool IsSuccessStatusCode(XElement propstatElement)
