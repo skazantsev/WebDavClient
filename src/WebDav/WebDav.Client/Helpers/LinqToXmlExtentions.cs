@@ -39,5 +39,14 @@ namespace WebDav.Helpers
         {
             return parent.Elements().Where(e => e.Name.LocalName.Equals(localName, comparisonType));
         }
+
+        public static string InnerXml(this XElement element)
+        {
+            using (var reader = element.CreateReader())
+            {
+                reader.MoveToContent();
+                return reader.ReadInnerXml();
+            }
+        }
     }
 }

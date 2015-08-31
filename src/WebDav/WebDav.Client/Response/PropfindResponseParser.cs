@@ -53,7 +53,8 @@ namespace WebDav.Response
                 LastModifiedDate = PropertyParser.ParseDateTime(FindProp("getlastmodified", properties)),
                 IsCollection = PropertyParser.ParseInteger(FindProp("iscollection", properties)) > 0 ||
                     PropertyParser.ParseResourceType(FindProp("resourcetype", properties)) == ResourceType.Collection,
-                IsHidden = PropertyParser.ParseInteger(FindProp("ishidden", properties)) > 0
+                IsHidden = PropertyParser.ParseInteger(FindProp("ishidden", properties)) > 0,
+                Properties = properties.ToDictionary(k => k.Name.LocalName, v => v.InnerXml())
             };
 
             if (resource.IsCollection)

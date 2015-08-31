@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WebDav
 {
     public class WebDavResource
     {
+        public WebDavResource()
+        {
+            Properties = new Dictionary<string, string>();
+        }
+
         public bool IsCollection { get; set; }
 
         public bool IsHidden { get; set; }
@@ -23,5 +29,7 @@ namespace WebDav
         public string ETag { get; set; }
 
         public DateTime? LastModifiedDate { get; set; }
+
+        public Dictionary<string, string> Properties { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebDav.ClientConsole
@@ -32,7 +33,7 @@ namespace WebDav.ClientConsole
                     Console.WriteLine(fileOutput);
                 }
 
-                var response = await webDavClient.Propfind("http://localhost:88");
+                var response = await webDavClient.Propfind("http://localhost:88", "testprop");
                 foreach (var res in response.Resources)
                 {
                     Console.WriteLine("====================================================");
@@ -47,6 +48,7 @@ namespace WebDav.ClientConsole
                     Console.WriteLine("ContentType: {0}", res.ContentType);
                     Console.WriteLine("ETag: {0}", res.ETag);
                     Console.WriteLine("LastModifiedDate: {0}", res.LastModifiedDate);
+                    Console.WriteLine("Properties: {0}", "[\r\n -" + string.Join("\r\n -", res.Properties.Select(kv => string.Format("{0}: {1}", kv.Key, kv.Value))) + "\r\n]");
                     Console.WriteLine();
                 }
 

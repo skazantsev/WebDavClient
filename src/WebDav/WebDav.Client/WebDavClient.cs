@@ -31,7 +31,7 @@ namespace WebDav
             return Propfind(requestUri, new string[] {});
         }
 
-        private async Task<PropfindResponse> Propfind(string requestUri, params string[] customProperties)
+        public async Task<PropfindResponse> Propfind(string requestUri, params string[] customProperties)
         {
             if (customProperties == null)
                 throw new ArgumentNullException("customProperties");
