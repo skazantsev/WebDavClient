@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using WebDav.Helpers;
 
@@ -6,7 +7,7 @@ namespace WebDav.Request
 {
     internal static class PropfindRequestBuilder
     {
-        public static string BuildRequestBody(string[] customProperties)
+        public static string BuildRequestBody(IReadOnlyCollection<string> customProperties)
         {
             var doc = new XDocument(new XDeclaration("1.0", "utf-8", null));
             var propfind = new XElement("{DAV:}propfind", new XAttribute(XNamespace.Xmlns + "D", "DAV:"));

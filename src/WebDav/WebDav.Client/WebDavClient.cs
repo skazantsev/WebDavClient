@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -28,17 +29,27 @@ namespace WebDav
 
         public Task<PropfindResponse> Propfind(string requestUri)
         {
-            return Propfind(requestUri, new string[] {});
+            return Propfind(requestUri, new string[] { }, ApplyTo.Propfind.CollectionAndChildren);
         }
 
-        public async Task<PropfindResponse> Propfind(string requestUri, params string[] customProperties)
+        public Task<PropfindResponse> Propfind(string requestUri, IReadOnlyCollection<string> customProperties)
+        {
+            return Propfind(requestUri, customProperties, ApplyTo.Propfind.CollectionAndChildren);
+        }
+
+        public Task<PropfindResponse> Propfind(string requestUri, ApplyTo.Propfind applyTo)
+        {
+            return Propfind(requestUri, new string[] { }, applyTo);
+        }
+
+        public async Task<PropfindResponse> Propfind(string requestUri, IReadOnlyCollection<string> customProperties, ApplyTo.Propfind applyTo)
         {
             if (customProperties == null)
                 throw new ArgumentNullException("customProperties");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Propfind, requestUri))
             {
-                request.Headers.Add("Depth", "1");
+                request.Headers.Add("Depth", DepthHeaderHelper.GetValueForPropfind(applyTo));
                 request.Content = new StringContent(PropfindRequestBuilder.BuildRequestBody(customProperties));
                 using (var response = await _httpClient.SendAsync(request).ConfigureAwait(false))
                 {
@@ -104,14 +115,25 @@ namespace WebDav
 
         public Task Copy(string sourceUri, string destUri, bool overwrite = true)
         {
-            return Copy(sourceUri, destUri, CancellationToken.None, overwrite);
+            return Copy(sourceUri, destUri, ApplyTo.Copy.CollectionAndAncestors, CancellationToken.None, overwrite);
         }
 
-        public async Task Copy(string sourceUri, string destUri, CancellationToken cancellationToken, bool overwrite = true)
+        public Task Copy(string sourceUri, string destUri, ApplyTo.Copy applyTo, bool overwrite = true)
+        {
+            return Copy(sourceUri, destUri, applyTo, CancellationToken.None, overwrite);
+        }
+
+        public Task Copy(string sourceUri, string destUri, CancellationToken cancellationToken, bool overwrite = true)
+        {
+            return Copy(sourceUri, destUri, ApplyTo.Copy.CollectionAndAncestors, cancellationToken, overwrite);
+        }
+
+        public async Task Copy(string sourceUri, string destUri, ApplyTo.Copy applyTo, CancellationToken cancellationToken, bool overwrite = true)
         {
             using (var request = new HttpRequestMessage(WebDavMethod.Copy, sourceUri))
             {
                 request.Headers.Add("Destination", destUri);
+                request.Headers.Add("Depth", DepthHeaderHelper.GetValueForCopy(applyTo));
                 request.Headers.Add("Overwrite", overwrite ? "T" : "F");
                 using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
                 {

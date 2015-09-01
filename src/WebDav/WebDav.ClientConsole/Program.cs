@@ -26,6 +26,10 @@ namespace WebDav.ClientConsole
 
                 await webDavClient.Move("http://localhost:88/mydir/test.txt", "http://localhost:88/mydir/test_ren.txt");
 
+                await webDavClient.Copy("http://localhost:88/mydir/", "http://localhost:88/mydir1/");
+
+                await webDavClient.Copy("http://localhost:88/mydir/", "http://localhost:88/mydir2/", ApplyTo.Copy.CollectionOnly);
+
                 var fileStream = await webDavClient.GetFile("http://localhost:88/mydir/test_ren.txt");
                 using (var reader = new StreamReader(fileStream))
                 {
@@ -33,7 +37,7 @@ namespace WebDav.ClientConsole
                     Console.WriteLine(fileOutput);
                 }
 
-                var response = await webDavClient.Propfind("http://localhost:88", "testprop");
+                var response = await webDavClient.Propfind("http://localhost:88", new [] {"testprop"});
                 foreach (var res in response.Resources)
                 {
                     Console.WriteLine("====================================================");
