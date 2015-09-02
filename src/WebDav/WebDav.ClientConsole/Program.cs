@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,6 +56,8 @@ namespace WebDav.ClientConsole
                     Console.WriteLine("Properties: {0}", "[\r\n -" + string.Join("\r\n -", res.Properties.Select(kv => string.Format("{0}: {1}", kv.Key, kv.Value))) + "\r\n]");
                     Console.WriteLine();
                 }
+
+                // await webDavClient.Proppatch("http://localhost:88/1.txt", new Dictionary<string, string> { { "DisplayName", "111" } }, new List<string> { "ETag" });
 
                 Console.ReadLine();
             }
