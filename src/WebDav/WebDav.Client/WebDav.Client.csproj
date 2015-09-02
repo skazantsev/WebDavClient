@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="ApplyTo.cs" />
     <Compile Include="Helpers\DepthHeaderHelper.cs" />
+    <Compile Include="Helpers\Guard.cs" />
     <Compile Include="Helpers\LinqToXmlExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropfindResponse.cs" />

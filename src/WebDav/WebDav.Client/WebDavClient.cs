@@ -44,8 +44,8 @@ namespace WebDav
 
         public async Task<PropfindResponse> Propfind(string requestUri, IReadOnlyCollection<string> customProperties, ApplyTo.Propfind applyTo)
         {
-            if (customProperties == null)
-                throw new ArgumentNullException("customProperties");
+            Guard.NotNullOrEmpty(requestUri, "requestUri");
+            Guard.NotNull(customProperties, "customProperties");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Propfind, requestUri))
             {
@@ -64,6 +64,8 @@ namespace WebDav
 
         public async Task Mkcol(string requestUri)
         {
+            Guard.NotNullOrEmpty(requestUri, "requestUri");
+
             using (var request = new HttpRequestMessage(WebDavMethod.Mkcol, requestUri))
             using (var response = await _httpClient.SendAsync(request).ConfigureAwait(false))
             {
@@ -74,6 +76,8 @@ namespace WebDav
 
         public async Task<Stream> GetFile(string requestUri, bool translate = false)
         {
+            Guard.NotNullOrEmpty(requestUri, "requestUri");
+
             using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
             {
                 request.Headers.Add("Translate", translate ? "t" : "f");
@@ -87,6 +91,8 @@ namespace WebDav
 
         public async Task Delete(string requestUri)
         {
+            Guard.NotNullOrEmpty(requestUri, "requestUri");
+
             using (var response = await _httpClient.DeleteAsync(requestUri).ConfigureAwait(false))
             {
                 if (response.StatusCode != HttpStatusCode.OK &&
@@ -102,6 +108,9 @@ namespace WebDav
 
         public async Task PutFile(string requestUri, Stream stream, string contentType, CancellationToken cancellationToken)
         {
+            Guard.NotNullOrEmpty(requestUri, "requestUri");
+            Guard.NotNull(stream, "stream");
+
             var fileContent = new StreamContent(stream);
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             using (var response = await _httpClient.PutAsync(requestUri, fileContent, cancellationToken).ConfigureAwait(false))
@@ -130,6 +139,9 @@ namespace WebDav
 
         public async Task Copy(string sourceUri, string destUri, ApplyTo.Copy applyTo, CancellationToken cancellationToken, bool overwrite = true)
         {
+            Guard.NotNullOrEmpty(sourceUri, "sourceUri");
+            Guard.NotNullOrEmpty(destUri, "destUri");
+
             using (var request = new HttpRequestMessage(WebDavMethod.Copy, sourceUri))
             {
                 request.Headers.Add("Destination", destUri);
@@ -152,6 +164,9 @@ namespace WebDav
 
         public async Task Move(string sourceUri, string destUri, CancellationToken cancellationToken, bool overwrite = true)
         {
+            Guard.NotNullOrEmpty(sourceUri, "sourceUri");
+            Guard.NotNullOrEmpty(destUri, "destUri");
+
             using (var request = new HttpRequestMessage(WebDavMethod.Move, sourceUri))
             {
                 request.Headers.Add("Destination", destUri);
