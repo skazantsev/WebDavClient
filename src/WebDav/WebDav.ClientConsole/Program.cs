@@ -31,7 +31,7 @@ namespace WebDav.ClientConsole
 
                 await webDavClient.Copy("http://localhost:88/mydir/", "http://localhost:88/mydir2/", ApplyTo.Copy.CollectionOnly);
 
-                var fileStream = await webDavClient.GetFile("http://localhost:88/mydir/test_ren.txt");
+                var fileStream = await webDavClient.GetRawFile("http://localhost:88/mydir/test_ren.txt");
                 using (var reader = new StreamReader(fileStream))
                 {
                     var fileOutput = await reader.ReadToEndAsync();

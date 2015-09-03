@@ -101,7 +101,17 @@ namespace WebDav
             }
         }
 
-        public async Task<Stream> GetFile(string requestUri, bool translate = false)
+        public Task<Stream> GetRawFile(string requestUri)
+        {
+            return GetFile(requestUri, false);
+        }
+
+        public Task<Stream> GetProcessedFile(string requestUri)
+        {
+            return GetFile(requestUri, true);
+        }
+
+        private async Task<Stream> GetFile(string requestUri, bool translate)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
 
