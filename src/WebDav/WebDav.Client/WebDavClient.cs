@@ -29,20 +29,47 @@ namespace WebDav
 
         public Task<PropfindResponse> Propfind(string requestUri)
         {
-            return Propfind(requestUri, new string[] { }, ApplyTo.Propfind.CollectionAndChildren);
+            return Propfind(requestUri, new string[] { }, ApplyTo.Propfind.CollectionAndChildren, CancellationToken.None);
         }
 
         public Task<PropfindResponse> Propfind(string requestUri, IReadOnlyCollection<string> customProperties)
         {
-            return Propfind(requestUri, customProperties, ApplyTo.Propfind.CollectionAndChildren);
+            return Propfind(requestUri, customProperties, ApplyTo.Propfind.CollectionAndChildren, CancellationToken.None);
         }
 
         public Task<PropfindResponse> Propfind(string requestUri, ApplyTo.Propfind applyTo)
         {
-            return Propfind(requestUri, new string[] { }, applyTo);
+            return Propfind(requestUri, new string[] { }, applyTo, CancellationToken.None);
         }
 
-        public async Task<PropfindResponse> Propfind(string requestUri, IReadOnlyCollection<string> customProperties, ApplyTo.Propfind applyTo)
+        public Task<PropfindResponse> Propfind(
+            string requestUri,
+            IReadOnlyCollection<string> customProperties,
+            ApplyTo.Propfind applyTo)
+        {
+            return Propfind(requestUri, customProperties, applyTo, CancellationToken.None);
+        }
+
+        public Task<PropfindResponse> Propfind(
+            string requestUri,
+            IReadOnlyCollection<string> customProperties,
+            CancellationToken cancellationToken)
+        {
+            return Propfind(requestUri, customProperties, ApplyTo.Propfind.CollectionAndChildren, cancellationToken);
+        }
+
+        public Task<PropfindResponse> Propfind(
+            string requestUri,
+            ApplyTo.Propfind applyTo,
+            CancellationToken cancellationToken)
+        {
+            return Propfind(requestUri, new string[] { }, applyTo, cancellationToken);
+        }
+
+        public async Task<PropfindResponse> Propfind(string requestUri,
+            IReadOnlyCollection<string> customProperties,
+            ApplyTo.Propfind applyTo,
+            CancellationToken cancellationToken)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
             Guard.NotNull(customProperties, "customProperties");
@@ -51,10 +78,10 @@ namespace WebDav
             {
                 request.Headers.Add("Depth", DepthHeaderHelper.GetValueForPropfind(applyTo));
                 request.Content = new StringContent(PropfindRequestBuilder.BuildRequestBody(customProperties));
-                using (var response = await _httpClient.SendAsync(request).ConfigureAwait(false))
+                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
                 {
-                    if ((int) response.StatusCode != 207)
-                        throw new WebDavException((int) response.StatusCode, "Wrong PROPFIND response. Multi-Status code is expected.");
+                    if ((int)response.StatusCode != 207)
+                        throw new WebDavException((int)response.StatusCode, "Wrong PROPFIND response. Multi-Status code is expected.");
 
                     var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     return PropfindResponseParser.Parse(responseContent);
@@ -64,15 +91,43 @@ namespace WebDav
 
         public Task Proppatch(string requestUri, IDictionary<string, string> propertiesToSet)
         {
-            return Proppatch(requestUri, propertiesToSet, new string[] { });
+            return Proppatch(requestUri, propertiesToSet, new string[] { }, CancellationToken.None);
         }
 
         public Task Proppatch(string requestUri, IReadOnlyCollection<string> propertiesToRemove)
         {
-            return Proppatch(requestUri, new Dictionary<string, string>(), propertiesToRemove);
+            return Proppatch(requestUri, new Dictionary<string, string>(), propertiesToRemove, CancellationToken.None);
         }
 
-        public async Task Proppatch(string requestUri, IDictionary<string, string> propertiesToSet, IReadOnlyCollection<string> propertiesToRemove)
+        public Task Proppatch(
+            string requestUri,
+            IDictionary<string, string> propertiesToSet,
+            IReadOnlyCollection<string> propertiesToRemove)
+        {
+            return Proppatch(requestUri, propertiesToSet, propertiesToRemove, CancellationToken.None);
+        }
+
+        public Task Proppatch(
+            string requestUri,
+            IDictionary<string, string> propertiesToSet,
+            CancellationToken cancellationToken)
+        {
+            return Proppatch(requestUri, propertiesToSet, new string[] {}, cancellationToken);
+        }
+
+        public Task Proppatch(
+            string requestUri,
+            IReadOnlyCollection<string> propertiesToRemove,
+            CancellationToken cancellationToken)
+        {
+            return Proppatch(requestUri, new Dictionary<string, string>(), propertiesToRemove, cancellationToken);
+        }
+
+        public async Task Proppatch(
+            string requestUri,
+            IDictionary<string, string> propertiesToSet,
+            IReadOnlyCollection<string> propertiesToRemove,
+            CancellationToken cancellationToken)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
             Guard.NotNull(propertiesToSet, "propertiesToSet");
@@ -81,7 +136,7 @@ namespace WebDav
             using (var request = new HttpRequestMessage(WebDavMethod.Proppatch, requestUri))
             {
                 request.Content = new StringContent(ProppatchRequestBuilder.BuildRequestBody(propertiesToSet, propertiesToRemove));
-                using (var response = await _httpClient.SendAsync(request).ConfigureAwait(false))
+                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
                 {
                     if ((int) response.StatusCode != 207)
                         throw new WebDavException((int) response.StatusCode, "Wrong PROPPATCH response. Multi-Status code is expected.");
@@ -89,12 +144,17 @@ namespace WebDav
             }
         }
 
-        public async Task Mkcol(string requestUri)
+        public Task Mkcol(string requestUri)
+        {
+            return Mkcol(requestUri, CancellationToken.None);
+        }
+
+        public async Task Mkcol(string requestUri, CancellationToken cancellationToken)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Mkcol, requestUri))
-            using (var response = await _httpClient.SendAsync(request).ConfigureAwait(false))
+            using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
             {
                 if (response.StatusCode != HttpStatusCode.Created)
                     throw new WebDavException((int)response.StatusCode, "Failed to create a collection.");
@@ -103,22 +163,32 @@ namespace WebDav
 
         public Task<Stream> GetRawFile(string requestUri)
         {
-            return GetFile(requestUri, false);
+            return GetFile(requestUri, false, CancellationToken.None);
+        }
+
+        public Task<Stream> GetRawFile(string requestUri, CancellationToken cancellationToken)
+        {
+            return GetFile(requestUri, false, cancellationToken);
         }
 
         public Task<Stream> GetProcessedFile(string requestUri)
         {
-            return GetFile(requestUri, true);
+            return GetFile(requestUri, true, CancellationToken.None);
         }
 
-        private async Task<Stream> GetFile(string requestUri, bool translate)
+        public Task<Stream> GetProcessedFile(string requestUri, CancellationToken cancellationToken)
+        {
+            return GetFile(requestUri, true, cancellationToken);
+        }
+
+        private async Task<Stream> GetFile(string requestUri, bool translate, CancellationToken cancellationToken)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
 
             using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
             {
                 request.Headers.Add("Translate", translate ? "t" : "f");
-                var response = await _httpClient.SendAsync(request).ConfigureAwait(false);
+                var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                     throw new WebDavException((int)response.StatusCode, "Failed to get a file.");
 
@@ -126,11 +196,16 @@ namespace WebDav
             }
         }
 
-        public async Task Delete(string requestUri)
+        public Task Delete(string requestUri)
+        {
+            return Delete(requestUri, CancellationToken.None);
+        }
+
+        public async Task Delete(string requestUri, CancellationToken cancellationToken)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
 
-            using (var response = await _httpClient.DeleteAsync(requestUri).ConfigureAwait(false))
+            using (var response = await _httpClient.DeleteAsync(requestUri, cancellationToken).ConfigureAwait(false))
             {
                 if (response.StatusCode != HttpStatusCode.OK &&
                     response.StatusCode != HttpStatusCode.NoContent)
