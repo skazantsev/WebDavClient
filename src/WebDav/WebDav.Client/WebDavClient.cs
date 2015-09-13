@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -146,18 +147,27 @@ namespace WebDav
 
         public Task Mkcol(string requestUri)
         {
-            return Mkcol(requestUri, CancellationToken.None);
+            return Mkcol(requestUri, null, CancellationToken.None);
         }
 
-        public async Task Mkcol(string requestUri, CancellationToken cancellationToken)
+        public Task Mkcol(string requestUri, string lockToken)
+        {
+            return Mkcol(requestUri, lockToken, CancellationToken.None);
+        }
+
+        public async Task Mkcol(string requestUri, string lockToken, CancellationToken cancellationToken)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Mkcol, requestUri))
-            using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
             {
-                if (response.StatusCode != HttpStatusCode.Created)
-                    throw new WebDavException((int)response.StatusCode, "Failed to create a collection.");
+                if (!string.IsNullOrEmpty(lockToken))
+                    request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(lockToken));
+                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                {
+                    if (response.StatusCode != HttpStatusCode.Created)
+                        throw new WebDavException((int) response.StatusCode, "Failed to create a collection.");
+                }
             }
         }
 
@@ -198,27 +208,42 @@ namespace WebDav
 
         public Task Delete(string requestUri)
         {
-            return Delete(requestUri, CancellationToken.None);
+            return Delete(requestUri, null, CancellationToken.None);
         }
 
-        public async Task Delete(string requestUri, CancellationToken cancellationToken)
+        public Task Delete(string requestUri, string lockToken)
+        {
+            return Delete(requestUri, lockToken, CancellationToken.None);
+        }
+
+        public async Task Delete(string requestUri, string lockToken, CancellationToken cancellationToken)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
 
-            using (var response = await _httpClient.DeleteAsync(requestUri, cancellationToken).ConfigureAwait(false))
+            using (var request = new HttpRequestMessage(HttpMethod.Delete, requestUri))
             {
-                if (response.StatusCode != HttpStatusCode.OK &&
-                    response.StatusCode != HttpStatusCode.NoContent)
-                    throw new WebDavException((int)response.StatusCode, "Failed to delete a resource.");
+                if (!string.IsNullOrEmpty(lockToken))
+                    request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(lockToken));
+                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                {
+                    if (response.StatusCode != HttpStatusCode.OK &&
+                        response.StatusCode != HttpStatusCode.NoContent)
+                        throw new WebDavException((int) response.StatusCode, "Failed to delete a resource.");
+                }
             }
         }
 
         public Task PutFile(string requestUri, Stream stream, string contentType)
         {
-            return PutFile(requestUri, stream, contentType, CancellationToken.None);
+            return PutFile(requestUri, stream, contentType, null, CancellationToken.None);
         }
 
-        public async Task PutFile(string requestUri, Stream stream, string contentType, CancellationToken cancellationToken)
+        public Task PutFile(string requestUri, Stream stream, string contentType, string lockToken)
+        {
+            return PutFile(requestUri, stream, contentType, lockToken, CancellationToken.None);
+        }
+
+        public async Task PutFile(string requestUri, Stream stream, string contentType, string lockToken, CancellationToken cancellationToken)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
             Guard.NotNull(stream, "stream");
@@ -236,20 +261,25 @@ namespace WebDav
 
         public Task Copy(string sourceUri, string destUri, bool overwrite = true)
         {
-            return Copy(sourceUri, destUri, ApplyTo.Copy.CollectionAndAncestors, CancellationToken.None, overwrite);
+            return Copy(sourceUri, destUri, ApplyTo.Copy.CollectionAndAncestors, null, CancellationToken.None, overwrite);
+        }
+
+        public Task Copy(string sourceUri, string destUri, string destLockToken, bool overwrite = true)
+        {
+            return Copy(sourceUri, destUri, ApplyTo.Copy.CollectionAndAncestors, destLockToken, CancellationToken.None, overwrite);
         }
 
         public Task Copy(string sourceUri, string destUri, ApplyTo.Copy applyTo, bool overwrite = true)
         {
-            return Copy(sourceUri, destUri, applyTo, CancellationToken.None, overwrite);
+            return Copy(sourceUri, destUri, applyTo, null, CancellationToken.None, overwrite);
         }
 
         public Task Copy(string sourceUri, string destUri, CancellationToken cancellationToken, bool overwrite = true)
         {
-            return Copy(sourceUri, destUri, ApplyTo.Copy.CollectionAndAncestors, cancellationToken, overwrite);
+            return Copy(sourceUri, destUri, ApplyTo.Copy.CollectionAndAncestors, null, cancellationToken, overwrite);
         }
 
-        public async Task Copy(string sourceUri, string destUri, ApplyTo.Copy applyTo, CancellationToken cancellationToken, bool overwrite = true)
+        public async Task Copy(string sourceUri, string destUri, ApplyTo.Copy applyTo, string destLockToken, CancellationToken cancellationToken, bool overwrite = true)
         {
             Guard.NotNullOrEmpty(sourceUri, "sourceUri");
             Guard.NotNullOrEmpty(destUri, "destUri");
@@ -259,6 +289,8 @@ namespace WebDav
                 request.Headers.Add("Destination", destUri);
                 request.Headers.Add("Depth", DepthHeaderHelper.GetValueForCopy(applyTo));
                 request.Headers.Add("Overwrite", overwrite ? "T" : "F");
+                if (!string.IsNullOrEmpty(destLockToken))
+                    request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(destLockToken));
                 using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
                 {
                     if (response.StatusCode != HttpStatusCode.OK &&
@@ -271,10 +303,15 @@ namespace WebDav
 
         public Task Move(string sourceUri, string destUri, bool overwrite = true)
         {
-            return Move(sourceUri, destUri, CancellationToken.None, overwrite);
+            return Move(sourceUri, destUri, null, null, CancellationToken.None, overwrite);
         }
 
-        public async Task Move(string sourceUri, string destUri, CancellationToken cancellationToken, bool overwrite = true)
+        public Task Move(string sourceUri, string destUri, string sourceLockToken, string destLockToken, bool overwrite = true)
+        {
+            return Move(sourceUri, destUri, sourceLockToken, destLockToken, CancellationToken.None, overwrite);
+        }
+
+        public async Task Move(string sourceUri, string destUri, string sourceLockToken, string destLockToken, CancellationToken cancellationToken, bool overwrite = true)
         {
             Guard.NotNullOrEmpty(sourceUri, "sourceUri");
             Guard.NotNullOrEmpty(destUri, "destUri");
@@ -283,6 +320,15 @@ namespace WebDav
             {
                 request.Headers.Add("Destination", destUri);
                 request.Headers.Add("Overwrite", overwrite ? "T" : "F");
+
+                var lockTokens = new List<string>();
+                if (!string.IsNullOrEmpty(sourceLockToken))
+                    lockTokens.Add(IfHeaderHelper.GetHeaderValue(sourceLockToken));
+                if (!string.IsNullOrEmpty(destLockToken))
+                    lockTokens.Add(IfHeaderHelper.GetHeaderValue(destLockToken));
+                if (lockTokens.Any())
+                    request.Headers.Add("If", lockTokens);
+
                 using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
                 {
                     if (response.StatusCode != HttpStatusCode.OK &&
@@ -291,6 +337,11 @@ namespace WebDav
                         throw new WebDavException((int)response.StatusCode, "Failed to move a resource.");
                 }
             }
+        }
+
+        public Task<List<ActiveLock>> Lock(string requestUri)
+        {
+            return Lock(requestUri, new LockParameters(), CancellationToken.None);
         }
 
         public Task<List<ActiveLock>> Lock(string requestUri, LockParameters lockParams)

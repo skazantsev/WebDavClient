@@ -44,7 +44,6 @@ namespace WebDav.ClientConsole
 
                 await TestLock(webDavClient);
 
-                await webDavClient.Delete("http://localhost:88/2.txt");
                 await webDavClient.Delete("http://localhost:88/mydir");
 
                 Console.ReadLine();
@@ -91,19 +90,22 @@ namespace WebDav.ClientConsole
                 Console.WriteLine("Timeout: {0}", @lock.Timeout.HasValue ? @lock.Timeout.Value.TotalSeconds.ToString() : "infinity");
                 Console.WriteLine();
             }
-
             await webDavClient.Unlock("http://localhost:88/1.txt", token);
             Console.WriteLine("Unlocked!");
 
+            var activeLocks2 = await webDavClient.Lock("http://localhost:88/2.txt");
+            var token2 = activeLocks2.First().LockToken;
             try
             {
-                await webDavClient.Unlock("http://localhost:88/2.txt", token);
-                Console.WriteLine("Unlocked!");
+                await webDavClient.Delete("http://localhost:88/2.txt");
             }
             catch
             {
-                Console.WriteLine("Wrong lock token!");
+                Console.WriteLine("Can't delete a resource. It's locked!");
             }
+
+            await webDavClient.Delete("http://localhost:88/2.txt", token2);
+            Console.WriteLine("The resource was deleted.");
         }
     }
 }

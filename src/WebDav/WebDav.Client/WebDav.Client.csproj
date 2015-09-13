@@ -52,6 +52,7 @@
     <Compile Include="ApplyTo.cs" />
     <Compile Include="Helpers\DepthHeaderHelper.cs" />
     <Compile Include="Helpers\Guard.cs" />
+    <Compile Include="Helpers\IfHeaderHelper.cs" />
     <Compile Include="Helpers\LinqToXmlExtentions.cs" />
     <Compile Include="HrefLockOwner.cs" />
     <Compile Include="LockOwner.cs" />
