@@ -54,6 +54,7 @@ namespace WebDav.Response
                 IsCollection = PropertyParser.ParseInteger(FindProp("iscollection", properties)) > 0 ||
                     PropertyParser.ParseResourceType(FindProp("resourcetype", properties)) == ResourceType.Collection,
                 IsHidden = PropertyParser.ParseInteger(FindProp("ishidden", properties)) > 0,
+                ActiveLocks = LockResponseParser.ParseLockDiscovery(FindProp("lockdiscovery", properties)),
                 Properties = properties.ToDictionary(k => k.Name.LocalName, v => v.GetInnerXml())
             };
 

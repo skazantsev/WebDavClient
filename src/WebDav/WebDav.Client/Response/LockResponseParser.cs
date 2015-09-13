@@ -16,6 +16,11 @@ namespace WebDav.Response
                 throw new WebDavException("Failed to parse LOCK response.");
 
             var lockdiscovery = xresponse.Root.LocalNameElement("lockdiscovery", StringComparison.OrdinalIgnoreCase);
+            return ParseLockDiscovery(lockdiscovery);
+        }
+
+        public static List<ActiveLock> ParseLockDiscovery(XElement lockdiscovery)
+        {
             if (lockdiscovery == null)
                 throw new WebDavException("Failed to parse LOCK response.");
 

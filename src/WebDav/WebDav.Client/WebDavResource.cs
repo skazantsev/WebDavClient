@@ -30,6 +30,8 @@ namespace WebDav
 
         public DateTime? LastModifiedDate { get; set; }
 
+        public List<ActiveLock> ActiveLocks { get; set; }
+
         public Dictionary<string, string> Properties { get; set; }
     }
 }

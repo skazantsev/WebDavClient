@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,6 +57,10 @@ namespace WebDav.ClientConsole
                 Console.WriteLine("====================================================");
                 Console.WriteLine("HREF: {0}", res.Href);
                 Console.WriteLine("====================================================");
+                foreach (var @lock in res.ActiveLocks)
+                {
+                    PrintActiveLock(@lock);
+                }
                 Console.WriteLine("IsCollection: {0}", res.IsCollection);
                 Console.WriteLine("IsHidden: {0}", res.IsHidden);
                 Console.WriteLine("CreationDate: {0}", res.CreationDate);
@@ -80,15 +83,7 @@ namespace WebDav.ClientConsole
             foreach (var @lock in activeLocks)
             {
                 token = @lock.LockToken;
-                Console.WriteLine("====================================================");
-                Console.WriteLine("HREF: {0}", @lock.ResourceHref);
-                Console.WriteLine("====================================================");
-                Console.WriteLine("LockToken: {0}", @lock.LockToken);
-                Console.WriteLine("LockScope: {0}", @lock.LockScope.HasValue ? Enum.GetName(typeof(LockScope), @lock.LockScope) : "null");
-                Console.WriteLine("LockOwner: {0}", @lock.Owner != null ? @lock.Owner.Value : "null");
-                Console.WriteLine("ApplyTo: {0}", Enum.GetName(typeof(ApplyTo.Lock), @lock.ApplyTo));
-                Console.WriteLine("Timeout: {0}", @lock.Timeout.HasValue ? @lock.Timeout.Value.TotalSeconds.ToString() : "infinity");
-                Console.WriteLine();
+                PrintActiveLock(@lock);
             }
             await webDavClient.Unlock("http://localhost:88/1.txt", token);
             Console.WriteLine("Unlocked!");
@@ -106,6 +101,18 @@ namespace WebDav.ClientConsole
 
             await webDavClient.Delete("http://localhost:88/2.txt", token2);
             Console.WriteLine("The resource was deleted.");
+        }
+
+        public static void PrintActiveLock(ActiveLock @lock)
+        {
+            Console.WriteLine(">>>LOCK");
+            Console.WriteLine("HREF: {0}", @lock.ResourceHref);
+            Console.WriteLine("LockToken: {0}", @lock.LockToken);
+            Console.WriteLine("LockScope: {0}", @lock.LockScope.HasValue ? Enum.GetName(typeof(LockScope), @lock.LockScope) : "null");
+            Console.WriteLine("LockOwner: {0}", @lock.Owner != null ? @lock.Owner.Value : "null");
+            Console.WriteLine("ApplyTo: {0}", Enum.GetName(typeof(ApplyTo.Lock), @lock.ApplyTo));
+            Console.WriteLine("Timeout: {0}", @lock.Timeout.HasValue ? @lock.Timeout.Value.TotalSeconds.ToString() : "infinity");
+            Console.WriteLine();
         }
     }
 }
