@@ -77,8 +77,10 @@ namespace WebDav.ClientConsole
         {
             var activeLocks = await webDavClient.Lock("http://localhost:88/1.txt",
                     new LockParameters { LockScope = LockScope.Shared, Owner = new PrincipalLockOwner("Chuck Norris"), Timeout = TimeSpan.FromSeconds(120) });
+            var token = string.Empty;
             foreach (var @lock in activeLocks)
             {
+                token = @lock.LockToken;
                 Console.WriteLine("====================================================");
                 Console.WriteLine("HREF: {0}", @lock.ResourceHref);
                 Console.WriteLine("====================================================");
@@ -88,6 +90,19 @@ namespace WebDav.ClientConsole
                 Console.WriteLine("ApplyTo: {0}", Enum.GetName(typeof(ApplyTo.Lock), @lock.ApplyTo));
                 Console.WriteLine("Timeout: {0}", @lock.Timeout.HasValue ? @lock.Timeout.Value.TotalSeconds.ToString() : "infinity");
                 Console.WriteLine();
+            }
+
+            await webDavClient.Unlock("http://localhost:88/1.txt", token);
+            Console.WriteLine("Unlocked!");
+
+            try
+            {
+                await webDavClient.Unlock("http://localhost:88/2.txt", token);
+                Console.WriteLine("Unlocked!");
+            }
+            catch
+            {
+                Console.WriteLine("Wrong lock token!");
             }
         }
     }

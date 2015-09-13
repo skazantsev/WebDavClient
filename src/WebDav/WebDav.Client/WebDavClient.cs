@@ -318,6 +318,24 @@ namespace WebDav
             }
         }
 
+        public Task Unlock(string requestUri, string lockToken)
+        {
+            return Unlock(requestUri, lockToken, CancellationToken.None);
+        }
+
+        public async Task Unlock(string requestUri, string lockToken, CancellationToken cancellationToken)
+        {
+            using (var request = new HttpRequestMessage(WebDavMethod.Unlock, requestUri))
+            {
+                request.Headers.Add("Lock-Token", string.Format("<{0}>", lockToken));
+                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                {
+                    if (!response.IsSuccessStatusCode)
+                        throw new WebDavException((int)response.StatusCode, "Failed to unlock a resource.");
+                }
+            }
+        }
+
         private static HttpClient ConfigureHttpClient(WebDavClientParams @params)
         {
             var httpHandler = new HttpClientHandler
