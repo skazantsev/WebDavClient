@@ -14,5 +14,11 @@
             CollectionOnly,
             CollectionAndAncestors
         }
+
+        public enum Lock
+        {
+            CollectionOnly,
+            CollectionAndAncestors
+        }
     }
 }

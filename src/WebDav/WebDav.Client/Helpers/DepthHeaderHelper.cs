@@ -31,5 +31,18 @@ namespace WebDav.Helpers
                     throw new InvalidEnumArgumentException("applyTo", (int)applyTo, typeof(ApplyTo.Copy));
             }
         }
+
+        public static string GetValueForLock(ApplyTo.Lock applyTo)
+        {
+            switch (applyTo)
+            {
+                case ApplyTo.Lock.CollectionOnly:
+                    return "0";
+                case ApplyTo.Lock.CollectionAndAncestors:
+                    return "infinity";
+                default:
+                    throw new InvalidEnumArgumentException("applyTo", (int)applyTo, typeof(ApplyTo.Lock));
+            }
+        }
     }
 }

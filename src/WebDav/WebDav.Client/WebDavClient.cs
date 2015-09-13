@@ -293,6 +293,31 @@ namespace WebDav
             }
         }
 
+        public Task<List<ActiveLock>> Lock(string requestUri, LockParameters lockParams)
+        {
+            return Lock(requestUri, lockParams, CancellationToken.None);
+        }
+
+        public async Task<List<ActiveLock>> Lock(string requestUri, LockParameters lockParams, CancellationToken cancellationToken)
+        {
+            using (var request = new HttpRequestMessage(WebDavMethod.Lock, requestUri))
+            {
+                if (lockParams.ApplyTo.HasValue)
+                    request.Headers.Add("Depth", DepthHeaderHelper.GetValueForLock(lockParams.ApplyTo.Value));
+                if (lockParams.Timeout.HasValue)
+                    request.Headers.Add("Timeout", string.Format("Second-{0}", lockParams.Timeout.Value.TotalSeconds));
+                request.Content = new StringContent(LockRequestBuilder.BuildRequestBody(lockParams));
+                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                {
+                    if (!response.IsSuccessStatusCode)
+                        throw new WebDavException((int)response.StatusCode, "Failed to acquire a lock.");
+
+                    var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    return LockResponseParser.Parse(responseContent);
+                }
+            }
+        }
+
         private static HttpClient ConfigureHttpClient(WebDavClientParams @params)
         {
             var httpHandler = new HttpClientHandler

@@ -38,28 +38,56 @@ namespace WebDav.ClientConsole
                     Console.WriteLine(fileOutput);
                 }
 
-                var response = await webDavClient.Propfind("http://localhost:88", new [] {"testprop"});
-                foreach (var res in response.Resources)
-                {
-                    Console.WriteLine("====================================================");
-                    Console.WriteLine("HREF: {0}", res.Href);
-                    Console.WriteLine("====================================================");
-                    Console.WriteLine("IsCollection: {0}", res.IsCollection);
-                    Console.WriteLine("IsHidden: {0}", res.IsHidden);
-                    Console.WriteLine("CreationDate: {0}", res.CreationDate);
-                    Console.WriteLine("DisplayName: {0}", res.DisplayName);
-                    Console.WriteLine("ContentLanguage: {0}", res.ContentLanguage);
-                    Console.WriteLine("ContentLength: {0}", res.ContentLength);
-                    Console.WriteLine("ContentType: {0}", res.ContentType);
-                    Console.WriteLine("ETag: {0}", res.ETag);
-                    Console.WriteLine("LastModifiedDate: {0}", res.LastModifiedDate);
-                    Console.WriteLine("Properties: {0}", "[\r\n -" + string.Join("\r\n -", res.Properties.Select(kv => string.Format("{0}: {1}", kv.Key, kv.Value))) + "\r\n]");
-                    Console.WriteLine();
-                }
+                await TestPropfind(webDavClient);
 
-                // await webDavClient.Proppatch("http://localhost:88/1.txt", new Dictionary<string, string> { { "DisplayName", "111" } }, new List<string> { "ETag" });
+                //await webDavClient.Proppatch("http://localhost:88/1.txt", new Dictionary<string, string> { { "DisplayName", "111" } }, new List<string> { "ETag" });
+
+                await TestLock(webDavClient);
+
+                await webDavClient.Delete("http://localhost:88/2.txt");
+                await webDavClient.Delete("http://localhost:88/mydir");
 
                 Console.ReadLine();
+            }
+        }
+
+        public static async Task TestPropfind(WebDavClient webDavClient)
+        {
+            var response = await webDavClient.Propfind("http://localhost:88", new[] { "testprop" });
+            foreach (var res in response.Resources)
+            {
+                Console.WriteLine("====================================================");
+                Console.WriteLine("HREF: {0}", res.Href);
+                Console.WriteLine("====================================================");
+                Console.WriteLine("IsCollection: {0}", res.IsCollection);
+                Console.WriteLine("IsHidden: {0}", res.IsHidden);
+                Console.WriteLine("CreationDate: {0}", res.CreationDate);
+                Console.WriteLine("DisplayName: {0}", res.DisplayName);
+                Console.WriteLine("ContentLanguage: {0}", res.ContentLanguage);
+                Console.WriteLine("ContentLength: {0}", res.ContentLength);
+                Console.WriteLine("ContentType: {0}", res.ContentType);
+                Console.WriteLine("ETag: {0}", res.ETag);
+                Console.WriteLine("LastModifiedDate: {0}", res.LastModifiedDate);
+                Console.WriteLine("Properties: {0}", "[\r\n -" + string.Join("\r\n -", res.Properties.Select(kv => string.Format("{0}: {1}", kv.Key, kv.Value))) + "\r\n]");
+                Console.WriteLine();
+            }
+        }
+
+        public static async Task TestLock(WebDavClient webDavClient)
+        {
+            var activeLocks = await webDavClient.Lock("http://localhost:88/1.txt",
+                    new LockParameters { LockScope = LockScope.Shared, Owner = new PrincipalLockOwner("Chuck Norris"), Timeout = TimeSpan.FromSeconds(120) });
+            foreach (var @lock in activeLocks)
+            {
+                Console.WriteLine("====================================================");
+                Console.WriteLine("HREF: {0}", @lock.ResourceHref);
+                Console.WriteLine("====================================================");
+                Console.WriteLine("LockToken: {0}", @lock.LockToken);
+                Console.WriteLine("LockScope: {0}", @lock.LockScope.HasValue ? Enum.GetName(typeof(LockScope), @lock.LockScope) : "null");
+                Console.WriteLine("LockOwner: {0}", @lock.Owner != null ? @lock.Owner.Value : "null");
+                Console.WriteLine("ApplyTo: {0}", Enum.GetName(typeof(ApplyTo.Lock), @lock.ApplyTo));
+                Console.WriteLine("Timeout: {0}", @lock.Timeout.HasValue ? @lock.Timeout.Value.TotalSeconds.ToString() : "infinity");
+                Console.WriteLine();
             }
         }
     }
