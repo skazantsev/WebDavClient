@@ -54,7 +54,7 @@ namespace WebDav.Response
 
         public static ApplyTo.Lock ParseLockDepth(XElement element)
         {
-            return element.Value.Equals("0") ? ApplyTo.Lock.CollectionOnly : ApplyTo.Lock.CollectionAndAncestors;
+            return element.Value.Equals("0") ? ApplyTo.Lock.ResourceOnly : ApplyTo.Lock.ResourceAndAncestors;
         }
 
         public static LockOwner ParseOwner(XElement element)

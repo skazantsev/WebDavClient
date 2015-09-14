@@ -30,12 +30,12 @@ namespace WebDav
 
         public Task<PropfindResponse> Propfind(string requestUri)
         {
-            return Propfind(requestUri, new string[] { }, ApplyTo.Propfind.CollectionAndChildren, CancellationToken.None);
+            return Propfind(requestUri, new string[] { }, ApplyTo.Propfind.ResourceAndChildren, CancellationToken.None);
         }
 
         public Task<PropfindResponse> Propfind(string requestUri, IReadOnlyCollection<string> customProperties)
         {
-            return Propfind(requestUri, customProperties, ApplyTo.Propfind.CollectionAndChildren, CancellationToken.None);
+            return Propfind(requestUri, customProperties, ApplyTo.Propfind.ResourceAndChildren, CancellationToken.None);
         }
 
         public Task<PropfindResponse> Propfind(string requestUri, ApplyTo.Propfind applyTo)
@@ -56,7 +56,7 @@ namespace WebDav
             IReadOnlyCollection<string> customProperties,
             CancellationToken cancellationToken)
         {
-            return Propfind(requestUri, customProperties, ApplyTo.Propfind.CollectionAndChildren, cancellationToken);
+            return Propfind(requestUri, customProperties, ApplyTo.Propfind.ResourceAndChildren, cancellationToken);
         }
 
         public Task<PropfindResponse> Propfind(
@@ -261,12 +261,12 @@ namespace WebDav
 
         public Task Copy(string sourceUri, string destUri, bool overwrite = true)
         {
-            return Copy(sourceUri, destUri, ApplyTo.Copy.CollectionAndAncestors, null, CancellationToken.None, overwrite);
+            return Copy(sourceUri, destUri, ApplyTo.Copy.ResourceAndAncestors, null, CancellationToken.None, overwrite);
         }
 
         public Task Copy(string sourceUri, string destUri, string destLockToken, bool overwrite = true)
         {
-            return Copy(sourceUri, destUri, ApplyTo.Copy.CollectionAndAncestors, destLockToken, CancellationToken.None, overwrite);
+            return Copy(sourceUri, destUri, ApplyTo.Copy.ResourceAndAncestors, destLockToken, CancellationToken.None, overwrite);
         }
 
         public Task Copy(string sourceUri, string destUri, ApplyTo.Copy applyTo, bool overwrite = true)
@@ -276,7 +276,7 @@ namespace WebDav
 
         public Task Copy(string sourceUri, string destUri, CancellationToken cancellationToken, bool overwrite = true)
         {
-            return Copy(sourceUri, destUri, ApplyTo.Copy.CollectionAndAncestors, null, cancellationToken, overwrite);
+            return Copy(sourceUri, destUri, ApplyTo.Copy.ResourceAndAncestors, null, cancellationToken, overwrite);
         }
 
         public async Task Copy(string sourceUri, string destUri, ApplyTo.Copy applyTo, string destLockToken, CancellationToken cancellationToken, bool overwrite = true)

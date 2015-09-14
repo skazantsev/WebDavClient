@@ -4,21 +4,21 @@
     {
         public enum Propfind
         {
-            CollectionOnly,
-            CollectionAndChildren,
-            CollectionAndAncestors
+            ResourceOnly,
+            ResourceAndChildren,
+            ResourceAndAncestors
         }
 
         public enum Copy
         {
-            CollectionOnly,
-            CollectionAndAncestors
+            ResourceOnly,
+            ResourceAndAncestors
         }
 
         public enum Lock
         {
-            CollectionOnly,
-            CollectionAndAncestors
+            ResourceOnly,
+            ResourceAndAncestors
         }
     }
 }

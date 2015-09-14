@@ -8,11 +8,11 @@ namespace WebDav.Helpers
         {
             switch (applyTo)
             {
-                case ApplyTo.Propfind.CollectionOnly:
+                case ApplyTo.Propfind.ResourceOnly:
                     return "0";
-                case ApplyTo.Propfind.CollectionAndChildren:
+                case ApplyTo.Propfind.ResourceAndChildren:
                     return "1";
-                case ApplyTo.Propfind.CollectionAndAncestors:
+                case ApplyTo.Propfind.ResourceAndAncestors:
                     return "infinity";
                 default:
                     throw new InvalidEnumArgumentException("applyTo", (int)applyTo, typeof(ApplyTo.Propfind));
@@ -23,9 +23,9 @@ namespace WebDav.Helpers
         {
             switch (applyTo)
             {
-                case ApplyTo.Copy.CollectionOnly:
+                case ApplyTo.Copy.ResourceOnly:
                     return "0";
-                case ApplyTo.Copy.CollectionAndAncestors:
+                case ApplyTo.Copy.ResourceAndAncestors:
                     return "infinity";
                 default:
                     throw new InvalidEnumArgumentException("applyTo", (int)applyTo, typeof(ApplyTo.Copy));
@@ -36,9 +36,9 @@ namespace WebDav.Helpers
         {
             switch (applyTo)
             {
-                case ApplyTo.Lock.CollectionOnly:
+                case ApplyTo.Lock.ResourceOnly:
                     return "0";
-                case ApplyTo.Lock.CollectionAndAncestors:
+                case ApplyTo.Lock.ResourceAndAncestors:
                     return "infinity";
                 default:
                     throw new InvalidEnumArgumentException("applyTo", (int)applyTo, typeof(ApplyTo.Lock));
