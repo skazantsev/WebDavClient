@@ -9,5 +9,6 @@ AppPackages/
 *.userprefs
 _ReSharper*/
 *.[Rr]e[Ss]harper
+*.DotSettings.user
 _UpgradeReport.*
 packages/
