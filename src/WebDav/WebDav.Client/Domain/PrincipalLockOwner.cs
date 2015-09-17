@@ -1,6 +1,4 @@
-﻿using WebDav.Helpers;
-
-namespace WebDav
+﻿namespace WebDav
 {
     public class PrincipalLockOwner : LockOwner
     {

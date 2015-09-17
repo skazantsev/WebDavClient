@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Xml.Linq;
-using WebDav.Helpers;
 
 namespace WebDav.Request
 {

@@ -1,8 +1,8 @@
 ﻿using System.Net.Http;
 
-namespace WebDav.Helpers
+namespace WebDav
 {
-    internal sealed class WebDavMethod
+    internal static class WebDavMethod
     {
         public static readonly HttpMethod Propfind = new HttpMethod("PROPFIND");
 

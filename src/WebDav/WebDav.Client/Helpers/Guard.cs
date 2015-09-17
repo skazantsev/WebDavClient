@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace WebDav.Helpers
+namespace WebDav
 {
-    public static class Guard
+    internal static class Guard
     {
         public static void NotNull(object obj, string paramName)
         {

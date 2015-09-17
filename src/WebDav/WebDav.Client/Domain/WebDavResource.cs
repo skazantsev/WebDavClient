@@ -10,15 +10,7 @@ namespace WebDav
             Properties = new Dictionary<string, string>();
         }
 
-        public bool IsCollection { get; set; }
-
-        public bool IsHidden { get; set; }
-
-        public string Href { get; set; }
-
-        public DateTime? CreationDate { get; set; }
-
-        public string DisplayName { get; set; }
+        public List<ActiveLock> ActiveLocks { get; set; }
 
         public string ContentLanguage { get; set; }
 
@@ -26,11 +18,19 @@ namespace WebDav
 
         public string ContentType { get; set; }
 
+        public DateTime? CreationDate { get; set; }
+
+        public string DisplayName { get; set; }
+
         public string ETag { get; set; }
 
-        public DateTime? LastModifiedDate { get; set; }
+        public string Href { get; set; }
 
-        public List<ActiveLock> ActiveLocks { get; set; }
+        public bool IsCollection { get; set; }
+
+        public bool IsHidden { get; set; }
+
+        public DateTime? LastModifiedDate { get; set; }
 
         public Dictionary<string, string> Properties { get; set; }
     }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace WebDav.Helpers
+namespace WebDav
 {
     internal static class DepthHeaderHelper
     {

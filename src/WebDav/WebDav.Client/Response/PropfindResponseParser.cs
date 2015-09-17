@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using WebDav.Exceptions;
-using WebDav.Helpers;
 
 namespace WebDav.Response
 {
@@ -43,18 +41,19 @@ namespace WebDav.Response
         {
             var resource = new WebDavResource
             {
-                Href = href,
-                CreationDate = PropertyParser.ParseDateTime(FindProp("creationdate", properties)),
-                DisplayName = PropertyParser.ParseString(FindProp("displayname", properties)),
+                ActiveLocks = LockResponseParser.ParseLockDiscovery(FindProp("lockdiscovery", properties)),
+                
                 ContentLanguage = PropertyParser.ParseString(FindProp("getcontentlanguage", properties)),
                 ContentLength = PropertyParser.ParseInteger(FindProp("getcontentlength", properties)),
                 ContentType = PropertyParser.ParseString(FindProp("getcontenttype", properties)),
+                CreationDate = PropertyParser.ParseDateTime(FindProp("creationdate", properties)),
+                DisplayName = PropertyParser.ParseString(FindProp("displayname", properties)),
                 ETag = PropertyParser.ParseString(FindProp("getetag", properties)),
-                LastModifiedDate = PropertyParser.ParseDateTime(FindProp("getlastmodified", properties)),
+                Href = href,
                 IsCollection = PropertyParser.ParseInteger(FindProp("iscollection", properties)) > 0 ||
                     PropertyParser.ParseResourceType(FindProp("resourcetype", properties)) == ResourceType.Collection,
                 IsHidden = PropertyParser.ParseInteger(FindProp("ishidden", properties)) > 0,
-                ActiveLocks = LockResponseParser.ParseLockDiscovery(FindProp("lockdiscovery", properties)),
+                LastModifiedDate = PropertyParser.ParseDateTime(FindProp("getlastmodified", properties)),
                 Properties = properties.ToDictionary(k => k.Name.LocalName, v => v.GetInnerXml())
             };
 

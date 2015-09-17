@@ -1,4 +1,4 @@
-﻿namespace WebDav.Helpers
+﻿namespace WebDav
 {
     internal static class IfHeaderHelper
     {

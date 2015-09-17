@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml.Linq;
-using WebDav.Helpers;
 
 namespace WebDav.Response
 {

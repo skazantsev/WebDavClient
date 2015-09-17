@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace WebDav.Helpers
+namespace WebDav
 {
     internal static class LinqToXmlExtentions
     {

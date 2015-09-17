@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace WebDav.Exceptions
+namespace WebDav
 {
     public class WebDavException : Exception
     {
         public WebDavException()
         {
         }
-
-        public int HttpCode { get; private set; }
 
         public WebDavException(string message)
             : base(message)
@@ -32,6 +30,8 @@ namespace WebDav.Exceptions
             : base(info, context)
         {
         }
+
+        public int HttpCode { get; private set; }
 
         public override string ToString()
         {

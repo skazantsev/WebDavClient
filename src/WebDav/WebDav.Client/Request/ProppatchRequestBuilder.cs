@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using WebDav.Helpers;
 
 namespace WebDav.Request
 {
-    internal class ProppatchRequestBuilder
+    internal static class ProppatchRequestBuilder
     {
         public static string BuildRequestBody(IDictionary<string, string> propertiesToSet, IReadOnlyCollection<string> propertiesToRemove)
         {

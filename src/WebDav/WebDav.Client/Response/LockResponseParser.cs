@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using WebDav.Exceptions;
-using WebDav.Helpers;
 
 namespace WebDav.Response
 {
@@ -34,12 +32,12 @@ namespace WebDav.Response
         {
             var activeLock = new ActiveLock
             {
-                LockScope = PropertyParser.ParseLockScope(FindProp("lockscope", properties)),
                 ApplyTo = PropertyParser.ParseLockDepth(FindProp("depth", properties)),
-                Owner = PropertyParser.ParseOwner(FindProp("owner", properties)),
-                Timeout = PropertyParser.ParseLockTimeout(FindProp("timeout", properties)),
+                LockScope = PropertyParser.ParseLockScope(FindProp("lockscope", properties)),
                 LockToken = PropertyParser.ParseString(FindProp("locktoken", properties)),
-                ResourceHref = PropertyParser.ParseString(FindProp("lockroot", properties))
+                Owner = PropertyParser.ParseOwner(FindProp("owner", properties)),
+                ResourceHref = PropertyParser.ParseString(FindProp("lockroot", properties)),
+                Timeout = PropertyParser.ParseLockTimeout(FindProp("timeout", properties))
             };
             return activeLock;
         }
