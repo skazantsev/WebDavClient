@@ -28,7 +28,7 @@ namespace WebDav.ClientConsole
 
                 await webDavClient.Copy("http://localhost:88/mydir/", "http://localhost:88/mydir1/");
 
-                await webDavClient.Copy("http://localhost:88/mydir/", "http://localhost:88/mydir2/", ApplyTo.Copy.ResourceOnly);
+                await webDavClient.Copy("http://localhost:88/mydir/", "http://localhost:88/mydir2/", new CopyParameters { ApplyTo = ApplyTo.Copy.ResourceOnly });
 
                 var fileStream = await webDavClient.GetRawFile("http://localhost:88/mydir/test_ren.txt");
                 using (var reader = new StreamReader(fileStream))
@@ -99,7 +99,7 @@ namespace WebDav.ClientConsole
                 Console.WriteLine("Can't delete a resource. It's locked!");
             }
 
-            await webDavClient.Delete("http://localhost:88/2.txt", token2);
+            await webDavClient.Delete("http://localhost:88/2.txt", new DeleteParameters { LockToken = token2 });
             Console.WriteLine("The resource was deleted.");
         }
 

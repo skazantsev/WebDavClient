@@ -49,6 +49,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiParams\CopyParameters.cs" />
+    <Compile Include="ApiParams\DeleteParameters.cs" />
+    <Compile Include="ApiParams\GetFileParameters.cs" />
+    <Compile Include="ApiParams\MkColParameters.cs" />
+    <Compile Include="ApiParams\MoveParameters.cs" />
+    <Compile Include="ApiParams\PropfindParameters.cs" />
+    <Compile Include="ApiParams\ProppatchParameters.cs" />
+    <Compile Include="ApiParams\PutFileParameters.cs" />
+    <Compile Include="ApiParams\UnlockParameters.cs" />
     <Compile Include="Domain\ApplyTo.cs" />
     <Compile Include="Helpers\DepthHeaderHelper.cs" />
     <Compile Include="Helpers\Guard.cs" />

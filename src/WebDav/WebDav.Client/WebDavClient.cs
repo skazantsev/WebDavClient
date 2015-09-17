@@ -28,56 +28,24 @@ namespace WebDav
 
         public Task<PropfindResponse> Propfind(string requestUri)
         {
-            return Propfind(requestUri, new string[] { }, ApplyTo.Propfind.ResourceAndChildren, CancellationToken.None);
+            return Propfind(requestUri, new PropfindParameters());
         }
 
         public Task<PropfindResponse> Propfind(string requestUri, IReadOnlyCollection<string> customProperties)
         {
-            return Propfind(requestUri, customProperties, ApplyTo.Propfind.ResourceAndChildren, CancellationToken.None);
+            return Propfind(requestUri, new PropfindParameters { CustomProperties = customProperties });
         }
 
-        public Task<PropfindResponse> Propfind(string requestUri, ApplyTo.Propfind applyTo)
-        {
-            return Propfind(requestUri, new string[] { }, applyTo, CancellationToken.None);
-        }
-
-        public Task<PropfindResponse> Propfind(
-            string requestUri,
-            IReadOnlyCollection<string> customProperties,
-            ApplyTo.Propfind applyTo)
-        {
-            return Propfind(requestUri, customProperties, applyTo, CancellationToken.None);
-        }
-
-        public Task<PropfindResponse> Propfind(
-            string requestUri,
-            IReadOnlyCollection<string> customProperties,
-            CancellationToken cancellationToken)
-        {
-            return Propfind(requestUri, customProperties, ApplyTo.Propfind.ResourceAndChildren, cancellationToken);
-        }
-
-        public Task<PropfindResponse> Propfind(
-            string requestUri,
-            ApplyTo.Propfind applyTo,
-            CancellationToken cancellationToken)
-        {
-            return Propfind(requestUri, new string[] { }, applyTo, cancellationToken);
-        }
-
-        public async Task<PropfindResponse> Propfind(string requestUri,
-            IReadOnlyCollection<string> customProperties,
-            ApplyTo.Propfind applyTo,
-            CancellationToken cancellationToken)
+        public async Task<PropfindResponse> Propfind(string requestUri, PropfindParameters parameters)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
-            Guard.NotNull(customProperties, "customProperties");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Propfind, requestUri))
             {
+                var applyTo = parameters.ApplyTo ?? ApplyTo.Propfind.ResourceAndChildren;
                 request.Headers.Add("Depth", DepthHeaderHelper.GetValueForPropfind(applyTo));
-                request.Content = new StringContent(PropfindRequestBuilder.BuildRequestBody(customProperties));
-                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                request.Content = new StringContent(PropfindRequestBuilder.BuildRequestBody(parameters.CustomProperties));
+                using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
                     if ((int)response.StatusCode != 207)
                         throw new WebDavException((int)response.StatusCode, "Wrong PROPFIND response. Multi-Status code is expected.");
@@ -88,83 +56,47 @@ namespace WebDav
             }
         }
 
-        public Task Proppatch(string requestUri, IDictionary<string, string> propertiesToSet)
-        {
-            return Proppatch(requestUri, propertiesToSet, new string[] { }, CancellationToken.None);
-        }
-
-        public Task Proppatch(string requestUri, IReadOnlyCollection<string> propertiesToRemove)
-        {
-            return Proppatch(requestUri, new Dictionary<string, string>(), propertiesToRemove, CancellationToken.None);
-        }
-
-        public Task Proppatch(
-            string requestUri,
-            IDictionary<string, string> propertiesToSet,
+        public Task Proppatch(string requestUri, IDictionary<string, string> propertiesToSet,
             IReadOnlyCollection<string> propertiesToRemove)
         {
-            return Proppatch(requestUri, propertiesToSet, propertiesToRemove, CancellationToken.None);
+            return Proppatch(requestUri, new ProppatchParameters { PropertiesToSet = propertiesToSet, PropertiesToRemove = propertiesToRemove });
         }
 
-        public Task Proppatch(
-            string requestUri,
-            IDictionary<string, string> propertiesToSet,
-            CancellationToken cancellationToken)
-        {
-            return Proppatch(requestUri, propertiesToSet, new string[] {}, cancellationToken);
-        }
-
-        public Task Proppatch(
-            string requestUri,
-            IReadOnlyCollection<string> propertiesToRemove,
-            CancellationToken cancellationToken)
-        {
-            return Proppatch(requestUri, new Dictionary<string, string>(), propertiesToRemove, cancellationToken);
-        }
-
-        public async Task Proppatch(
-            string requestUri,
-            IDictionary<string, string> propertiesToSet,
-            IReadOnlyCollection<string> propertiesToRemove,
-            CancellationToken cancellationToken)
+        public async Task Proppatch(string requestUri, ProppatchParameters parameters)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
-            Guard.NotNull(propertiesToSet, "propertiesToSet");
-            Guard.NotNull(propertiesToRemove, "propertiesToRemove");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Proppatch, requestUri))
             {
-                request.Content = new StringContent(ProppatchRequestBuilder.BuildRequestBody(propertiesToSet, propertiesToRemove));
-                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                var requestBody = ProppatchRequestBuilder.BuildRequestBody(
+                    parameters.PropertiesToSet,
+                    parameters.PropertiesToRemove);
+                request.Content = new StringContent(requestBody);
+                using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
-                    if ((int) response.StatusCode != 207)
-                        throw new WebDavException((int) response.StatusCode, "Wrong PROPPATCH response. Multi-Status code is expected.");
+                    if ((int)response.StatusCode != 207)
+                        throw new WebDavException((int)response.StatusCode, "Wrong PROPPATCH response. Multi-Status code is expected.");
                 }
             }
         }
 
         public Task Mkcol(string requestUri)
         {
-            return Mkcol(requestUri, null, CancellationToken.None);
+            return Mkcol(requestUri, new MkColParameters());
         }
 
-        public Task Mkcol(string requestUri, string lockToken)
-        {
-            return Mkcol(requestUri, lockToken, CancellationToken.None);
-        }
-
-        public async Task Mkcol(string requestUri, string lockToken, CancellationToken cancellationToken)
+        public async Task Mkcol(string requestUri, MkColParameters parameters)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Mkcol, requestUri))
             {
-                if (!string.IsNullOrEmpty(lockToken))
-                    request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(lockToken));
-                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                if (!string.IsNullOrEmpty(parameters.LockToken))
+                    request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(parameters.LockToken));
+                using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
                     if (response.StatusCode != HttpStatusCode.Created)
-                        throw new WebDavException((int) response.StatusCode, "Failed to create a collection.");
+                        throw new WebDavException((int)response.StatusCode, "Failed to create a collection.");
                 }
             }
         }
@@ -174,9 +106,9 @@ namespace WebDav
             return GetFile(requestUri, false, CancellationToken.None);
         }
 
-        public Task<Stream> GetRawFile(string requestUri, CancellationToken cancellationToken)
+        public Task<Stream> GetRawFile(string requestUri, GetFileParameters parameters)
         {
-            return GetFile(requestUri, false, cancellationToken);
+            return GetFile(requestUri, false, parameters.CancellationToken);
         }
 
         public Task<Stream> GetProcessedFile(string requestUri)
@@ -184,9 +116,9 @@ namespace WebDav
             return GetFile(requestUri, true, CancellationToken.None);
         }
 
-        public Task<Stream> GetProcessedFile(string requestUri, CancellationToken cancellationToken)
+        public Task<Stream> GetProcessedFile(string requestUri, GetFileParameters parameters)
         {
-            return GetFile(requestUri, true, cancellationToken);
+            return GetFile(requestUri, true, parameters.CancellationToken);
         }
 
         private async Task<Stream> GetFile(string requestUri, bool translate, CancellationToken cancellationToken)
@@ -206,49 +138,44 @@ namespace WebDav
 
         public Task Delete(string requestUri)
         {
-            return Delete(requestUri, null, CancellationToken.None);
+            return Delete(requestUri, new DeleteParameters());
         }
 
-        public Task Delete(string requestUri, string lockToken)
-        {
-            return Delete(requestUri, lockToken, CancellationToken.None);
-        }
-
-        public async Task Delete(string requestUri, string lockToken, CancellationToken cancellationToken)
+        public async Task Delete(string requestUri, DeleteParameters parameters)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
 
             using (var request = new HttpRequestMessage(HttpMethod.Delete, requestUri))
             {
-                if (!string.IsNullOrEmpty(lockToken))
-                    request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(lockToken));
-                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                if (!string.IsNullOrEmpty(parameters.LockToken))
+                    request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(parameters.LockToken));
+                using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
                     if (response.StatusCode != HttpStatusCode.OK &&
                         response.StatusCode != HttpStatusCode.NoContent)
-                        throw new WebDavException((int) response.StatusCode, "Failed to delete a resource.");
+                        throw new WebDavException((int)response.StatusCode, "Failed to delete a resource.");
                 }
             }
         }
 
+        public Task PutFile(string requestUri, Stream stream)
+        {
+            return PutFile(requestUri, stream, new PutFileParameters());
+        }
+
         public Task PutFile(string requestUri, Stream stream, string contentType)
         {
-            return PutFile(requestUri, stream, contentType, null, CancellationToken.None);
+            return PutFile(requestUri, stream, new PutFileParameters { ContentType = contentType });
         }
 
-        public Task PutFile(string requestUri, Stream stream, string contentType, string lockToken)
-        {
-            return PutFile(requestUri, stream, contentType, lockToken, CancellationToken.None);
-        }
-
-        public async Task PutFile(string requestUri, Stream stream, string contentType, string lockToken, CancellationToken cancellationToken)
+        public async Task PutFile(string requestUri, Stream stream, PutFileParameters parameters)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
             Guard.NotNull(stream, "stream");
 
             var fileContent = new StreamContent(stream);
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-            using (var response = await _httpClient.PutAsync(requestUri, fileContent, cancellationToken).ConfigureAwait(false))
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(parameters.ContentType);
+            using (var response = await _httpClient.PutAsync(requestUri, fileContent, parameters.CancellationToken).ConfigureAwait(false))
             {
                 if (response.StatusCode != HttpStatusCode.OK &&
                     response.StatusCode != HttpStatusCode.Created &&
@@ -257,39 +184,25 @@ namespace WebDav
             }
         }
 
-        public Task Copy(string sourceUri, string destUri, bool overwrite = true)
+        public Task Copy(string sourceUri, string destUri)
         {
-            return Copy(sourceUri, destUri, ApplyTo.Copy.ResourceAndAncestors, null, CancellationToken.None, overwrite);
+            return Copy(sourceUri, destUri, new CopyParameters());
         }
 
-        public Task Copy(string sourceUri, string destUri, string destLockToken, bool overwrite = true)
-        {
-            return Copy(sourceUri, destUri, ApplyTo.Copy.ResourceAndAncestors, destLockToken, CancellationToken.None, overwrite);
-        }
-
-        public Task Copy(string sourceUri, string destUri, ApplyTo.Copy applyTo, bool overwrite = true)
-        {
-            return Copy(sourceUri, destUri, applyTo, null, CancellationToken.None, overwrite);
-        }
-
-        public Task Copy(string sourceUri, string destUri, CancellationToken cancellationToken, bool overwrite = true)
-        {
-            return Copy(sourceUri, destUri, ApplyTo.Copy.ResourceAndAncestors, null, cancellationToken, overwrite);
-        }
-
-        public async Task Copy(string sourceUri, string destUri, ApplyTo.Copy applyTo, string destLockToken, CancellationToken cancellationToken, bool overwrite = true)
+        public async Task Copy(string sourceUri, string destUri, CopyParameters parameters)
         {
             Guard.NotNullOrEmpty(sourceUri, "sourceUri");
             Guard.NotNullOrEmpty(destUri, "destUri");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Copy, sourceUri))
             {
+                var applyTo = parameters.ApplyTo ?? ApplyTo.Copy.ResourceAndAncestors;
                 request.Headers.Add("Destination", destUri);
                 request.Headers.Add("Depth", DepthHeaderHelper.GetValueForCopy(applyTo));
-                request.Headers.Add("Overwrite", overwrite ? "T" : "F");
-                if (!string.IsNullOrEmpty(destLockToken))
-                    request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(destLockToken));
-                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                request.Headers.Add("Overwrite", parameters.Overwrite ? "T" : "F");
+                if (!string.IsNullOrEmpty(parameters.DestLockToken))
+                    request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(parameters.DestLockToken));
+                using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
                     if (response.StatusCode != HttpStatusCode.OK &&
                     response.StatusCode != HttpStatusCode.Created &&
@@ -301,15 +214,10 @@ namespace WebDav
 
         public Task Move(string sourceUri, string destUri, bool overwrite = true)
         {
-            return Move(sourceUri, destUri, null, null, CancellationToken.None, overwrite);
+            return Move(sourceUri, destUri, new MoveParameters());
         }
 
-        public Task Move(string sourceUri, string destUri, string sourceLockToken, string destLockToken, bool overwrite = true)
-        {
-            return Move(sourceUri, destUri, sourceLockToken, destLockToken, CancellationToken.None, overwrite);
-        }
-
-        public async Task Move(string sourceUri, string destUri, string sourceLockToken, string destLockToken, CancellationToken cancellationToken, bool overwrite = true)
+        public async Task Move(string sourceUri, string destUri, MoveParameters parameters)
         {
             Guard.NotNullOrEmpty(sourceUri, "sourceUri");
             Guard.NotNullOrEmpty(destUri, "destUri");
@@ -317,17 +225,17 @@ namespace WebDav
             using (var request = new HttpRequestMessage(WebDavMethod.Move, sourceUri))
             {
                 request.Headers.Add("Destination", destUri);
-                request.Headers.Add("Overwrite", overwrite ? "T" : "F");
+                request.Headers.Add("Overwrite", parameters.Overwrite ? "T" : "F");
 
                 var lockTokens = new List<string>();
-                if (!string.IsNullOrEmpty(sourceLockToken))
-                    lockTokens.Add(IfHeaderHelper.GetHeaderValue(sourceLockToken));
-                if (!string.IsNullOrEmpty(destLockToken))
-                    lockTokens.Add(IfHeaderHelper.GetHeaderValue(destLockToken));
+                if (!string.IsNullOrEmpty(parameters.SourceLockToken))
+                    lockTokens.Add(IfHeaderHelper.GetHeaderValue(parameters.SourceLockToken));
+                if (!string.IsNullOrEmpty(parameters.DestLockToken))
+                    lockTokens.Add(IfHeaderHelper.GetHeaderValue(parameters.DestLockToken));
                 if (lockTokens.Any())
                     request.Headers.Add("If", lockTokens);
 
-                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
                     if (response.StatusCode != HttpStatusCode.OK &&
                     response.StatusCode != HttpStatusCode.Created &&
@@ -342,20 +250,20 @@ namespace WebDav
             return Lock(requestUri, new LockParameters(), CancellationToken.None);
         }
 
-        public Task<List<ActiveLock>> Lock(string requestUri, LockParameters lockParams)
+        public Task<List<ActiveLock>> Lock(string requestUri, LockParameters parameters)
         {
-            return Lock(requestUri, lockParams, CancellationToken.None);
+            return Lock(requestUri, parameters, CancellationToken.None);
         }
 
-        public async Task<List<ActiveLock>> Lock(string requestUri, LockParameters lockParams, CancellationToken cancellationToken)
+        public async Task<List<ActiveLock>> Lock(string requestUri, LockParameters parameters, CancellationToken cancellationToken)
         {
             using (var request = new HttpRequestMessage(WebDavMethod.Lock, requestUri))
             {
-                if (lockParams.ApplyTo.HasValue)
-                    request.Headers.Add("Depth", DepthHeaderHelper.GetValueForLock(lockParams.ApplyTo.Value));
-                if (lockParams.Timeout.HasValue)
-                    request.Headers.Add("Timeout", string.Format("Second-{0}", lockParams.Timeout.Value.TotalSeconds));
-                request.Content = new StringContent(LockRequestBuilder.BuildRequestBody(lockParams));
+                if (parameters.ApplyTo.HasValue)
+                    request.Headers.Add("Depth", DepthHeaderHelper.GetValueForLock(parameters.ApplyTo.Value));
+                if (parameters.Timeout.HasValue)
+                    request.Headers.Add("Timeout", string.Format("Second-{0}", parameters.Timeout.Value.TotalSeconds));
+                request.Content = new StringContent(LockRequestBuilder.BuildRequestBody(parameters));
                 using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
@@ -369,15 +277,15 @@ namespace WebDav
 
         public Task Unlock(string requestUri, string lockToken)
         {
-            return Unlock(requestUri, lockToken, CancellationToken.None);
+            return Unlock(requestUri, new UnlockParameters { LockToken = lockToken });
         }
 
-        public async Task Unlock(string requestUri, string lockToken, CancellationToken cancellationToken)
+        public async Task Unlock(string requestUri, UnlockParameters parameters)
         {
             using (var request = new HttpRequestMessage(WebDavMethod.Unlock, requestUri))
             {
-                request.Headers.Add("Lock-Token", string.Format("<{0}>", lockToken));
-                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                request.Headers.Add("Lock-Token", string.Format("<{0}>", parameters.LockToken));
+                using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
                         throw new WebDavException((int)response.StatusCode, "Failed to unlock a resource.");
