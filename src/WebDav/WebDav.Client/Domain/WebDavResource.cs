@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace WebDav
 {
@@ -7,7 +8,7 @@ namespace WebDav
     {
         public WebDavResource()
         {
-            Properties = new Dictionary<string, string>();
+            Properties = new Dictionary<XName, string>();
         }
 
         public List<ActiveLock> ActiveLocks { get; set; }
@@ -32,6 +33,6 @@ namespace WebDav
 
         public DateTime? LastModifiedDate { get; set; }
 
-        public Dictionary<string, string> Properties { get; set; }
+        public Dictionary<XName, string> Properties { get; set; }
     }
 }

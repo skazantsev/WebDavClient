@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace WebDav.ClientConsole
 {
@@ -39,8 +41,6 @@ namespace WebDav.ClientConsole
 
                 await TestPropfind(webDavClient);
 
-                //await webDavClient.Proppatch("http://localhost:88/1.txt", new Dictionary<string, string> { { "DisplayName", "111" } }, new List<string> { "ETag" });
-
                 await TestLock(webDavClient);
 
                 await webDavClient.Delete("http://localhost:88/mydir");
@@ -51,7 +51,12 @@ namespace WebDav.ClientConsole
 
         public static async Task TestPropfind(WebDavClient webDavClient)
         {
-            var response = await webDavClient.Propfind("http://localhost:88", new[] { "testprop" });
+            var propfindParams = new PropfindParameters
+            {
+                CustomProperties = new XName[] {"testprop"},
+                Namespaces = new[] {new NamespaceAttr("http://example.com")}
+            };
+            var response = await webDavClient.Propfind("http://localhost:88", propfindParams);
             foreach (var res in response.Resources)
             {
                 Console.WriteLine("====================================================");
@@ -113,6 +118,21 @@ namespace WebDav.ClientConsole
             Console.WriteLine("ApplyTo: {0}", Enum.GetName(typeof(ApplyTo.Lock), @lock.ApplyTo));
             Console.WriteLine("Timeout: {0}", @lock.Timeout.HasValue ? @lock.Timeout.Value.TotalSeconds.ToString() : "infinity");
             Console.WriteLine();
+        }
+
+        private static async Task TestPropatch()
+        {
+            using (var webDavClient = new WebDavClient())
+            {
+                var xns = "http://X_X";
+                var @params = new ProppatchParameters
+                {
+                    PropertiesToSet = new Dictionary<XName, string> { { "{DAV:}getcontenttype", "text/plain" }, { XName.Get("myprop", xns), "myval" } },
+                    PropertiesToRemove = new List<XName> { "{DAV:}ETag" },
+                    Namespaces = new List<NamespaceAttr> { new NamespaceAttr("x", xns) }
+                };
+                await webDavClient.Proppatch("http://localhost:88/1.txt", @params);
+            }
         }
     }
 }

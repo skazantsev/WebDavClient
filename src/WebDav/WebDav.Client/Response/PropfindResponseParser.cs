@@ -41,20 +41,20 @@ namespace WebDav.Response
         {
             var resource = new WebDavResource
             {
-                ActiveLocks = LockResponseParser.ParseLockDiscovery(FindProp("lockdiscovery", properties)),
+                ActiveLocks = LockResponseParser.ParseLockDiscovery(FindProp("{DAV:}lockdiscovery", properties)),
                 
-                ContentLanguage = PropertyParser.ParseString(FindProp("getcontentlanguage", properties)),
-                ContentLength = PropertyParser.ParseInteger(FindProp("getcontentlength", properties)),
-                ContentType = PropertyParser.ParseString(FindProp("getcontenttype", properties)),
-                CreationDate = PropertyParser.ParseDateTime(FindProp("creationdate", properties)),
-                DisplayName = PropertyParser.ParseString(FindProp("displayname", properties)),
-                ETag = PropertyParser.ParseString(FindProp("getetag", properties)),
+                ContentLanguage = PropertyParser.ParseString(FindProp("{DAV:}getcontentlanguage", properties)),
+                ContentLength = PropertyParser.ParseInteger(FindProp("{DAV:}getcontentlength", properties)),
+                ContentType = PropertyParser.ParseString(FindProp("{DAV:}getcontenttype", properties)),
+                CreationDate = PropertyParser.ParseDateTime(FindProp("{DAV:}creationdate", properties)),
+                DisplayName = PropertyParser.ParseString(FindProp("{DAV:}displayname", properties)),
+                ETag = PropertyParser.ParseString(FindProp("{DAV:}getetag", properties)),
                 Href = href,
-                IsCollection = PropertyParser.ParseInteger(FindProp("iscollection", properties)) > 0 ||
-                    PropertyParser.ParseResourceType(FindProp("resourcetype", properties)) == ResourceType.Collection,
-                IsHidden = PropertyParser.ParseInteger(FindProp("ishidden", properties)) > 0,
-                LastModifiedDate = PropertyParser.ParseDateTime(FindProp("getlastmodified", properties)),
-                Properties = properties.ToDictionary(k => k.Name.LocalName, v => v.GetInnerXml())
+                IsCollection = PropertyParser.ParseInteger(FindProp("{DAV:}iscollection", properties)) > 0 ||
+                    PropertyParser.ParseResourceType(FindProp("{DAV:}resourcetype", properties)) == ResourceType.Collection,
+                IsHidden = PropertyParser.ParseInteger(FindProp("{DAV:}ishidden", properties)) > 0,
+                LastModifiedDate = PropertyParser.ParseDateTime(FindProp("{DAV:}getlastmodified", properties)),
+                Properties = properties.ToDictionary(k => k.Name, v => v.GetInnerXml())
             };
 
             if (resource.IsCollection)
@@ -62,9 +62,9 @@ namespace WebDav.Response
             return resource;
         }
 
-        private static XElement FindProp(string localName, IEnumerable<XElement> properties)
+        private static XElement FindProp(XName name, IEnumerable<XElement> properties)
         {
-            return properties.FirstOrDefault(x => x.Name.LocalName.Equals(localName, StringComparison.OrdinalIgnoreCase));
+            return properties.FirstOrDefault(x => x.Name.Equals(name));
         }
 
         private static bool IsSuccessStatusCode(XElement propstatElement)

@@ -31,11 +31,6 @@ namespace WebDav
             return Propfind(requestUri, new PropfindParameters());
         }
 
-        public Task<PropfindResponse> Propfind(string requestUri, IReadOnlyCollection<string> customProperties)
-        {
-            return Propfind(requestUri, new PropfindParameters { CustomProperties = customProperties });
-        }
-
         public async Task<PropfindResponse> Propfind(string requestUri, PropfindParameters parameters)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
@@ -44,7 +39,8 @@ namespace WebDav
             {
                 var applyTo = parameters.ApplyTo ?? ApplyTo.Propfind.ResourceAndChildren;
                 request.Headers.Add("Depth", DepthHeaderHelper.GetValueForPropfind(applyTo));
-                request.Content = new StringContent(PropfindRequestBuilder.BuildRequestBody(parameters.CustomProperties));
+                var requestBody = PropfindRequestBuilder.BuildRequestBody(parameters.CustomProperties, parameters.Namespaces);
+                request.Content = new StringContent(requestBody);
                 using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
                     if ((int)response.StatusCode != 207)
@@ -56,12 +52,6 @@ namespace WebDav
             }
         }
 
-        public Task Proppatch(string requestUri, IDictionary<string, string> propertiesToSet,
-            IReadOnlyCollection<string> propertiesToRemove)
-        {
-            return Proppatch(requestUri, new ProppatchParameters { PropertiesToSet = propertiesToSet, PropertiesToRemove = propertiesToRemove });
-        }
-
         public async Task Proppatch(string requestUri, ProppatchParameters parameters)
         {
             Guard.NotNullOrEmpty(requestUri, "requestUri");
@@ -70,7 +60,8 @@ namespace WebDav
             {
                 var requestBody = ProppatchRequestBuilder.BuildRequestBody(
                     parameters.PropertiesToSet,
-                    parameters.PropertiesToRemove);
+                    parameters.PropertiesToRemove,
+                    parameters.Namespaces);
                 request.Content = new StringContent(requestBody);
                 using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {

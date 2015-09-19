@@ -59,6 +59,7 @@
     <Compile Include="ApiParams\PutFileParameters.cs" />
     <Compile Include="ApiParams\UnlockParameters.cs" />
     <Compile Include="Domain\ApplyTo.cs" />
+    <Compile Include="Domain\NamespaceAttr.cs" />
     <Compile Include="Helpers\DepthHeaderHelper.cs" />
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="Helpers\IfHeaderHelper.cs" />
