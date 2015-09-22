@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace WebDav
@@ -14,6 +15,8 @@ namespace WebDav
         }
 
         public bool AuthenticateAsCurrentUser { get; set; }
+
+        public Uri BaseAddress { get; set; }
 
         public ICredentials Credentials { get; set; }
 

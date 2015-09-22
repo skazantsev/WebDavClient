@@ -16,17 +16,17 @@ namespace WebDav.ClientConsole
 
         private static async Task TestWebDav()
         {
-            using (var webDavClient = new WebDavClient())
+            using (var webDavClient = new WebDavClient(new WebDavClientParams { BaseAddress = new Uri("http://localhost:88/") }))
             {
-                await webDavClient.Copy("http://localhost:88/1.txt", "http://localhost:88/_2.txt");
+                await webDavClient.Copy("1.txt", "_2.txt");
 
-                await webDavClient.Move("http://localhost:88/_2.txt", "http://localhost:88/2.txt");
+                await webDavClient.Move("http://localhost:88/_2.txt", "2.txt");
 
                 await webDavClient.Mkcol("http://localhost:88/mydir");
 
                 await webDavClient.PutFile("http://localhost:88/mydir/test.txt", File.OpenRead("test.txt"), "text/plain");
 
-                await webDavClient.Move("http://localhost:88/mydir/test.txt", "http://localhost:88/mydir/test_ren.txt");
+                await webDavClient.Move("mydir/test.txt", "http://localhost:88/mydir/test_ren.txt");
 
                 await webDavClient.Copy("http://localhost:88/mydir/", "http://localhost:88/mydir1/");
 

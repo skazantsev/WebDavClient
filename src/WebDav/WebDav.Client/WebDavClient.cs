@@ -268,7 +268,7 @@ namespace WebDav
             using (var request = new HttpRequestMessage(WebDavMethod.Copy, sourceUri))
             {
                 var applyTo = parameters.ApplyTo ?? ApplyTo.Copy.ResourceAndAncestors;
-                request.Headers.Add("Destination", destUri.ToString());
+                request.Headers.Add("Destination", GetAbsoluteUri(destUri).ToString());
                 request.Headers.Add("Depth", DepthHeaderHelper.GetValueForCopy(applyTo));
                 request.Headers.Add("Overwrite", parameters.Overwrite ? "T" : "F");
                 if (!string.IsNullOrEmpty(parameters.DestLockToken))
@@ -305,7 +305,7 @@ namespace WebDav
 
             using (var request = new HttpRequestMessage(WebDavMethod.Move, sourceUri))
             {
-                request.Headers.Add("Destination", destUri.ToString());
+                request.Headers.Add("Destination", GetAbsoluteUri(destUri).ToString());
                 request.Headers.Add("Overwrite", parameters.Overwrite ? "T" : "F");
 
                 var lockTokens = new List<string>();
@@ -412,7 +412,7 @@ namespace WebDav
                 httpHandler.Proxy = @params.Proxy;
             }
 
-            var httpClient = new HttpClient(httpHandler, true);
+            var httpClient = new HttpClient(httpHandler, true) { BaseAddress = @params.BaseAddress };
             foreach (var header in @params.DefaultRequestHeaders)
             {
                 httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
@@ -420,9 +420,32 @@ namespace WebDav
             return httpClient;
         }
 
-        private Uri CreateUri(string requestUri)
+        private static Uri CreateUri(string requestUri)
         {
             return !string.IsNullOrEmpty(requestUri) ? new Uri(requestUri, UriKind.RelativeOrAbsolute) : null;
+        }
+
+        private static Exception CreateInvalidUriException()
+        {
+            return
+                new InvalidOperationException(
+                    "An invalid request URI was provided. The request URI must either be an absolute URI or BaseAddress must be set.");
+        }
+
+        private Uri GetAbsoluteUri(Uri uri)
+        {
+            if (uri == null && _httpClient.BaseAddress == null)
+                throw CreateInvalidUriException();
+
+            if (uri == null)
+                return _httpClient.BaseAddress;
+
+            if (uri.IsAbsoluteUri)
+                return uri;
+
+            if (_httpClient.BaseAddress == null)
+                throw CreateInvalidUriException();
+            return new Uri(_httpClient.BaseAddress, uri);
         }
 
         #region IDisposable
