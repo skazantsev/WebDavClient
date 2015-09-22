@@ -28,12 +28,22 @@ namespace WebDav
 
         public Task<PropfindResponse> Propfind(string requestUri)
         {
+            return Propfind(CreateUri(requestUri), new PropfindParameters());
+        }
+
+        public Task<PropfindResponse> Propfind(Uri requestUri)
+        {
             return Propfind(requestUri, new PropfindParameters());
         }
 
-        public async Task<PropfindResponse> Propfind(string requestUri, PropfindParameters parameters)
+        public Task<PropfindResponse> Propfind(string requestUri, PropfindParameters parameters)
         {
-            Guard.NotNullOrEmpty(requestUri, "requestUri");
+            return Propfind(CreateUri(requestUri), parameters);
+        }
+
+        public async Task<PropfindResponse> Propfind(Uri requestUri, PropfindParameters parameters)
+        {
+            Guard.NotNull(requestUri, "requestUri");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Propfind, requestUri))
             {
@@ -52,9 +62,14 @@ namespace WebDav
             }
         }
 
-        public async Task Proppatch(string requestUri, ProppatchParameters parameters)
+        public Task Proppatch(string requestUri, ProppatchParameters parameters)
         {
-            Guard.NotNullOrEmpty(requestUri, "requestUri");
+            return Proppatch(CreateUri(requestUri), parameters);
+        }
+
+        public async Task Proppatch(Uri requestUri, ProppatchParameters parameters)
+        {
+            Guard.NotNull(requestUri, "requestUri");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Proppatch, requestUri))
             {
@@ -73,12 +88,22 @@ namespace WebDav
 
         public Task Mkcol(string requestUri)
         {
+            return Mkcol(CreateUri(requestUri), new MkColParameters());
+        }
+
+        public Task Mkcol(Uri requestUri)
+        {
             return Mkcol(requestUri, new MkColParameters());
         }
 
-        public async Task Mkcol(string requestUri, MkColParameters parameters)
+        public Task Mkcol(string requestUri, MkColParameters parameters)
         {
-            Guard.NotNullOrEmpty(requestUri, "requestUri");
+            return Mkcol(CreateUri(requestUri), parameters);
+        }
+
+        public async Task Mkcol(Uri requestUri, MkColParameters parameters)
+        {
+            Guard.NotNull(requestUri, "requestUri");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Mkcol, requestUri))
             {
@@ -94,27 +119,47 @@ namespace WebDav
 
         public Task<Stream> GetRawFile(string requestUri)
         {
+            return GetFile(CreateUri(requestUri), false, CancellationToken.None);
+        }
+
+        public Task<Stream> GetRawFile(Uri requestUri)
+        {
             return GetFile(requestUri, false, CancellationToken.None);
         }
 
         public Task<Stream> GetRawFile(string requestUri, GetFileParameters parameters)
+        {
+            return GetFile(CreateUri(requestUri), false, parameters.CancellationToken);
+        }
+
+        public Task<Stream> GetRawFile(Uri requestUri, GetFileParameters parameters)
         {
             return GetFile(requestUri, false, parameters.CancellationToken);
         }
 
         public Task<Stream> GetProcessedFile(string requestUri)
         {
+            return GetFile(CreateUri(requestUri), true, CancellationToken.None);
+        }
+
+        public Task<Stream> GetProcessedFile(Uri requestUri)
+        {
             return GetFile(requestUri, true, CancellationToken.None);
         }
 
         public Task<Stream> GetProcessedFile(string requestUri, GetFileParameters parameters)
         {
+            return GetFile(CreateUri(requestUri), true, parameters.CancellationToken);
+        }
+
+        public Task<Stream> GetProcessedFile(Uri requestUri, GetFileParameters parameters)
+        {
             return GetFile(requestUri, true, parameters.CancellationToken);
         }
 
-        private async Task<Stream> GetFile(string requestUri, bool translate, CancellationToken cancellationToken)
+        private async Task<Stream> GetFile(Uri requestUri, bool translate, CancellationToken cancellationToken)
         {
-            Guard.NotNullOrEmpty(requestUri, "requestUri");
+            Guard.NotNull(requestUri, "requestUri");
 
             using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
             {
@@ -129,12 +174,22 @@ namespace WebDav
 
         public Task Delete(string requestUri)
         {
+            return Delete(CreateUri(requestUri), new DeleteParameters());
+        }
+
+        public Task Delete(Uri requestUri)
+        {
             return Delete(requestUri, new DeleteParameters());
         }
 
-        public async Task Delete(string requestUri, DeleteParameters parameters)
+        public Task Delete(string requestUri, DeleteParameters parameters)
         {
-            Guard.NotNullOrEmpty(requestUri, "requestUri");
+            return Delete(CreateUri(requestUri), parameters);
+        }
+
+        public async Task Delete(Uri requestUri, DeleteParameters parameters)
+        {
+            Guard.NotNull(requestUri, "requestUri");
 
             using (var request = new HttpRequestMessage(HttpMethod.Delete, requestUri))
             {
@@ -151,17 +206,32 @@ namespace WebDav
 
         public Task PutFile(string requestUri, Stream stream)
         {
+            return PutFile(CreateUri(requestUri), stream, new PutFileParameters());
+        }
+
+        public Task PutFile(Uri requestUri, Stream stream)
+        {
             return PutFile(requestUri, stream, new PutFileParameters());
         }
 
         public Task PutFile(string requestUri, Stream stream, string contentType)
         {
+            return PutFile(CreateUri(requestUri), stream, new PutFileParameters { ContentType = contentType });
+        }
+
+        public Task PutFile(Uri requestUri, Stream stream, string contentType)
+        {
             return PutFile(requestUri, stream, new PutFileParameters { ContentType = contentType });
         }
 
-        public async Task PutFile(string requestUri, Stream stream, PutFileParameters parameters)
+        public Task PutFile(string requestUri, Stream stream, PutFileParameters parameters)
         {
-            Guard.NotNullOrEmpty(requestUri, "requestUri");
+            return PutFile(CreateUri(requestUri), stream, parameters);
+        }
+
+        public async Task PutFile(Uri requestUri, Stream stream, PutFileParameters parameters)
+        {
+            Guard.NotNull(requestUri, "requestUri");
             Guard.NotNull(stream, "stream");
 
             var fileContent = new StreamContent(stream);
@@ -177,18 +247,28 @@ namespace WebDav
 
         public Task Copy(string sourceUri, string destUri)
         {
+            return Copy(CreateUri(sourceUri), CreateUri(destUri), new CopyParameters());
+        }
+
+        public Task Copy(Uri sourceUri, Uri destUri)
+        {
             return Copy(sourceUri, destUri, new CopyParameters());
         }
 
-        public async Task Copy(string sourceUri, string destUri, CopyParameters parameters)
+        public Task Copy(string sourceUri, string destUri, CopyParameters parameters)
         {
-            Guard.NotNullOrEmpty(sourceUri, "sourceUri");
-            Guard.NotNullOrEmpty(destUri, "destUri");
+            return Copy(CreateUri(sourceUri), CreateUri(destUri), parameters);
+        }
+
+        public async Task Copy(Uri sourceUri, Uri destUri, CopyParameters parameters)
+        {
+            Guard.NotNull(sourceUri, "sourceUri");
+            Guard.NotNull(destUri, "destUri");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Copy, sourceUri))
             {
                 var applyTo = parameters.ApplyTo ?? ApplyTo.Copy.ResourceAndAncestors;
-                request.Headers.Add("Destination", destUri);
+                request.Headers.Add("Destination", destUri.ToString());
                 request.Headers.Add("Depth", DepthHeaderHelper.GetValueForCopy(applyTo));
                 request.Headers.Add("Overwrite", parameters.Overwrite ? "T" : "F");
                 if (!string.IsNullOrEmpty(parameters.DestLockToken))
@@ -205,17 +285,27 @@ namespace WebDav
 
         public Task Move(string sourceUri, string destUri, bool overwrite = true)
         {
+            return Move(CreateUri(sourceUri), CreateUri(destUri), new MoveParameters());
+        }
+
+        public Task Move(Uri sourceUri, Uri destUri, bool overwrite = true)
+        {
             return Move(sourceUri, destUri, new MoveParameters());
         }
 
-        public async Task Move(string sourceUri, string destUri, MoveParameters parameters)
+        public Task Move(string sourceUri, string destUri, MoveParameters parameters)
         {
-            Guard.NotNullOrEmpty(sourceUri, "sourceUri");
-            Guard.NotNullOrEmpty(destUri, "destUri");
+            return Move(CreateUri(sourceUri), CreateUri(destUri), parameters);
+        }
+
+        public async Task Move(Uri sourceUri, Uri destUri, MoveParameters parameters)
+        {
+            Guard.NotNull(sourceUri, "sourceUri");
+            Guard.NotNull(destUri, "destUri");
 
             using (var request = new HttpRequestMessage(WebDavMethod.Move, sourceUri))
             {
-                request.Headers.Add("Destination", destUri);
+                request.Headers.Add("Destination", destUri.ToString());
                 request.Headers.Add("Overwrite", parameters.Overwrite ? "T" : "F");
 
                 var lockTokens = new List<string>();
@@ -238,16 +328,23 @@ namespace WebDav
 
         public Task<List<ActiveLock>> Lock(string requestUri)
         {
-            return Lock(requestUri, new LockParameters(), CancellationToken.None);
+            return Lock(CreateUri(requestUri), new LockParameters());
+        }
+
+        public Task<List<ActiveLock>> Lock(Uri requestUri)
+        {
+            return Lock(requestUri, new LockParameters());
         }
 
         public Task<List<ActiveLock>> Lock(string requestUri, LockParameters parameters)
         {
-            return Lock(requestUri, parameters, CancellationToken.None);
+            return Lock(CreateUri(requestUri), parameters);
         }
 
-        public async Task<List<ActiveLock>> Lock(string requestUri, LockParameters parameters, CancellationToken cancellationToken)
+        public async Task<List<ActiveLock>> Lock(Uri requestUri, LockParameters parameters)
         {
+            Guard.NotNull(requestUri, "requestUri");
+
             using (var request = new HttpRequestMessage(WebDavMethod.Lock, requestUri))
             {
                 if (parameters.ApplyTo.HasValue)
@@ -255,7 +352,7 @@ namespace WebDav
                 if (parameters.Timeout.HasValue)
                     request.Headers.Add("Timeout", string.Format("Second-{0}", parameters.Timeout.Value.TotalSeconds));
                 request.Content = new StringContent(LockRequestBuilder.BuildRequestBody(parameters));
-                using (var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false))
+                using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
                         throw new WebDavException((int)response.StatusCode, "Failed to acquire a lock.");
@@ -268,11 +365,23 @@ namespace WebDav
 
         public Task Unlock(string requestUri, string lockToken)
         {
+            return Unlock(CreateUri(requestUri), new UnlockParameters { LockToken = lockToken });
+        }
+
+        public Task Unlock(Uri requestUri, string lockToken)
+        {
             return Unlock(requestUri, new UnlockParameters { LockToken = lockToken });
         }
 
-        public async Task Unlock(string requestUri, UnlockParameters parameters)
+        public Task Unlock(string requestUri, UnlockParameters parameters)
         {
+            return Unlock(CreateUri(requestUri), parameters);
+        }
+
+        public async Task Unlock(Uri requestUri, UnlockParameters parameters)
+        {
+            Guard.NotNull(requestUri, "requestUri");
+
             using (var request = new HttpRequestMessage(WebDavMethod.Unlock, requestUri))
             {
                 request.Headers.Add("Lock-Token", string.Format("<{0}>", parameters.LockToken));
@@ -293,6 +402,7 @@ namespace WebDav
                 UseDefaultCredentials = @params.AuthenticateAsCurrentUser,
                 UseProxy = @params.UseProxy
             };
+
             if (@params.Credentials != null)
             {
                 httpHandler.Credentials = @params.Credentials;
@@ -308,6 +418,11 @@ namespace WebDav
                 httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
             }
             return httpClient;
+        }
+
+        private Uri CreateUri(string requestUri)
+        {
+            return !string.IsNullOrEmpty(requestUri) ? new Uri(requestUri, UriKind.RelativeOrAbsolute) : null;
         }
 
         #region IDisposable
