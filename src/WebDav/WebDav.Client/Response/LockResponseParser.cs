@@ -32,12 +32,12 @@ namespace WebDav.Response
         {
             var activeLock = new ActiveLock
             {
-                ApplyTo = PropertyParser.ParseLockDepth(FindProp("depth", properties)),
-                LockScope = PropertyParser.ParseLockScope(FindProp("lockscope", properties)),
-                LockToken = PropertyParser.ParseString(FindProp("locktoken", properties)),
-                Owner = PropertyParser.ParseOwner(FindProp("owner", properties)),
-                ResourceHref = PropertyParser.ParseString(FindProp("lockroot", properties)),
-                Timeout = PropertyParser.ParseLockTimeout(FindProp("timeout", properties))
+                ApplyTo = PropertyValueParser.ParseLockDepth(FindProp("depth", properties)),
+                LockScope = PropertyValueParser.ParseLockScope(FindProp("lockscope", properties)),
+                LockToken = PropertyValueParser.ParseString(FindProp("locktoken", properties)),
+                Owner = PropertyValueParser.ParseOwner(FindProp("owner", properties)),
+                ResourceHref = PropertyValueParser.ParseString(FindProp("lockroot", properties)),
+                Timeout = PropertyValueParser.ParseLockTimeout(FindProp("timeout", properties))
             };
             return activeLock;
         }

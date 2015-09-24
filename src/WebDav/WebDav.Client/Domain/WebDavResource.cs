@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace WebDav
@@ -9,6 +10,7 @@ namespace WebDav
         public WebDavResource()
         {
             Properties = new Dictionary<XName, string>();
+            PropertyErrors = new Dictionary<XName, PropertyError>();
         }
 
         public List<ActiveLock> ActiveLocks { get; set; }
@@ -34,5 +36,17 @@ namespace WebDav
         public DateTime? LastModifiedDate { get; set; }
 
         public Dictionary<XName, string> Properties { get; set; }
+
+        public Dictionary<XName, PropertyError> PropertyErrors { get; set; }
+
+        public bool HasProperty(XName propName)
+        {
+            return Properties.ContainsKey(propName);
+        }
+
+        public bool HasErrors()
+        {
+            return PropertyErrors.Any();
+        }
     }
 }

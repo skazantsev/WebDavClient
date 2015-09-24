@@ -26,22 +26,22 @@ namespace WebDav
             _httpClient = ConfigureHttpClient(@params);
         }
 
-        public Task<PropfindResponse> Propfind(string requestUri)
+        public Task<List<WebDavResource>> Propfind(string requestUri)
         {
             return Propfind(CreateUri(requestUri), new PropfindParameters());
         }
 
-        public Task<PropfindResponse> Propfind(Uri requestUri)
+        public Task<List<WebDavResource>> Propfind(Uri requestUri)
         {
             return Propfind(requestUri, new PropfindParameters());
         }
 
-        public Task<PropfindResponse> Propfind(string requestUri, PropfindParameters parameters)
+        public Task<List<WebDavResource>> Propfind(string requestUri, PropfindParameters parameters)
         {
             return Propfind(CreateUri(requestUri), parameters);
         }
 
-        public async Task<PropfindResponse> Propfind(Uri requestUri, PropfindParameters parameters)
+        public async Task<List<WebDavResource>> Propfind(Uri requestUri, PropfindParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
 

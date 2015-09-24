@@ -56,8 +56,8 @@ namespace WebDav.ClientConsole
                 CustomProperties = new XName[] {"testprop"},
                 Namespaces = new[] {new NamespaceAttr("http://example.com")}
             };
-            var response = await webDavClient.Propfind("http://localhost:88", propfindParams);
-            foreach (var res in response.Resources)
+            var resources = await webDavClient.Propfind("http://localhost:88", propfindParams);
+            foreach (var res in resources)
             {
                 Console.WriteLine("====================================================");
                 Console.WriteLine("HREF: {0}", res.Href);
@@ -76,6 +76,7 @@ namespace WebDav.ClientConsole
                 Console.WriteLine("ETag: {0}", res.ETag);
                 Console.WriteLine("LastModifiedDate: {0}", res.LastModifiedDate);
                 Console.WriteLine("Properties: {0}", "[\r\n -" + string.Join("\r\n -", res.Properties.Select(kv => string.Format("{0}: {1}", kv.Key, kv.Value))) + "\r\n]");
+                Console.WriteLine("PropertyErrors: {0}", "[\r\n -" + string.Join("\r\n -", res.PropertyErrors.Select(kv => string.Format("{0}: {1}", kv.Key, kv.Value))) + "\r\n]");
                 Console.WriteLine();
             }
         }

@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace WebDav.Response
 {
-    internal static class PropertyParser
+    internal static class PropertyValueParser
     {
         public static string ParseString(XElement element)
         {
