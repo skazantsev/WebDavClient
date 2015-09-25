@@ -2,13 +2,24 @@
 {
     public class PropertyError
     {
-        public int? StatusCode { get; set; }
+        public PropertyError(int statusCode)
+        {
+            StatusCode = statusCode;
+        }
 
-        public string ResponseDescription { get; set; }
+        public PropertyError(int statusCode, string description)
+        {
+            StatusCode = statusCode;
+            Description = description;
+        }
+
+        public int StatusCode { get; private set; }
+
+        public string Description { get; private set; }
 
         public override string ToString()
         {
-            return string.Format("{{ StatusCode: {0}, ResponseDescription: {1} }}", StatusCode, ResponseDescription);
+            return string.Format("Property error: StatusCode: {0}, Description: {1}", StatusCode, Description);
         }
     }
 }

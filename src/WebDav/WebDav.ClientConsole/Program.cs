@@ -56,8 +56,9 @@ namespace WebDav.ClientConsole
                 CustomProperties = new XName[] {"testprop"},
                 Namespaces = new[] {new NamespaceAttr("http://example.com")}
             };
-            var resources = await webDavClient.Propfind("http://localhost:88", propfindParams);
-            foreach (var res in resources)
+            var response = await webDavClient.Propfind("http://localhost:88", propfindParams);
+            Console.WriteLine(response.ToString());
+            foreach (var res in response.Resources)
             {
                 Console.WriteLine("====================================================");
                 Console.WriteLine("HREF: {0}", res.Href);

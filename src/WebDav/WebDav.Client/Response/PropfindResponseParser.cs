@@ -10,13 +10,17 @@ namespace WebDav.Response
     {
         private static readonly Regex StatusCodeRegex = new Regex(@".*(\d{3}).*");
 
-        public static List<WebDavResource> Parse(string response)
+        public static PropfindResponse Parse(string response, int statusCode, string description)
         {
+            if (string.IsNullOrEmpty(response))
+                return new PropfindResponse(statusCode, description);
+
             var xresponse = XDocument.Parse(response);
             if (xresponse.Root == null)
-                throw new WebDavException("Failed to parse PROPFIND response.");
+                return new PropfindResponse(statusCode, description);
 
-            return xresponse.Root.LocalNameElements("response").Select(ParseResource).ToList();
+            var resources = xresponse.Root.LocalNameElements("response").Select(ParseResource).ToList();
+            return new PropfindResponse(statusCode, description, resources);
         }
 
         private static WebDavResource ParseResource(XElement xres)
@@ -39,7 +43,7 @@ namespace WebDav.Response
                     .Select(p => new { Prop = p, StatusCode = x.StatusCode, Description = x.Description }))
                 .GroupBy(x => x.Prop.Name)
                 .Select(x => x.First())
-                .ToDictionary(x => x.Prop.Name, v => new PropertyError { StatusCode = v.StatusCode, ResponseDescription = v.Description });
+                .ToDictionary(x => x.Prop.Name, v => new PropertyError(v.StatusCode, v.Description));
 
             return CreateResource(hrefValue, properties, propertyErrors);
         }
@@ -75,19 +79,19 @@ namespace WebDav.Response
             return properties.FirstOrDefault(x => x.Name.Equals(name));
         }
 
-        private static int? GetStatusCodeForPropstat(XElement propstatElement)
+        private static int GetStatusCodeForPropstat(XElement propstatElement)
         {
             var statusRawValue = propstatElement.LocalNameElement("status", StringComparison.OrdinalIgnoreCase).GetValueOrNull();
             if (string.IsNullOrEmpty(statusRawValue))
-                return null;
+                return default(int);
 
             var statusCodeGroup = StatusCodeRegex.Match(statusRawValue).Groups[1];
             if (!statusCodeGroup.Success)
-                return null;
+                return default(int);
 
             int statusCode;
             if (!int.TryParse(statusCodeGroup.Value, out statusCode))
-                return null;
+                return default(int);
 
             return statusCode;
         }
@@ -99,7 +103,7 @@ namespace WebDav.Response
                     .GetValueOrNull();
         }
 
-        private static bool IsSuccessStatusCode(int? statusCode)
+        private static bool IsSuccessStatusCode(int statusCode)
         {
             return statusCode >= 200 && statusCode <= 299;
         }

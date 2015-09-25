@@ -26,22 +26,22 @@ namespace WebDav
             _httpClient = ConfigureHttpClient(@params);
         }
 
-        public Task<List<WebDavResource>> Propfind(string requestUri)
+        public Task<PropfindResponse> Propfind(string requestUri)
         {
             return Propfind(CreateUri(requestUri), new PropfindParameters());
         }
 
-        public Task<List<WebDavResource>> Propfind(Uri requestUri)
+        public Task<PropfindResponse> Propfind(Uri requestUri)
         {
             return Propfind(requestUri, new PropfindParameters());
         }
 
-        public Task<List<WebDavResource>> Propfind(string requestUri, PropfindParameters parameters)
+        public Task<PropfindResponse> Propfind(string requestUri, PropfindParameters parameters)
         {
             return Propfind(CreateUri(requestUri), parameters);
         }
 
-        public async Task<List<WebDavResource>> Propfind(Uri requestUri, PropfindParameters parameters)
+        public async Task<PropfindResponse> Propfind(Uri requestUri, PropfindParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
 
@@ -53,11 +53,8 @@ namespace WebDav
                 request.Content = new StringContent(requestBody);
                 using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
-                    if ((int)response.StatusCode != 207)
-                        throw new WebDavException((int)response.StatusCode, "Wrong PROPFIND response. Multi-Status code is expected.");
-
                     var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    return PropfindResponseParser.Parse(responseContent);
+                    return PropfindResponseParser.Parse(responseContent, (int)response.StatusCode, response.ReasonPhrase);
                 }
             }
         }
