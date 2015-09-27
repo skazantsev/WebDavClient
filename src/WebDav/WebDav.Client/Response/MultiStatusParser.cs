@@ -17,8 +17,8 @@ namespace WebDav
                     new Propstat
                     {
                         Element = x,
-                        StatusCode = GetStatusCodeForPropstat(x),
-                        Description = GetResponseDescription(x)
+                        StatusCode = GetStatusCodeFromPropstat(x),
+                        Description = GetDescriptionFromPropstat(x)
                     })
                 .ToList();
         }
@@ -53,16 +53,16 @@ namespace WebDav
             return statusCode >= 200 && statusCode <= 299;
         }
 
-        private static string GetResponseDescription(XElement propstatElement)
+        private static string GetDescriptionFromPropstat(XElement propstat)
         {
             return
-                propstatElement.LocalNameElement("responsedescription", StringComparison.OrdinalIgnoreCase)
-                    .GetValueOrNull();
+                propstat.LocalNameElement("responsedescription", StringComparison.OrdinalIgnoreCase).GetValueOrNull() ??
+                propstat.LocalNameElement("status", StringComparison.OrdinalIgnoreCase).GetValueOrNull();
         }
 
-        private static int GetStatusCodeForPropstat(XElement propstatElement)
+        private static int GetStatusCodeFromPropstat(XElement propstat)
         {
-            var statusRawValue = propstatElement.LocalNameElement("status", StringComparison.OrdinalIgnoreCase).GetValueOrNull();
+            var statusRawValue = propstat.LocalNameElement("status", StringComparison.OrdinalIgnoreCase).GetValueOrNull();
             if (string.IsNullOrEmpty(statusRawValue))
                 return default(int);
 
