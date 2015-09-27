@@ -12,6 +12,7 @@ namespace WebDav.ClientConsole
         public static void Main()
         {
             TestWebDav().Wait();
+            Console.ReadLine();
         }
 
         private static async Task TestWebDav()
@@ -43,9 +44,9 @@ namespace WebDav.ClientConsole
 
                 await TestLock(webDavClient);
 
-                await webDavClient.Delete("http://localhost:88/mydir");
+                await TestPropatch(webDavClient);
 
-                Console.ReadLine();
+                await webDavClient.Delete("http://localhost:88/mydir");
             }
         }
 
@@ -76,8 +77,8 @@ namespace WebDav.ClientConsole
                 Console.WriteLine("ContentType: {0}", res.ContentType);
                 Console.WriteLine("ETag: {0}", res.ETag);
                 Console.WriteLine("LastModifiedDate: {0}", res.LastModifiedDate);
-                Console.WriteLine("Properties: {0}", "[\r\n -" + string.Join("\r\n -", res.Properties.Select(kv => string.Format("{0}: {1}", kv.Key, kv.Value))) + "\r\n]");
-                Console.WriteLine("PropertyErrors: {0}", "[\r\n -" + string.Join("\r\n -", res.PropertyErrors.Select(kv => string.Format("{0}: {1}", kv.Key, kv.Value))) + "\r\n]");
+                Console.WriteLine("Properties: {0}", "[\r\n " + string.Join("\r\n ", res.Properties.Select(kv => string.Format("{0}: {1}", kv.Key, kv.Value))) + "\r\n]");
+                Console.WriteLine("PropertyStatuses: {0}", "[\r\n " + string.Join("\r\n ", res.PropertyStatuses.Select(x => x.ToString())) + "\r\n]");
                 Console.WriteLine();
             }
         }
@@ -122,19 +123,18 @@ namespace WebDav.ClientConsole
             Console.WriteLine();
         }
 
-        private static async Task TestPropatch()
+        private static async Task TestPropatch(WebDavClient webDavClient)
         {
-            using (var webDavClient = new WebDavClient())
+            var xns = "http://X_X";
+            var @params = new ProppatchParameters
             {
-                var xns = "http://X_X";
-                var @params = new ProppatchParameters
-                {
-                    PropertiesToSet = new Dictionary<XName, string> { { "{DAV:}getcontenttype", "text/plain" }, { XName.Get("myprop", xns), "myval" } },
-                    PropertiesToRemove = new List<XName> { "{DAV:}ETag" },
-                    Namespaces = new List<NamespaceAttr> { new NamespaceAttr("x", xns) }
-                };
-                await webDavClient.Proppatch("http://localhost:88/1.txt", @params);
-            }
+                PropertiesToSet = new Dictionary<XName, string> { { "{DAV:}getcontenttype", "text/plain" }, { XName.Get("myprop", xns), "myval" } },
+                PropertiesToRemove = new List<XName> { "{DAV:}ETag" },
+                Namespaces = new List<NamespaceAttr> { new NamespaceAttr("x", xns) }
+            };
+            var response = await webDavClient.Proppatch("http://localhost:88/1.txt", @params);
+            Console.WriteLine(response.ToString());
+            Console.WriteLine("PropertyStatuses: {0}", "[\r\n " + string.Join("\r\n ", response.PropertyStatuses.Select(x => x.ToString())) + "\r\n]");
         }
     }
 }

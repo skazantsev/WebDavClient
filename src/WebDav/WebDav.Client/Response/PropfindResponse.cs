@@ -31,7 +31,7 @@ namespace WebDav
 
         public override string ToString()
         {
-            return string.Format("PROPFIND WebDav response: StatusCode: {0}, Description: {1}", StatusCode, Description);
+            return string.Format("PROPFIND WebDav response - StatusCode: {0}, Description: {1}", StatusCode, Description);
         }
     }
 }

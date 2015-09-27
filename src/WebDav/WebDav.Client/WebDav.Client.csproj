@@ -60,6 +60,7 @@
     <Compile Include="ApiParams\UnlockParameters.cs" />
     <Compile Include="Domain\ApplyTo.cs" />
     <Compile Include="Domain\NamespaceAttr.cs" />
+    <Compile Include="Domain\WebDavPropertyStatus.cs" />
     <Compile Include="Helpers\DepthHeaderHelper.cs" />
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="Helpers\IfHeaderHelper.cs" />
@@ -75,10 +76,13 @@
     <Compile Include="Request\PropfindRequestBuilder.cs" />
     <Compile Include="Request\ProppatchRequestBuilder.cs" />
     <Compile Include="Response\LockResponseParser.cs" />
-    <Compile Include="Response\PropertyError.cs" />
+    <Compile Include="Domain\WebDavProperty.cs" />
+    <Compile Include="Response\MultiStatusParser.cs" />
     <Compile Include="Response\PropfindResponse.cs" />
     <Compile Include="Response\PropfindResponseParser.cs" />
     <Compile Include="Response\PropertyValueParser.cs" />
+    <Compile Include="Response\ProppatchResponse.cs" />
+    <Compile Include="Response\ProppatchResponseParser.cs" />
     <Compile Include="Response\ResourceType.cs" />
     <Compile Include="Response\WebDavResponse.cs" />
     <Compile Include="WebDavClient.cs" />

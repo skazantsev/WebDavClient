@@ -24,7 +24,7 @@
 
         public override string ToString()
         {
-            return string.Format("WebDav response: StatusCode: {0}, Description: {1}", StatusCode, Description);
+            return string.Format("WebDav response - StatusCode: {0}, Description: {1}", StatusCode, Description);
         }
     }
 }

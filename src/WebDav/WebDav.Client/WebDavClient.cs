@@ -59,12 +59,12 @@ namespace WebDav
             }
         }
 
-        public Task Proppatch(string requestUri, ProppatchParameters parameters)
+        public Task<ProppatchResponse> Proppatch(string requestUri, ProppatchParameters parameters)
         {
             return Proppatch(CreateUri(requestUri), parameters);
         }
 
-        public async Task Proppatch(Uri requestUri, ProppatchParameters parameters)
+        public async Task<ProppatchResponse> Proppatch(Uri requestUri, ProppatchParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
 
@@ -77,8 +77,8 @@ namespace WebDav
                 request.Content = new StringContent(requestBody);
                 using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
-                    if ((int)response.StatusCode != 207)
-                        throw new WebDavException((int)response.StatusCode, "Wrong PROPPATCH response. Multi-Status code is expected.");
+                    var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    return ProppatchResponseParser.Parse(responseContent, (int)response.StatusCode, response.ReasonPhrase);
                 }
             }
         }
