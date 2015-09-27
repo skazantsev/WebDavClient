@@ -83,22 +83,22 @@ namespace WebDav
             }
         }
 
-        public Task Mkcol(string requestUri)
+        public Task<WebDavResponse> Mkcol(string requestUri)
         {
             return Mkcol(CreateUri(requestUri), new MkColParameters());
         }
 
-        public Task Mkcol(Uri requestUri)
+        public Task<WebDavResponse> Mkcol(Uri requestUri)
         {
             return Mkcol(requestUri, new MkColParameters());
         }
 
-        public Task Mkcol(string requestUri, MkColParameters parameters)
+        public Task<WebDavResponse> Mkcol(string requestUri, MkColParameters parameters)
         {
             return Mkcol(CreateUri(requestUri), parameters);
         }
 
-        public async Task Mkcol(Uri requestUri, MkColParameters parameters)
+        public async Task<WebDavResponse> Mkcol(Uri requestUri, MkColParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
 
@@ -108,53 +108,52 @@ namespace WebDav
                     request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(parameters.LockToken));
                 using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
-                    if (response.StatusCode != HttpStatusCode.Created)
-                        throw new WebDavException((int)response.StatusCode, "Failed to create a collection.");
+                    return new WebDavResponse((int) response.StatusCode, response.ReasonPhrase);
                 }
             }
         }
 
-        public Task<Stream> GetRawFile(string requestUri)
+        public Task<WebDavStreamResponse> GetRawFile(string requestUri)
         {
             return GetFile(CreateUri(requestUri), false, CancellationToken.None);
         }
 
-        public Task<Stream> GetRawFile(Uri requestUri)
+        public Task<WebDavStreamResponse> GetRawFile(Uri requestUri)
         {
             return GetFile(requestUri, false, CancellationToken.None);
         }
 
-        public Task<Stream> GetRawFile(string requestUri, GetFileParameters parameters)
+        public Task<WebDavStreamResponse> GetRawFile(string requestUri, GetFileParameters parameters)
         {
             return GetFile(CreateUri(requestUri), false, parameters.CancellationToken);
         }
 
-        public Task<Stream> GetRawFile(Uri requestUri, GetFileParameters parameters)
+        public Task<WebDavStreamResponse> GetRawFile(Uri requestUri, GetFileParameters parameters)
         {
             return GetFile(requestUri, false, parameters.CancellationToken);
         }
 
-        public Task<Stream> GetProcessedFile(string requestUri)
+        public Task<WebDavStreamResponse> GetProcessedFile(string requestUri)
         {
             return GetFile(CreateUri(requestUri), true, CancellationToken.None);
         }
 
-        public Task<Stream> GetProcessedFile(Uri requestUri)
+        public Task<WebDavStreamResponse> GetProcessedFile(Uri requestUri)
         {
             return GetFile(requestUri, true, CancellationToken.None);
         }
 
-        public Task<Stream> GetProcessedFile(string requestUri, GetFileParameters parameters)
+        public Task<WebDavStreamResponse> GetProcessedFile(string requestUri, GetFileParameters parameters)
         {
             return GetFile(CreateUri(requestUri), true, parameters.CancellationToken);
         }
 
-        public Task<Stream> GetProcessedFile(Uri requestUri, GetFileParameters parameters)
+        public Task<WebDavStreamResponse> GetProcessedFile(Uri requestUri, GetFileParameters parameters)
         {
             return GetFile(requestUri, true, parameters.CancellationToken);
         }
 
-        private async Task<Stream> GetFile(Uri requestUri, bool translate, CancellationToken cancellationToken)
+        private async Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, CancellationToken cancellationToken)
         {
             Guard.NotNull(requestUri, "requestUri");
 
@@ -163,28 +162,29 @@ namespace WebDav
                 request.Headers.Add("Translate", translate ? "t" : "f");
                 var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
-                    throw new WebDavException((int)response.StatusCode, "Failed to get a file.");
+                    return new WebDavStreamResponse((int)response.StatusCode, response.ReasonPhrase);
 
-                return await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                return new WebDavStreamResponse((int) response.StatusCode, response.ReasonPhrase, stream);
             }
         }
 
-        public Task Delete(string requestUri)
+        public Task<WebDavResponse> Delete(string requestUri)
         {
             return Delete(CreateUri(requestUri), new DeleteParameters());
         }
 
-        public Task Delete(Uri requestUri)
+        public Task<WebDavResponse> Delete(Uri requestUri)
         {
             return Delete(requestUri, new DeleteParameters());
         }
 
-        public Task Delete(string requestUri, DeleteParameters parameters)
+        public Task<WebDavResponse> Delete(string requestUri, DeleteParameters parameters)
         {
             return Delete(CreateUri(requestUri), parameters);
         }
 
-        public async Task Delete(Uri requestUri, DeleteParameters parameters)
+        public async Task<WebDavResponse> Delete(Uri requestUri, DeleteParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
 
@@ -194,39 +194,37 @@ namespace WebDav
                     request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(parameters.LockToken));
                 using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
-                    if (response.StatusCode != HttpStatusCode.OK &&
-                        response.StatusCode != HttpStatusCode.NoContent)
-                        throw new WebDavException((int)response.StatusCode, "Failed to delete a resource.");
+                    return new WebDavResponse((int)response.StatusCode, response.ReasonPhrase);
                 }
             }
         }
 
-        public Task PutFile(string requestUri, Stream stream)
+        public Task<WebDavResponse> PutFile(string requestUri, Stream stream)
         {
             return PutFile(CreateUri(requestUri), stream, new PutFileParameters());
         }
 
-        public Task PutFile(Uri requestUri, Stream stream)
+        public Task<WebDavResponse> PutFile(Uri requestUri, Stream stream)
         {
             return PutFile(requestUri, stream, new PutFileParameters());
         }
 
-        public Task PutFile(string requestUri, Stream stream, string contentType)
+        public Task<WebDavResponse> PutFile(string requestUri, Stream stream, string contentType)
         {
             return PutFile(CreateUri(requestUri), stream, new PutFileParameters { ContentType = contentType });
         }
 
-        public Task PutFile(Uri requestUri, Stream stream, string contentType)
+        public Task<WebDavResponse> PutFile(Uri requestUri, Stream stream, string contentType)
         {
             return PutFile(requestUri, stream, new PutFileParameters { ContentType = contentType });
         }
 
-        public Task PutFile(string requestUri, Stream stream, PutFileParameters parameters)
+        public Task<WebDavResponse> PutFile(string requestUri, Stream stream, PutFileParameters parameters)
         {
             return PutFile(CreateUri(requestUri), stream, parameters);
         }
 
-        public async Task PutFile(Uri requestUri, Stream stream, PutFileParameters parameters)
+        public async Task<WebDavResponse> PutFile(Uri requestUri, Stream stream, PutFileParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
             Guard.NotNull(stream, "stream");
@@ -235,29 +233,26 @@ namespace WebDav
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(parameters.ContentType);
             using (var response = await _httpClient.PutAsync(requestUri, fileContent, parameters.CancellationToken).ConfigureAwait(false))
             {
-                if (response.StatusCode != HttpStatusCode.OK &&
-                    response.StatusCode != HttpStatusCode.Created &&
-                    response.StatusCode != HttpStatusCode.NoContent)
-                    throw new WebDavException((int)response.StatusCode, "Failed to upload a file.");
+                return new WebDavResponse((int)response.StatusCode, response.ReasonPhrase);
             }
         }
 
-        public Task Copy(string sourceUri, string destUri)
+        public Task<WebDavResponse> Copy(string sourceUri, string destUri)
         {
             return Copy(CreateUri(sourceUri), CreateUri(destUri), new CopyParameters());
         }
 
-        public Task Copy(Uri sourceUri, Uri destUri)
+        public Task<WebDavResponse> Copy(Uri sourceUri, Uri destUri)
         {
             return Copy(sourceUri, destUri, new CopyParameters());
         }
 
-        public Task Copy(string sourceUri, string destUri, CopyParameters parameters)
+        public Task<WebDavResponse> Copy(string sourceUri, string destUri, CopyParameters parameters)
         {
             return Copy(CreateUri(sourceUri), CreateUri(destUri), parameters);
         }
 
-        public async Task Copy(Uri sourceUri, Uri destUri, CopyParameters parameters)
+        public async Task<WebDavResponse> Copy(Uri sourceUri, Uri destUri, CopyParameters parameters)
         {
             Guard.NotNull(sourceUri, "sourceUri");
             Guard.NotNull(destUri, "destUri");
@@ -272,30 +267,27 @@ namespace WebDav
                     request.Headers.Add("If", IfHeaderHelper.GetHeaderValue(parameters.DestLockToken));
                 using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
-                    if (response.StatusCode != HttpStatusCode.OK &&
-                    response.StatusCode != HttpStatusCode.Created &&
-                    response.StatusCode != HttpStatusCode.NoContent)
-                        throw new WebDavException((int)response.StatusCode, "Failed to copy a resource.");
+                    return new WebDavResponse((int)response.StatusCode, response.ReasonPhrase);
                 }
             }
         }
 
-        public Task Move(string sourceUri, string destUri, bool overwrite = true)
+        public Task<WebDavResponse> Move(string sourceUri, string destUri, bool overwrite = true)
         {
             return Move(CreateUri(sourceUri), CreateUri(destUri), new MoveParameters());
         }
 
-        public Task Move(Uri sourceUri, Uri destUri, bool overwrite = true)
+        public Task<WebDavResponse> Move(Uri sourceUri, Uri destUri, bool overwrite = true)
         {
             return Move(sourceUri, destUri, new MoveParameters());
         }
 
-        public Task Move(string sourceUri, string destUri, MoveParameters parameters)
+        public Task<WebDavResponse> Move(string sourceUri, string destUri, MoveParameters parameters)
         {
             return Move(CreateUri(sourceUri), CreateUri(destUri), parameters);
         }
 
-        public async Task Move(Uri sourceUri, Uri destUri, MoveParameters parameters)
+        public async Task<WebDavResponse> Move(Uri sourceUri, Uri destUri, MoveParameters parameters)
         {
             Guard.NotNull(sourceUri, "sourceUri");
             Guard.NotNull(destUri, "destUri");
@@ -315,30 +307,27 @@ namespace WebDav
 
                 using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
-                    if (response.StatusCode != HttpStatusCode.OK &&
-                    response.StatusCode != HttpStatusCode.Created &&
-                    response.StatusCode != HttpStatusCode.NoContent)
-                        throw new WebDavException((int)response.StatusCode, "Failed to move a resource.");
+                    return new WebDavResponse((int)response.StatusCode, response.ReasonPhrase);
                 }
             }
         }
 
-        public Task<List<ActiveLock>> Lock(string requestUri)
+        public Task<LockResponse> Lock(string requestUri)
         {
             return Lock(CreateUri(requestUri), new LockParameters());
         }
 
-        public Task<List<ActiveLock>> Lock(Uri requestUri)
+        public Task<LockResponse> Lock(Uri requestUri)
         {
             return Lock(requestUri, new LockParameters());
         }
 
-        public Task<List<ActiveLock>> Lock(string requestUri, LockParameters parameters)
+        public Task<LockResponse> Lock(string requestUri, LockParameters parameters)
         {
             return Lock(CreateUri(requestUri), parameters);
         }
 
-        public async Task<List<ActiveLock>> Lock(Uri requestUri, LockParameters parameters)
+        public async Task<LockResponse> Lock(Uri requestUri, LockParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
 
@@ -352,30 +341,30 @@ namespace WebDav
                 using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
                     if (!response.IsSuccessStatusCode)
-                        throw new WebDavException((int)response.StatusCode, "Failed to acquire a lock.");
+                        return new LockResponse((int) response.StatusCode, response.ReasonPhrase);
 
                     var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    return LockResponseParser.Parse(responseContent);
+                    return LockResponseParser.Parse(responseContent, (int)response.StatusCode, response.ReasonPhrase);
                 }
             }
         }
 
-        public Task Unlock(string requestUri, string lockToken)
+        public Task<WebDavResponse> Unlock(string requestUri, string lockToken)
         {
             return Unlock(CreateUri(requestUri), new UnlockParameters { LockToken = lockToken });
         }
 
-        public Task Unlock(Uri requestUri, string lockToken)
+        public Task<WebDavResponse> Unlock(Uri requestUri, string lockToken)
         {
             return Unlock(requestUri, new UnlockParameters { LockToken = lockToken });
         }
 
-        public Task Unlock(string requestUri, UnlockParameters parameters)
+        public Task<WebDavResponse> Unlock(string requestUri, UnlockParameters parameters)
         {
             return Unlock(CreateUri(requestUri), parameters);
         }
 
-        public async Task Unlock(Uri requestUri, UnlockParameters parameters)
+        public async Task<WebDavResponse> Unlock(Uri requestUri, UnlockParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
 
@@ -384,8 +373,7 @@ namespace WebDav
                 request.Headers.Add("Lock-Token", string.Format("<{0}>", parameters.LockToken));
                 using (var response = await _httpClient.SendAsync(request, parameters.CancellationToken).ConfigureAwait(false))
                 {
-                    if (!response.IsSuccessStatusCode)
-                        throw new WebDavException((int)response.StatusCode, "Failed to unlock a resource.");
+                    return new WebDavResponse((int)response.StatusCode, response.ReasonPhrase);
                 }
             }
         }

@@ -75,6 +75,7 @@
     <Compile Include="Request\LockRequestBuilder.cs" />
     <Compile Include="Request\PropfindRequestBuilder.cs" />
     <Compile Include="Request\ProppatchRequestBuilder.cs" />
+    <Compile Include="Response\LockResponse.cs" />
     <Compile Include="Response\LockResponseParser.cs" />
     <Compile Include="Domain\WebDavProperty.cs" />
     <Compile Include="Response\MultiStatusParser.cs" />
@@ -85,9 +86,9 @@
     <Compile Include="Response\ProppatchResponseParser.cs" />
     <Compile Include="Response\ResourceType.cs" />
     <Compile Include="Response\WebDavResponse.cs" />
+    <Compile Include="Response\WebDavStreamResponse.cs" />
     <Compile Include="WebDavClient.cs" />
     <Compile Include="ApiParams\WebDavClientParams.cs" />
-    <Compile Include="Exceptions\WebDavException.cs" />
     <Compile Include="Domain\WebDavMethod.cs" />
     <Compile Include="Domain\WebDavResource.cs" />
   </ItemGroup>

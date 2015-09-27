@@ -7,20 +7,21 @@ namespace WebDav.Response
 {
     internal static class LockResponseParser
     {
-        public static List<ActiveLock> Parse(string response)
+        public static LockResponse Parse(string response, int statusCode, string description)
         {
             var xresponse = XDocument.Parse(response);
             if (xresponse.Root == null)
-                throw new WebDavException("Failed to parse LOCK response.");
+                return new LockResponse(statusCode, description);
 
             var lockdiscovery = xresponse.Root.LocalNameElement("lockdiscovery", StringComparison.OrdinalIgnoreCase);
-            return ParseLockDiscovery(lockdiscovery);
+            var activeLocks = ParseLockDiscovery(lockdiscovery);
+            return new LockResponse(statusCode, description, activeLocks);
         }
 
         public static List<ActiveLock> ParseLockDiscovery(XElement lockdiscovery)
         {
             if (lockdiscovery == null)
-                throw new WebDavException("Failed to parse LOCK response.");
+                return new List<ActiveLock>();
 
             return lockdiscovery
                 .LocalNameElements("activelock", StringComparison.OrdinalIgnoreCase)

@@ -33,8 +33,8 @@ namespace WebDav.ClientConsole
 
                 await webDavClient.Copy("http://localhost:88/mydir/", "http://localhost:88/mydir2/", new CopyParameters { ApplyTo = ApplyTo.Copy.ResourceOnly });
 
-                var fileStream = await webDavClient.GetRawFile("http://localhost:88/mydir/test_ren.txt");
-                using (var reader = new StreamReader(fileStream))
+                var response = await webDavClient.GetRawFile("http://localhost:88/mydir/test_ren.txt");
+                using (var reader = new StreamReader(response.Stream))
                 {
                     var fileOutput = await reader.ReadToEndAsync();
                     Console.WriteLine(fileOutput);
@@ -85,10 +85,10 @@ namespace WebDav.ClientConsole
 
         public static async Task TestLock(WebDavClient webDavClient)
         {
-            var activeLocks = await webDavClient.Lock("http://localhost:88/1.txt",
+            var response = await webDavClient.Lock("http://localhost:88/1.txt",
                     new LockParameters { LockScope = LockScope.Shared, Owner = new PrincipalLockOwner("Chuck Norris"), Timeout = TimeSpan.FromSeconds(120) });
             var token = string.Empty;
-            foreach (var @lock in activeLocks)
+            foreach (var @lock in response.ActiveLocks)
             {
                 token = @lock.LockToken;
                 PrintActiveLock(@lock);
@@ -96,19 +96,19 @@ namespace WebDav.ClientConsole
             await webDavClient.Unlock("http://localhost:88/1.txt", token);
             Console.WriteLine("Unlocked!");
 
-            var activeLocks2 = await webDavClient.Lock("http://localhost:88/2.txt");
-            var token2 = activeLocks2.First().LockToken;
-            try
-            {
-                await webDavClient.Delete("http://localhost:88/2.txt");
-            }
-            catch
+            var response2 = await webDavClient.Lock("http://localhost:88/2.txt");
+            var token2 = response2.ActiveLocks.First().LockToken;
+            var deleteResponse = await webDavClient.Delete("http://localhost:88/2.txt");
+            if (!deleteResponse.IsSuccessful)
             {
                 Console.WriteLine("Can't delete a resource. It's locked!");
             }
 
-            await webDavClient.Delete("http://localhost:88/2.txt", new DeleteParameters { LockToken = token2 });
-            Console.WriteLine("The resource was deleted.");
+            deleteResponse = await webDavClient.Delete("http://localhost:88/2.txt", new DeleteParameters { LockToken = token2 });
+            if (deleteResponse.IsSuccessful)
+            {
+                Console.WriteLine("The resource was deleted.");
+            }
         }
 
         public static void PrintActiveLock(ActiveLock @lock)
