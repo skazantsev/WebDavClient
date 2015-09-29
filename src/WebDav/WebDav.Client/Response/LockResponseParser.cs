@@ -31,15 +31,15 @@ namespace WebDav.Response
 
         private static ActiveLock CreateActiveLock(List<XElement> properties)
         {
-            var activeLock = new ActiveLock
-            {
-                ApplyTo = PropertyValueParser.ParseLockDepth(FindProp("depth", properties)),
-                LockScope = PropertyValueParser.ParseLockScope(FindProp("lockscope", properties)),
-                LockToken = PropertyValueParser.ParseString(FindProp("locktoken", properties)),
-                Owner = PropertyValueParser.ParseOwner(FindProp("owner", properties)),
-                ResourceHref = PropertyValueParser.ParseString(FindProp("lockroot", properties)),
-                Timeout = PropertyValueParser.ParseLockTimeout(FindProp("timeout", properties))
-            };
+            var activeLock =
+                new ActiveLock.Builder()
+                    .WithApplyTo(PropertyValueParser.ParseLockDepth(FindProp("depth", properties)))
+                    .WithLockScope(PropertyValueParser.ParseLockScope(FindProp("lockscope", properties)))
+                    .WithLockToken(PropertyValueParser.ParseString(FindProp("locktoken", properties)))
+                    .WithOwner(PropertyValueParser.ParseOwner(FindProp("owner", properties)))
+                    .WithResourceHref(PropertyValueParser.ParseString(FindProp("lockroot", properties)))
+                    .WithTimeout(PropertyValueParser.ParseLockTimeout(FindProp("timeout", properties)))
+                    .Build();
             return activeLock;
         }
 

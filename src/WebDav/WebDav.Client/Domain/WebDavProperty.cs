@@ -4,9 +4,17 @@ namespace WebDav
 {
     public class WebDavProperty
     {
-        public XName Name { get; set; }
+        public WebDavProperty(XName name, string value)
+        {
+            Guard.NotNullOrEmpty((name ?? "").ToString(), "name");
 
-        public string Value { get; set; }
+            Name = name;
+            Value = value;
+        }
+
+        public XName Name { get; private set; }
+
+        public string Value { get; private set; }
 
         public override string ToString()
         {

@@ -4,11 +4,25 @@ namespace WebDav
 {
     public class WebDavPropertyStatus
     {
-        public XName Name { get; set; }
+        public WebDavPropertyStatus(XName name, int statusCode)
+            :this (name, statusCode, null)
+        {
+        }
 
-        public int StatusCode { get; set; }
+        public WebDavPropertyStatus(XName name, int statusCode, string description)
+        {
+            Guard.NotNullOrEmpty((name ?? "").ToString(), "name");
 
-        public string Description { get; set; }
+            Name = name;
+            StatusCode = statusCode;
+            Description = description;
+        }
+
+        public XName Name { get; private set; }
+
+        public int StatusCode { get;  private set; }
+
+        public string Description { get; private set; }
 
         public virtual bool IsSuccessful
         {

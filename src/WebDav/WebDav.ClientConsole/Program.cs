@@ -77,7 +77,7 @@ namespace WebDav.ClientConsole
                 Console.WriteLine("ContentType: {0}", res.ContentType);
                 Console.WriteLine("ETag: {0}", res.ETag);
                 Console.WriteLine("LastModifiedDate: {0}", res.LastModifiedDate);
-                Console.WriteLine("Properties: {0}", "[\r\n " + string.Join("\r\n ", res.Properties.Select(kv => string.Format("{0}: {1}", kv.Key, kv.Value))) + "\r\n]");
+                Console.WriteLine("Properties: {0}", "[\r\n " + string.Join("\r\n ", res.Properties.Select(x => string.Format("{0}: {1}", x.Name, x.Value))) + "\r\n]");
                 Console.WriteLine("PropertyStatuses: {0}", "[\r\n " + string.Join("\r\n ", res.PropertyStatuses.Select(x => x.ToString())) + "\r\n]");
                 Console.WriteLine();
             }

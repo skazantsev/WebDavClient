@@ -35,7 +35,7 @@ namespace WebDav
                 .SelectMany(x => x.Element.LocalNameElements("prop", StringComparison.OrdinalIgnoreCase)
                     .SelectMany(p => p.Elements())
                     .Select(p => new { Prop = p, StatusCode = x.StatusCode, Description = x.Description }))
-                .Select(x => new WebDavPropertyStatus { Name = x.Prop.Name, StatusCode = x.StatusCode, Description = x.Description})
+                .Select(x => new WebDavPropertyStatus(x.Prop.Name, x.StatusCode, x.Description))
                 .ToList();
         }
 

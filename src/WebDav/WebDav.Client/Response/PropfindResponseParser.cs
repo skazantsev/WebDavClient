@@ -32,27 +32,33 @@ namespace WebDav.Response
         private static WebDavResource CreateResource(string href, List<MultiStatusParser.Propstat> propstats)
         {
             var properties = MultiStatusParser.GetProperties(propstats);
-            var resource = new WebDavResource
-            {
-                ActiveLocks = LockResponseParser.ParseLockDiscovery(FindProp("{DAV:}lockdiscovery", properties)),
-                ContentLanguage = PropertyValueParser.ParseString(FindProp("{DAV:}getcontentlanguage", properties)),
-                ContentLength = PropertyValueParser.ParseInteger(FindProp("{DAV:}getcontentlength", properties)),
-                ContentType = PropertyValueParser.ParseString(FindProp("{DAV:}getcontenttype", properties)),
-                CreationDate = PropertyValueParser.ParseDateTime(FindProp("{DAV:}creationdate", properties)),
-                DisplayName = PropertyValueParser.ParseString(FindProp("{DAV:}displayname", properties)),
-                ETag = PropertyValueParser.ParseString(FindProp("{DAV:}getetag", properties)),
-                Href = href,
-                IsCollection = PropertyValueParser.ParseInteger(FindProp("{DAV:}iscollection", properties)) > 0 ||
-                    PropertyValueParser.ParseResourceType(FindProp("{DAV:}resourcetype", properties)) == ResourceType.Collection,
-                IsHidden = PropertyValueParser.ParseInteger(FindProp("{DAV:}ishidden", properties)) > 0,
-                LastModifiedDate = PropertyValueParser.ParseDateTime(FindProp("{DAV:}getlastmodified", properties)),
-                Properties = properties.ToDictionary(k => k.Name, v => v.GetInnerXml()),
-                PropertyStatuses = MultiStatusParser.GetPropertyStatuses(propstats)
-            };
+            var resourceBuilder = new WebDavResource.Builder()
+                .WithActiveLocks(LockResponseParser.ParseLockDiscovery(FindProp("{DAV:}lockdiscovery", properties)))
+                .WithContentLanguage(PropertyValueParser.ParseString(FindProp("{DAV:}getcontentlanguage", properties)))
+                .WithContentLength(PropertyValueParser.ParseInteger(FindProp("{DAV:}getcontentlength", properties)))
+                .WithContentType(PropertyValueParser.ParseString(FindProp("{DAV:}getcontenttype", properties)))
+                .WithCreationDate(PropertyValueParser.ParseDateTime(FindProp("{DAV:}creationdate", properties)))
+                .WithDisplayName(PropertyValueParser.ParseString(FindProp("{DAV:}displayname", properties)))
+                .WithETag(PropertyValueParser.ParseString(FindProp("{DAV:}getetag", properties)))
+                .WithLastModifiedDate(PropertyValueParser.ParseDateTime(FindProp("{DAV:}getlastmodified", properties)))
+                .WithProperties(properties.ConvertAll(x => new WebDavProperty(x.Name, x.GetInnerXml())))
+                .WithPropertyStatuses(MultiStatusParser.GetPropertyStatuses(propstats));
 
-            if (resource.IsCollection)
-                resource.Href = resource.Href.TrimEnd('/') + "/";
-            return resource;
+            var isHidden = PropertyValueParser.ParseInteger(FindProp("{DAV:}ishidden", properties)) > 0;
+            if (isHidden)
+                resourceBuilder.IsHidden();
+
+            var isCollection = PropertyValueParser.ParseInteger(FindProp("{DAV:}iscollection", properties)) > 0;
+            if (isCollection)
+            {
+                resourceBuilder.IsCollection();
+                resourceBuilder.WithHref(href.TrimEnd('/') + "/");
+            }
+            else
+            {
+                resourceBuilder.WithHref(href);
+            }
+            return resourceBuilder.Build();
         }
 
         private static XElement FindProp(XName name, IEnumerable<XElement> properties)
