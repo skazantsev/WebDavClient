@@ -384,7 +384,7 @@ namespace WebDav
             {
                 AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
                 PreAuthenticate = @params.PreAuthenticate,
-                UseDefaultCredentials = @params.AuthenticateAsCurrentUser,
+                UseDefaultCredentials = @params.UseDefaultCredentials,
                 UseProxy = @params.UseProxy
             };
 
