@@ -20,12 +20,12 @@ namespace WebDav
         }
 
         /// <summary>
-        /// Gets or sets the a collection of custom properties (or dead properties in terms of WebDav).
+        /// Gets or sets the collection of custom properties (or dead properties in terms of WebDav).
         /// </summary>
         public IReadOnlyCollection<XName> CustomProperties { get; set; }
 
         /// <summary>
-        /// Gets or sets a collection of xml namespaces of properties.
+        /// Gets or sets the collection of xml namespaces of properties.
         /// </summary>
         public IReadOnlyCollection<NamespaceAttr> Namespaces { get; set; }
 

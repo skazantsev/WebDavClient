@@ -26,12 +26,12 @@ namespace WebDav
         public IDictionary<XName, string> PropertiesToSet { get; set; }
 
         /// <summary>
-        /// Gets or sets a collection of properties defined on the resource to remove.
+        /// Gets or sets the collection of properties defined on the resource to remove.
         /// </summary>
         public IReadOnlyCollection<XName> PropertiesToRemove { get; set; }
 
         /// <summary>
-        /// Gets or sets a collection of xml namespaces of properties.
+        /// Gets or sets the collection of xml namespaces of properties.
         /// </summary>
         public IReadOnlyCollection<NamespaceAttr> Namespaces { get; set; }
 

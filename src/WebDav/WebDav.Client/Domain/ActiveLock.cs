@@ -2,24 +2,49 @@
 
 namespace WebDav
 {
+    /// <summary>
+    /// Represents an active lock taken on a WebDav resource.
+    /// </summary>
     public class ActiveLock
     {
         private ActiveLock()
         {
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the lock is to be applied only to the resource or the resource and all its members.
+        /// It corresponds to the WebDav Depth header.
+        /// </summary>
         public ApplyTo.Lock ApplyTo { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this lock is an exclusive lock or a shared lock.
+        /// </summary>
         public LockScope? LockScope { get; private set; }
 
+        /// <summary>
+        /// Gets the resource lock token.
+        /// </summary>
         public string LockToken { get; private set; }
 
+        /// <summary>
+        /// Gets the owner of this lock.
+        /// </summary>
         public LockOwner Owner { get; private set; }
 
+        /// <summary>
+        /// Gets the URI of the resource locked by this lock.
+        /// </summary>
         public string ResourceUri { get; private set; }
 
+        /// <summary>
+        /// Gets the duration of this lock.
+        /// </summary>
         public TimeSpan? Timeout { get; private set; }
 
+        /// <summary>
+        /// Represents a builder of the <see cref="ActiveLock"/> class.
+        /// </summary>
         public class Builder
         {
             private ApplyTo.Lock _applyTo;
@@ -29,42 +54,64 @@ namespace WebDav
             private string _resourceUri;
             private TimeSpan? _timeout;
 
+            /// <summary>
+            /// Sets the ApplyTo parameter of an instance of the <see cref="ActiveLock"/> class.
+            /// </summary>
             public Builder WithApplyTo(ApplyTo.Lock applyTo)
             {
                 _applyTo = applyTo;
                 return this;
             }
 
+            /// <summary>
+            /// Sets the LockTo parameter of an instance of the <see cref="ActiveLock"/> class.
+            /// </summary>
             public Builder WithLockScope(LockScope? lockScope)
             {
                 _lockScope = lockScope;
                 return this;
             }
 
+            /// <summary>
+            /// Sets the LockToken parameter of an instance of the <see cref="ActiveLock"/> class.
+            /// </summary>
             public Builder WithLockToken(string lockToken)
             {
                 _lockToken = lockToken;
                 return this;
             }
 
+            /// <summary>
+            /// Sets the Owner parameter of an instance of the <see cref="ActiveLock"/> class.
+            /// </summary>
             public Builder WithOwner(LockOwner owner)
             {
                 _owner = owner;
                 return this;
             }
 
+            /// <summary>
+            /// Sets the ResourceUri parameter of an instance of the <see cref="ActiveLock"/> class.
+            /// </summary>
             public Builder WithResourceUri(string resourceUri)
             {
                 _resourceUri = resourceUri;
                 return this;
             }
 
+            /// <summary>
+            /// Sets the Timeout parameter of an instance of the <see cref="ActiveLock"/> class.
+            /// </summary>
             public Builder WithTimeout(TimeSpan? timeout)
             {
                 _timeout = timeout;
                 return this;
             }
 
+            /// <summary>
+            /// Builds a new instance of the <see cref="ActiveLock"/> class.
+            /// </summary>
+            /// <returns>A new instance of the <see cref="ActiveLock"/> class.</returns>
             public ActiveLock Build()
             {
                 return new ActiveLock
