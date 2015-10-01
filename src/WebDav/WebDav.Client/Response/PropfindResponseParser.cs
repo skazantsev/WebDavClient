@@ -24,12 +24,12 @@ namespace WebDav.Response
 
         private static WebDavResource ParseResource(XElement xresponse)
         {
-            var hrefValue = xresponse.LocalNameElement("href", StringComparison.OrdinalIgnoreCase).GetValueOrNull();
+            var uriValue = xresponse.LocalNameElement("href", StringComparison.OrdinalIgnoreCase).GetValueOrNull();
             var propstats = MultiStatusParser.GetPropstats(xresponse);
-            return CreateResource(hrefValue, propstats);
+            return CreateResource(uriValue, propstats);
         }
 
-        private static WebDavResource CreateResource(string href, List<MultiStatusParser.Propstat> propstats)
+        private static WebDavResource CreateResource(string uri, List<MultiStatusParser.Propstat> propstats)
         {
             var properties = MultiStatusParser.GetProperties(propstats);
             var resourceBuilder = new WebDavResource.Builder()
@@ -52,11 +52,11 @@ namespace WebDav.Response
             if (isCollection)
             {
                 resourceBuilder.IsCollection();
-                resourceBuilder.WithHref(href.TrimEnd('/') + "/");
+                resourceBuilder.WithUri(uri.TrimEnd('/') + "/");
             }
             else
             {
-                resourceBuilder.WithHref(href);
+                resourceBuilder.WithUri(uri);
             }
             return resourceBuilder.Build();
         }

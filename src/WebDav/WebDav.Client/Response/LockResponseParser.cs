@@ -37,7 +37,7 @@ namespace WebDav.Response
                     .WithLockScope(PropertyValueParser.ParseLockScope(FindProp("lockscope", properties)))
                     .WithLockToken(PropertyValueParser.ParseString(FindProp("locktoken", properties)))
                     .WithOwner(PropertyValueParser.ParseOwner(FindProp("owner", properties)))
-                    .WithResourceHref(PropertyValueParser.ParseString(FindProp("lockroot", properties)))
+                    .WithResourceUri(PropertyValueParser.ParseString(FindProp("lockroot", properties)))
                     .WithTimeout(PropertyValueParser.ParseLockTimeout(FindProp("timeout", properties)))
                     .Build();
             return activeLock;

@@ -16,7 +16,7 @@ namespace WebDav
 
         public LockOwner Owner { get; private set; }
 
-        public string ResourceHref { get; private set; }
+        public string ResourceUri { get; private set; }
 
         public TimeSpan? Timeout { get; private set; }
 
@@ -26,7 +26,7 @@ namespace WebDav
             private LockScope? _lockScope;
             private string _lockToken;
             private LockOwner _owner;
-            private string _resourceHref;
+            private string _resourceUri;
             private TimeSpan? _timeout;
 
             public Builder WithApplyTo(ApplyTo.Lock applyTo)
@@ -53,9 +53,9 @@ namespace WebDav
                 return this;
             }
 
-            public Builder WithResourceHref(string resourceHref)
+            public Builder WithResourceUri(string resourceUri)
             {
-                _resourceHref = resourceHref;
+                _resourceUri = resourceUri;
                 return this;
             }
 
@@ -73,7 +73,7 @@ namespace WebDav
                     LockScope = _lockScope,
                     LockToken = _lockToken,
                     Owner = _owner,
-                    ResourceHref = _resourceHref,
+                    ResourceUri = _resourceUri,
                     Timeout = _timeout
                 };
             }

@@ -61,9 +61,9 @@ namespace WebDav.Response
             if (element == null)
                 return null;
 
-            var href = element.LocalNameElement("href", StringComparison.OrdinalIgnoreCase);
-            if (href != null && Uri.IsWellFormedUriString(href.Value, UriKind.Absolute))
-                return new HrefLockOwner(href.Value);
+            var uri = element.LocalNameElement("href", StringComparison.OrdinalIgnoreCase);
+            if (uri != null && Uri.IsWellFormedUriString(uri.Value, UriKind.Absolute))
+                return new UriLockOwner(uri.Value);
 
             return !string.IsNullOrEmpty(element.Value) ? new PrincipalLockOwner(element.Value) : null;
         }

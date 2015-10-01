@@ -51,11 +51,11 @@ namespace WebDav.Request
             {
                 owner.SetValue(lockOwner.Value);
             }
-            else if (lockOwner is HrefLockOwner)
+            else if (lockOwner is UriLockOwner)
             {
-                var href = new XElement("{DAV:}href");
-                href.SetValue(lockOwner.Value);
-                owner.Add(href);
+                var uri = new XElement("{DAV:}href");
+                uri.SetValue(lockOwner.Value);
+                owner.Add(uri);
             }
             else
             {

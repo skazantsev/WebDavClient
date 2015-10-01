@@ -25,7 +25,7 @@ namespace WebDav
 
         public string ETag { get; private set; }
 
-        public string Href { get; private set; }
+        public string Uri { get; private set; }
 
         public bool IsCollection { get; private set; }
 
@@ -46,7 +46,7 @@ namespace WebDav
             private DateTime? _creationDate;
             private string _displayName;
             private string _eTag;
-            private string _href;
+            private string _uri;
             private bool _isCollection;
             private bool _isHidden;
             private DateTime? _lastModifiedDate;
@@ -95,9 +95,9 @@ namespace WebDav
                 return this;
             }
 
-            public Builder WithHref(string href)
+            public Builder WithUri(string uri)
             {
-                _href = href;
+                _uri = uri;
                 return this;
             }
 
@@ -156,7 +156,7 @@ namespace WebDav
                     CreationDate = _creationDate,
                     DisplayName = _displayName,
                     ETag = _eTag,
-                    Href = _href,
+                    Uri = _uri,
                     IsCollection = _isCollection,
                     IsHidden = _isHidden,
                     LastModifiedDate = _lastModifiedDate,

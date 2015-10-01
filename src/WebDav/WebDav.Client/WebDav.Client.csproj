@@ -65,7 +65,7 @@
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="Helpers\IfHeaderHelper.cs" />
     <Compile Include="Helpers\LinqToXmlExtentions.cs" />
-    <Compile Include="Domain\HrefLockOwner.cs" />
+    <Compile Include="Domain\UriLockOwner.cs" />
     <Compile Include="Domain\LockOwner.cs" />
     <Compile Include="ApiParams\LockParameters.cs" />
     <Compile Include="Domain\ActiveLock.cs" />

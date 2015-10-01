@@ -62,7 +62,7 @@ namespace WebDav.ClientConsole
             foreach (var res in response.Resources)
             {
                 Console.WriteLine("====================================================");
-                Console.WriteLine("HREF: {0}", res.Href);
+                Console.WriteLine("URI: {0}", res.Uri);
                 Console.WriteLine("====================================================");
                 foreach (var @lock in res.ActiveLocks)
                 {
@@ -114,7 +114,7 @@ namespace WebDav.ClientConsole
         public static void PrintActiveLock(ActiveLock @lock)
         {
             Console.WriteLine(">>>LOCK");
-            Console.WriteLine("HREF: {0}", @lock.ResourceHref);
+            Console.WriteLine("URI: {0}", @lock.ResourceUri);
             Console.WriteLine("LockToken: {0}", @lock.LockToken);
             Console.WriteLine("LockScope: {0}", @lock.LockScope.HasValue ? Enum.GetName(typeof(LockScope), @lock.LockScope) : "null");
             Console.WriteLine("LockOwner: {0}", @lock.Owner != null ? @lock.Owner.Value : "null");
