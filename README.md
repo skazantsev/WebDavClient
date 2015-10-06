@@ -2,6 +2,11 @@
 
 This is a simple & easy-to-use WebDAV client for .NET with asynchronous API. It aims to have a full support of [RFC4918](http://www.webdav.org/specs/rfc4918.html).
 
+##Installation
+Install WebDav.Client via [NuGet](https://www.nuget.org/packages/WebDav.Client/).
+
+    Install-Package WebDav.Client
+
 ##Usage examples
 
 **Basic usage:**
