@@ -3,7 +3,7 @@
 namespace WebDav
 {
     /// <summary>
-    /// Represents a WebDav resource property.
+    /// Represents a WebDAV resource property.
     /// </summary>
     public class WebDavProperty
     {

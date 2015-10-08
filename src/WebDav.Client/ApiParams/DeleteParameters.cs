@@ -3,7 +3,7 @@
 namespace WebDav
 {
     /// <summary>
-    /// Represents parameters for the DELETE WebDav method.
+    /// Represents parameters for the DELETE WebDAV method.
     /// </summary>
     public class DeleteParameters
     {

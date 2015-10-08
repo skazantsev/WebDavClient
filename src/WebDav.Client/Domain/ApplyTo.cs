@@ -7,7 +7,7 @@
     {
         /// <summary>
         /// Specifies whether the PROPFIND method is to be applied only to the resource, to the resource and its internal members only, or the resource and all its members.
-        /// It corresponds to the WebDav Depth header.
+        /// It corresponds to the WebDAV Depth header.
         /// </summary>
         public enum Propfind
         {
@@ -18,7 +18,7 @@
 
         /// <summary>
         /// Specifies whether the COPY method is to be applied only to the resource or the resource and all its members.
-        /// It corresponds to the WebDav Depth header.
+        /// It corresponds to the WebDAV Depth header.
         /// </summary>
         public enum Copy
         {
@@ -28,7 +28,7 @@
 
         /// <summary>
         /// Specifies whether the LOCK method is to be applied only to the resource or the resource and all its members.
-        /// It corresponds to the WebDav Depth header.
+        /// It corresponds to the WebDAV Depth header.
         /// </summary>
         public enum Lock
         {

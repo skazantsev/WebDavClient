@@ -3,7 +3,7 @@
 namespace WebDav
 {
     /// <summary>
-    /// Represents an active lock taken on a WebDav resource.
+    /// Represents an active lock taken on a WebDAV resource.
     /// </summary>
     public class ActiveLock
     {
@@ -13,7 +13,7 @@ namespace WebDav
 
         /// <summary>
         /// Gets a value indicating whether the lock is to be applied only to the resource or the resource and all its members.
-        /// It corresponds to the WebDav Depth header.
+        /// It corresponds to the WebDAV Depth header.
         /// </summary>
         public ApplyTo.Lock ApplyTo { get; private set; }
 

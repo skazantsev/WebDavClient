@@ -4,7 +4,7 @@ using System.Threading;
 namespace WebDav
 {
     /// <summary>
-    /// Represents parameters for the LOCK WebDav method.
+    /// Represents parameters for the LOCK WebDAV method.
     /// </summary>
     public class LockParameters
     {
@@ -28,7 +28,7 @@ namespace WebDav
 
         /// <summary>
         /// Gets or sets a value indicating whether the method is to be applied only to the resource or the resource and all its members.
-        /// It corresponds to the WebDav Depth header.
+        /// It corresponds to the WebDAV Depth header.
         /// </summary>
         public ApplyTo.Lock? ApplyTo { get; set; }
 

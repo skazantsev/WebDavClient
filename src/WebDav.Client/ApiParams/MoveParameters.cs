@@ -3,7 +3,7 @@
 namespace WebDav
 {
     /// <summary>
-    /// Represents parameters for the MOVE WebDav method.
+    /// Represents parameters for the MOVE WebDAV method.
     /// </summary>
     public class MoveParameters
     {

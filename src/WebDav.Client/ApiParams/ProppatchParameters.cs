@@ -5,7 +5,7 @@ using System.Xml.Linq;
 namespace WebDav
 {
     /// <summary>
-    /// Represents parameters for the PROPPATCH WebDav method.
+    /// Represents parameters for the PROPPATCH WebDAV method.
     /// </summary>
     public class ProppatchParameters
     {

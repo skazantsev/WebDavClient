@@ -5,7 +5,7 @@ using System.Xml.Linq;
 namespace WebDav
 {
     /// <summary>
-    /// Represents parameters for the PROPFIND WebDav method.
+    /// Represents parameters for the PROPFIND WebDAV method.
     /// </summary>
     public class PropfindParameters
     {
@@ -31,7 +31,7 @@ namespace WebDav
 
         /// <summary>
         /// Gets or sets a value indicating whether the method is to be applied only to the resource, to the resource and its internal members only, or the resource and all its members.
-        /// It corresponds to the WebDav Depth header.
+        /// It corresponds to the WebDAV Depth header.
         /// </summary>
         public ApplyTo.Propfind? ApplyTo { get; set; }
 

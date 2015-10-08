@@ -3,7 +3,7 @@
 namespace WebDav
 {
     /// <summary>
-    /// Represents parameters for the MKCOL WebDav method.
+    /// Represents parameters for the MKCOL WebDAV method.
     /// </summary>
     public class MkColParameters
     {

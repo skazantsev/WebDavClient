@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace WebDav
 {
     /// <summary>
-    /// Represents a WebDav resource.
+    /// Represents a WebDAV resource.
     /// </summary>
     public class WebDavResource
     {

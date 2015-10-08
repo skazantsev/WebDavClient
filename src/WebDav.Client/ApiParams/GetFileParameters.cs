@@ -3,7 +3,7 @@
 namespace WebDav
 {
     /// <summary>
-    /// Represents parameters for the GET WebDav method.
+    /// Represents parameters for the GET WebDAV method.
     /// </summary>
     public class GetFileParameters
     {

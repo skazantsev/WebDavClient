@@ -3,7 +3,7 @@
 namespace WebDav
 {
     /// <summary>
-    /// Represents parameters for the PUT WebDav method.
+    /// Represents parameters for the PUT WebDAV method.
     /// </summary>
     public class PutFileParameters
     {

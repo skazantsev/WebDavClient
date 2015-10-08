@@ -3,7 +3,7 @@
 namespace WebDav
 {
     /// <summary>
-    /// Represents parameters for the UNLOCK WebDav method.
+    /// Represents parameters for the UNLOCK WebDAV method.
     /// </summary>
     public class UnlockParameters
     {

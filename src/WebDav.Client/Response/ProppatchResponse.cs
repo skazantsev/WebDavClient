@@ -56,7 +56,7 @@ namespace WebDav
 
         public override string ToString()
         {
-            return string.Format("PROPPATCH WebDav response - StatusCode: {0}, Description: {1}", StatusCode, Description);
+            return string.Format("PROPPATCH WebDAV response - StatusCode: {0}, Description: {1}", StatusCode, Description);
         }
     }
 }

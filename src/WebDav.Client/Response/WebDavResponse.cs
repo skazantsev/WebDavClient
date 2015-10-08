@@ -1,7 +1,7 @@
 ﻿namespace WebDav
 {
     /// <summary>
-    /// Represents a response of a WebDav operation.
+    /// Represents a response of a WebDAV operation.
     /// </summary>
     public class WebDavResponse
     {
@@ -48,7 +48,7 @@
 
         public override string ToString()
         {
-            return string.Format("WebDav response - StatusCode: {0}, Description: {1}", StatusCode, Description);
+            return string.Format("WebDAV response - StatusCode: {0}, Description: {1}", StatusCode, Description);
         }
     }
 }

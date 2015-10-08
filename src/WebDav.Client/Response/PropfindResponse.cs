@@ -21,7 +21,7 @@ namespace WebDav
         /// Initializes a new instance of the <see cref="PropfindResponse"/> class.
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>
-        /// <param name="resources">The collection of WebDav resources.</param>
+        /// <param name="resources">The collection of WebDAV resources.</param>
         public PropfindResponse(int statusCode, IEnumerable<WebDavResource> resources)
             : this(statusCode, null, resources)
         {
@@ -42,7 +42,7 @@ namespace WebDav
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>
         /// <param name="description">The description of the response.</param>
-        /// <param name="resources">The collection of WebDav resources.</param>
+        /// <param name="resources">The collection of WebDAV resources.</param>
         public PropfindResponse(int statusCode, string description, IEnumerable<WebDavResource> resources)
             : base(statusCode, description)
         {
@@ -51,13 +51,13 @@ namespace WebDav
         }
 
         /// <summary>
-        /// Gets the collection of WebDav resources.
+        /// Gets the collection of WebDAV resources.
         /// </summary>
         public IReadOnlyCollection<WebDavResource> Resources { get; private set; }
 
         public override string ToString()
         {
-            return string.Format("PROPFIND WebDav response - StatusCode: {0}, Description: {1}", StatusCode, Description);
+            return string.Format("PROPFIND WebDAV response - StatusCode: {0}, Description: {1}", StatusCode, Description);
         }
     }
 }

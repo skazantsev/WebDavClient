@@ -13,7 +13,7 @@ using WebDav.Response;
 namespace WebDav
 {
     /// <summary>
-    /// Represents a WebDav client that can perform WebDav operations.
+    /// Represents a WebDAV client that can perform WebDAV operations.
     /// </summary>
     public class WebDavClient : IDisposable
     {
@@ -30,7 +30,7 @@ namespace WebDav
         /// <summary>
         /// Initializes a new instance of the <see cref="WebDavClient"/> class.
         /// </summary>
-        /// <param name="params">The parameters of the WebDav client.</param>
+        /// <param name="params">The parameters of the WebDAV client.</param>
         public WebDavClient(WebDavClientParams @params)
         {
             _httpClient = ConfigureHttpClient(@params);

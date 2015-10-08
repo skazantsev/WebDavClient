@@ -55,7 +55,7 @@ namespace WebDav
 
         public override string ToString()
         {
-            return string.Format("WebDav stream response - StatusCode: {0}, Description: {1}", StatusCode, Description);
+            return string.Format("WebDAV stream response - StatusCode: {0}, Description: {1}", StatusCode, Description);
         }
     }
 }
