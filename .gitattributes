@@ -1,3 +1,6 @@
+# Auto detect text files and perform CRLF normalization
+* text=auto eol=crlf
+
 *.doc	diff=astextplain
 *.DOC	diff=astextplain
 *.docx diff=astextplain
