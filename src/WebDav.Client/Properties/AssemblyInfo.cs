@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("WebDav.Client")]
@@ -10,3 +11,6 @@ using System.Runtime.InteropServices;
 [assembly: Guid("0cc4b1b7-57f0-456a-8512-b8d69e34a550")]
 [assembly: AssemblyVersion("0.0.1.0")]
 [assembly: AssemblyFileVersion("0.0.1.0")]
+
+[assembly: InternalsVisibleTo("WebDav.Client.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

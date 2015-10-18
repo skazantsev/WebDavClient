@@ -1,18 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{36ECE425-F392-41EA-B260-834F03A53EAC}</ProjectGuid>
+    <ProjectGuid>{F349B58D-A819-4690-932B-FE91F884E45D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WebDav</RootNamespace>
-    <AssemblyName>WebDav.Client</AssemblyName>
+    <RootNamespace>WebDav.Client.Tests</RootNamespace>
+    <AssemblyName>WebDav.Client.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>aa48dfa0</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,14 +35,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NSubstitute">
+      <HintPath>..\packages\NSubstitute.1.9.1.0\lib\net45\NSubstitute.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Extensions">
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Net.Http.Primitives">
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Xml.Linq" />
@@ -47,58 +56,43 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert">
+      <HintPath>..\packages\xunit.assert.2.1.0\lib\portable-net45+win8+wp8+wpa81\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.core.2.1.0\lib\portable-net45+win8+wp8+wpa81\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiParams\CopyParameters.cs" />
-    <Compile Include="ApiParams\DeleteParameters.cs" />
-    <Compile Include="ApiParams\GetFileParameters.cs" />
-    <Compile Include="ApiParams\MkColParameters.cs" />
-    <Compile Include="ApiParams\MoveParameters.cs" />
-    <Compile Include="ApiParams\PropfindParameters.cs" />
-    <Compile Include="ApiParams\ProppatchParameters.cs" />
-    <Compile Include="ApiParams\PutFileParameters.cs" />
-    <Compile Include="ApiParams\UnlockParameters.cs" />
-    <Compile Include="Domain\ApplyTo.cs" />
-    <Compile Include="Domain\NamespaceAttr.cs" />
-    <Compile Include="Domain\WebDavPropertyStatus.cs" />
-    <Compile Include="Helpers\DepthHeaderHelper.cs" />
-    <Compile Include="Helpers\Guard.cs" />
-    <Compile Include="Helpers\IfHeaderHelper.cs" />
-    <Compile Include="Helpers\LinqToXmlExtentions.cs" />
-    <Compile Include="Domain\UriLockOwner.cs" />
-    <Compile Include="Domain\LockOwner.cs" />
-    <Compile Include="ApiParams\LockParameters.cs" />
-    <Compile Include="Domain\ActiveLock.cs" />
-    <Compile Include="Domain\LockScope.cs" />
-    <Compile Include="Domain\PrincipalLockOwner.cs" />
-    <Compile Include="Infrastructure\IWebDavDispatcher.cs" />
-    <Compile Include="Infrastructure\WebDavDispatcher.cs" />
-    <Compile Include="Infrastructure\HttpResponse.cs" />
-    <Compile Include="ApiParams\RequestParameters.cs" />
+    <Compile Include="Infrastructure\WebDavDispatcherTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Request\LockRequestBuilder.cs" />
-    <Compile Include="Request\PropfindRequestBuilder.cs" />
-    <Compile Include="Request\ProppatchRequestBuilder.cs" />
-    <Compile Include="Response\LockResponse.cs" />
-    <Compile Include="Response\LockResponseParser.cs" />
-    <Compile Include="Domain\WebDavProperty.cs" />
-    <Compile Include="Response\MultiStatusParser.cs" />
-    <Compile Include="Response\PropfindResponse.cs" />
-    <Compile Include="Response\PropfindResponseParser.cs" />
-    <Compile Include="Response\PropertyValueParser.cs" />
-    <Compile Include="Response\ProppatchResponse.cs" />
-    <Compile Include="Response\ProppatchResponseParser.cs" />
-    <Compile Include="Response\ResourceType.cs" />
-    <Compile Include="Response\WebDavResponse.cs" />
-    <Compile Include="Response\WebDavStreamResponse.cs" />
-    <Compile Include="WebDavClient.cs" />
-    <Compile Include="ApiParams\WebDavClientParams.cs" />
-    <Compile Include="Domain\WebDavMethod.cs" />
-    <Compile Include="Domain\WebDavResource.cs" />
+    <Compile Include="Responses.cs" />
+    <Compile Include="TestDoubles\Dispatcher.cs" />
+    <Compile Include="WebDavClientTests\PropfindTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebDav.Client\WebDav.Client.csproj">
+      <Project>{36ece425-f392-41ea-b260-834f03a53eac}</Project>
+      <Name>WebDav.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -106,6 +100,8 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props'))" />
+    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">

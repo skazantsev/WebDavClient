@@ -51,6 +51,7 @@
     <ProjectReference Include="..\WebDav.Client\WebDav.Client.csproj">
       <Project>{36ece425-f392-41ea-b260-834f03a53eac}</Project>
       <Name>WebDav.Client</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
