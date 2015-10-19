@@ -9,12 +9,12 @@ namespace WebDav.Client.Tests.TestDoubles
 {
     public static class Dispatcher
     {
-        internal static IWebDavDispatcher Mock(string content)
+        internal static IWebDavDispatcher Mock(string content, int statusCode = 200, string description = "OK")
         {
             var dispatcher = Substitute.For<IWebDavDispatcher>();
             dispatcher
                 .Send(Arg.Any<Uri>(), Arg.Any<HttpMethod>(), Arg.Any<RequestParameters>(), Arg.Any<CancellationToken>())
-                .Returns(x => Task.FromResult(new HttpResponse(new StringContent(content), 200, "OK")));
+                .Returns(x => Task.FromResult(new HttpResponse(new StringContent(content), statusCode, description)));
             return dispatcher;
         }
 

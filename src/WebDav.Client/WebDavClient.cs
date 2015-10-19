@@ -19,6 +19,8 @@ namespace WebDav
     {
         private IWebDavDispatcher _dispatcher;
 
+        private IResponseParser<PropfindResponse> _propfindResponseParser;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WebDavClient"/> class.
         /// </summary>
@@ -34,6 +36,7 @@ namespace WebDav
         public WebDavClient(WebDavClientParams @params)
         {
             SetWebDavDispatcher(new WebDavDispatcher(ConfigureHttpClient(@params)));
+            SetPropfindResponseParser(new PropfindResponseParser());
         }
 
         /// <summary>
@@ -86,7 +89,7 @@ namespace WebDav
             var requestParams = new RequestParameters {Headers = headers, Content = new StringContent(requestBody)};
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Propfind, requestParams, parameters.CancellationToken);
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return PropfindResponseParser.Parse(responseContent, response.StatusCode, response.Description);
+            return _propfindResponseParser.Parse(responseContent, response.StatusCode, response.Description);
         }
 
         /// <summary>
@@ -632,7 +635,18 @@ namespace WebDav
         /// <param name="dispatcher">The dispatcher of WebDAV http requests.</param>
         internal void SetWebDavDispatcher(IWebDavDispatcher dispatcher)
         {
+            Guard.NotNull(dispatcher, "dispather");
             _dispatcher = dispatcher;
+        }
+
+        /// <summary>
+        /// Sets the parser of WebDAV responses.
+        /// </summary>
+        /// <param name="responseParser">The parser of WebDAV responses.</param>
+        internal void SetPropfindResponseParser(IResponseParser<PropfindResponse> responseParser)
+        {
+            Guard.NotNull(responseParser, "responseParser");
+            _propfindResponseParser = responseParser;
         }
 
         private static HttpClient ConfigureHttpClient(WebDavClientParams @params)

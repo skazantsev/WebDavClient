@@ -79,6 +79,7 @@
     <Compile Include="Request\LockRequestBuilder.cs" />
     <Compile Include="Request\PropfindRequestBuilder.cs" />
     <Compile Include="Request\ProppatchRequestBuilder.cs" />
+    <Compile Include="Response\IResponseParser.cs" />
     <Compile Include="Response\LockResponse.cs" />
     <Compile Include="Response\LockResponseParser.cs" />
     <Compile Include="Domain\WebDavProperty.cs" />

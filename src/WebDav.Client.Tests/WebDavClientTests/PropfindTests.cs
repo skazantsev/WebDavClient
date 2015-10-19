@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Xml.Linq;
 using WebDav.Client.Tests.TestDoubles;
+using WebDav.Response;
 using Xunit;
 
 namespace WebDav.Client.Tests.WebDavClientTests
@@ -13,7 +14,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
     public class PropfindTests
     {
         [Fact]
-        public async void When_RequestIsCorrect_Should_ReturnStatusCode200()
+        public async void When_RequestIsSuccessfull_Should_ReturnStatusCode200()
         {
             var client = new WebDavClient();
             client.SetWebDavDispatcher(Dispatcher.Mock(Responses.Propfind.EmptyPropResponse));
@@ -29,7 +30,21 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_RequestIsIncorrect_Should_ReturnStatusCode500()
+        public async void When_RequestIsSuccessfull_Should_ParseResponse()
+        {
+            var dispatcher = Dispatcher.Mock(Responses.Propfind.EmptyPropResponse, 207, "Multi-Status");
+            var propfindResponseParser = Substitute.For<IResponseParser<PropfindResponse>>();
+            var client = new WebDavClient();
+            client.SetWebDavDispatcher(dispatcher);
+            client.SetPropfindResponseParser(propfindResponseParser);
+
+            propfindResponseParser.DidNotReceiveWithAnyArgs().Parse("", 0, "");
+            await client.Propfind("http://example");
+            propfindResponseParser.Received(1).Parse(Responses.Propfind.EmptyPropResponse, 207, "Multi-Status");
+        }
+
+        [Fact]
+        public async void When_RequestIsFailed_Should_ReturnStatusCode500()
         {
             var client = new WebDavClient();
             client.SetWebDavDispatcher(Dispatcher.MockFaulted());
@@ -38,7 +53,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_CalledWithDefaultArguments_Should_SendPropfindRequest()
+        public async void When_IsCalledWithDefaultArguments_Should_SendPropfindRequest()
         {
             var requestUri = new Uri("http://example.com");
             var dispatcher = Dispatcher.Mock(Responses.Propfind.EmptyPropResponse);
@@ -52,7 +67,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_AppliedToResourceAndAncestors_Should_SendDepthHeaderEqualsInfinity()
+        public async void When_IsAppliedToResourceAndAncestors_Should_SendDepthHeaderEqualsInfinity()
         {
             var dispatcher = Dispatcher.Mock(Responses.Propfind.EmptyPropResponse);
             var client = new WebDavClient();
@@ -64,7 +79,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_AppliedToResourceAndChildren_Should_SendDepthHeaderEqualsOne()
+        public async void When_IsAppliedToResourceAndChildren_Should_SendDepthHeaderEqualsOne()
         {
             var dispatcher = Dispatcher.Mock(Responses.Propfind.EmptyPropResponse);
             var client = new WebDavClient();
@@ -76,7 +91,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_AppliedToResourceOnly_Should_SendDepthHeaderEqualsZero()
+        public async void When_IsAppliedToResourceOnly_Should_SendDepthHeaderEqualsZero()
         {
             var dispatcher = Dispatcher.Mock(Responses.Propfind.EmptyPropResponse);
             var client = new WebDavClient();
@@ -88,7 +103,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_CalledWithCancellationToken_Should_SendRequestWithIt()
+        public async void When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
         {
             var cts = new CancellationTokenSource();
             var dispatcher = Dispatcher.Mock(Responses.Propfind.EmptyPropResponse);
@@ -101,7 +116,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_CalledWithDefaultArguments_Should_SendAllPropRequest()
+        public async void When_IsCalledWithDefaultArguments_Should_SendAllPropRequest()
         {
             const string expectedContent =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -118,7 +133,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_CalledWithCustomProperties_Should_IncludeThemInRequest()
+        public async void When_IsCalledWithCustomProperties_Should_IncludeThemInRequest()
         {
             const string expectedContent =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -168,7 +183,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_CalledWithDefaultNamespace_Should_IncludeItInRequest()
+        public async void When_IsCalledWithDefaultNamespace_Should_IncludeItInRequest()
         {
             const string expectedContent =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -194,7 +209,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_CalledWithMoreThanOneDefaultNamespace_Should_UseTheLastOne()
+        public async void When_IsCalledWithMoreThanOneDefaultNamespace_Should_UseTheLastOne()
         {
             const string expectedContent =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -219,7 +234,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_CalledWithPrefixedNamespaces_Should_IncludeThemInRequest()
+        public async void When_IsCalledWithPrefixedNamespaces_Should_IncludeThemInRequest()
         {
             const string expectedContent =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -244,12 +259,12 @@ namespace WebDav.Client.Tests.WebDavClientTests
                 .Send(Arg.Any<Uri>(), WebDavMethod.Propfind, Arg.Is(RequestContentComparer(expectedContent)), CancellationToken.None);
         }
 
-        private Expression<Predicate<RequestParameters>> DepthHeaderValueComparer(string expectedDepthHeaderValue)
+        private static Expression<Predicate<RequestParameters>> DepthHeaderValueComparer(string expectedDepthHeaderValue)
         {
             return x => x.Headers.Any(h => h.Key == "Depth" && h.Value == expectedDepthHeaderValue);
         }
 
-        private Expression<Predicate<RequestParameters>> RequestContentComparer(string expectedContent)
+        private static Expression<Predicate<RequestParameters>> RequestContentComparer(string expectedContent)
         {
             return x => expectedContent == x.Content.ReadAsStringAsync().Result;
         }

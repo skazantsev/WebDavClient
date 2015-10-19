@@ -5,9 +5,9 @@ using System.Xml.Linq;
 
 namespace WebDav.Response
 {
-    internal static class PropfindResponseParser
+    internal class PropfindResponseParser : IResponseParser<PropfindResponse>
     {
-        public static PropfindResponse Parse(string response, int statusCode, string description)
+        public PropfindResponse Parse(string response, int statusCode, string description)
         {
             if (string.IsNullOrEmpty(response))
                 return new PropfindResponse(statusCode, description);
@@ -22,14 +22,14 @@ namespace WebDav.Response
             return new PropfindResponse(statusCode, description, resources);
         }
 
-        private static WebDavResource ParseResource(XElement xresponse)
+        private WebDavResource ParseResource(XElement xresponse)
         {
             var uriValue = xresponse.LocalNameElement("href", StringComparison.OrdinalIgnoreCase).GetValueOrNull();
             var propstats = MultiStatusParser.GetPropstats(xresponse);
             return CreateResource(uriValue, propstats);
         }
 
-        private static WebDavResource CreateResource(string uri, List<MultiStatusParser.Propstat> propstats)
+        private WebDavResource CreateResource(string uri, List<MultiStatusParser.Propstat> propstats)
         {
             var properties = MultiStatusParser.GetProperties(propstats);
             var resourceBuilder = new WebDavResource.Builder()
