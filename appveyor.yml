@@ -1,5 +1,7 @@
 init:
   - git config --global core.autocrlf true
+before_build:
+  - nuget restore src/WebDav.sln
 build:
   verbosity: normal
 deploy: off
