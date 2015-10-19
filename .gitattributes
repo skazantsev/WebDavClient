@@ -1,5 +1,4 @@
-# Auto detect text files and perform CRLF normalization
-* text=auto eol=crlf
+* text=auto
 
 *.doc	diff=astextplain
 *.DOC	diff=astextplain
@@ -12,9 +11,17 @@
 *.rtf	diff=astextplain
 *.RTF	diff=astextplain
 
+*.exe binary
 *.jpg binary
 *.png binary
 *.gif binary
+*.dll binary
+*.pdb binary
+*.pptx binary
+*.xap binary
+*.ico binary
+*.ttf binary
+*.otf binary
 
 *.cs diff=csharp
 
@@ -22,4 +29,4 @@
 *.vbproj merge=union
 *.fsproj merge=union
 *.dbproj merge=union
-*.sln merge=union
+*.sln text=auto eol=crlf merge=union
