@@ -9,7 +9,7 @@ namespace WebDav.Client.Tests.TestDoubles
 {
     public static class Dispatcher
     {
-        internal static IWebDavDispatcher Mock(string content, int statusCode = 200, string description = "OK")
+        internal static IWebDavDispatcher Mock(string content = "", int statusCode = 200, string description = "OK")
         {
             var dispatcher = Substitute.For<IWebDavDispatcher>();
             dispatcher

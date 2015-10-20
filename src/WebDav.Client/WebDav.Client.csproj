@@ -71,6 +71,7 @@
     <Compile Include="Domain\ActiveLock.cs" />
     <Compile Include="Domain\LockScope.cs" />
     <Compile Include="Domain\PrincipalLockOwner.cs" />
+    <Compile Include="Helpers\XDocumentExt.cs" />
     <Compile Include="Infrastructure\IWebDavDispatcher.cs" />
     <Compile Include="Infrastructure\WebDavDispatcher.cs" />
     <Compile Include="Infrastructure\HttpResponse.cs" />

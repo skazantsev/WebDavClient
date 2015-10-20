@@ -12,8 +12,8 @@ namespace WebDav.Response
             if (string.IsNullOrEmpty(response))
                 return new PropfindResponse(statusCode, description);
 
-            var xresponse = XDocument.Parse(response);
-            if (xresponse.Root == null)
+            var xresponse = XDocumentExt.TryParse(response);
+            if (xresponse == null || xresponse.Root == null)
                 return new PropfindResponse(statusCode, description);
 
             var resources = xresponse.Root.LocalNameElements("response", StringComparison.OrdinalIgnoreCase)
