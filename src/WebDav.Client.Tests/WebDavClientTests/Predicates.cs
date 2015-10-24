@@ -6,9 +6,9 @@ namespace WebDav.Client.Tests.WebDavClientTests
 {
     internal static class Predicates
     {
-        public static Expression<Predicate<RequestParameters>> CompareDepthHeader(string expectedDepthHeaderValue)
+        public static Expression<Predicate<RequestParameters>> CompareHeader(string headerName, string headerValue)
         {
-            return x => x.Headers.Any(h => h.Key == "Depth" && h.Value == expectedDepthHeaderValue);
+            return x => x.Headers.Any(h => h.Key == headerName && h.Value == headerValue);
         }
 
         public static Expression<Predicate<RequestParameters>> CompareRequestContent(string expectedContent)
