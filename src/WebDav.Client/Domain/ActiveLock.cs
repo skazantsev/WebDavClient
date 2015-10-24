@@ -33,9 +33,9 @@ namespace WebDav
         public LockOwner Owner { get; private set; }
 
         /// <summary>
-        /// Gets the URI of the resource locked by this lock.
+        /// Gets the root URL of the lock, which is the URL through which the resource was addressed in the LOCK request.
         /// </summary>
-        public string ResourceUri { get; private set; }
+        public string LockRoot { get; private set; }
 
         /// <summary>
         /// Gets the duration of this lock.
@@ -51,7 +51,7 @@ namespace WebDav
             private LockScope? _lockScope;
             private string _lockToken;
             private LockOwner _owner;
-            private string _resourceUri;
+            private string _lockRoot;
             private TimeSpan? _timeout;
 
             /// <summary>
@@ -91,11 +91,11 @@ namespace WebDav
             }
 
             /// <summary>
-            /// Sets the ResourceUri parameter of an instance of the <see cref="ActiveLock"/> class.
+            /// Sets the LockRoot parameter of an instance of the <see cref="ActiveLock"/> class.
             /// </summary>
-            public Builder WithResourceUri(string resourceUri)
+            public Builder WithLockRoot(string lockRoot)
             {
-                _resourceUri = resourceUri;
+                _lockRoot = lockRoot;
                 return this;
             }
 
@@ -120,7 +120,7 @@ namespace WebDav
                     LockScope = _lockScope,
                     LockToken = _lockToken,
                     Owner = _owner,
-                    ResourceUri = _resourceUri,
+                    LockRoot = _lockRoot,
                     Timeout = _timeout
                 };
             }

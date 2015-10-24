@@ -48,7 +48,8 @@ namespace WebDav.Response
             if (isHidden)
                 resourceBuilder.IsHidden();
 
-            var isCollection = PropertyValueParser.ParseInteger(FindProp("{DAV:}iscollection", properties)) > 0;
+            var isCollection = PropertyValueParser.ParseInteger(FindProp("{DAV:}iscollection", properties)) > 0 ||
+                PropertyValueParser.ParseResourceType(FindProp("{DAV:}resourcetype", properties)) == ResourceType.Collection;
             if (isCollection)
             {
                 resourceBuilder.IsCollection();

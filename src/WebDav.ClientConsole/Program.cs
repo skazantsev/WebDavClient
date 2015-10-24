@@ -114,7 +114,7 @@ namespace WebDav.ClientConsole
         public static void PrintActiveLock(ActiveLock @lock)
         {
             Console.WriteLine(">>>LOCK");
-            Console.WriteLine("URI: {0}", @lock.ResourceUri);
+            Console.WriteLine("LockRoot: {0}", @lock.LockRoot);
             Console.WriteLine("LockToken: {0}", @lock.LockToken);
             Console.WriteLine("LockScope: {0}", @lock.LockScope.HasValue ? Enum.GetName(typeof(LockScope), @lock.LockScope) : "null");
             Console.WriteLine("LockOwner: {0}", @lock.Owner != null ? @lock.Owner.Value : "null");
