@@ -21,6 +21,8 @@ namespace WebDav
 
         private IResponseParser<PropfindResponse> _propfindResponseParser;
 
+        private IResponseParser<ProppatchResponse> _proppatchResponseParser;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WebDavClient"/> class.
         /// </summary>
@@ -37,6 +39,7 @@ namespace WebDav
         {
             SetWebDavDispatcher(new WebDavDispatcher(ConfigureHttpClient(@params)));
             SetPropfindResponseParser(new PropfindResponseParser());
+            SetProppatchResponseParser(new ProppatchResponseParser());
         }
 
         /// <summary>
@@ -86,7 +89,7 @@ namespace WebDav
                 new KeyValuePair<string, string>("Depth", DepthHeaderHelper.GetValueForPropfind(applyTo))
             };
             var requestBody = PropfindRequestBuilder.BuildRequestBody(parameters.CustomProperties, parameters.Namespaces);
-            var requestParams = new RequestParameters {Headers = headers, Content = new StringContent(requestBody)};
+            var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Propfind, requestParams, parameters.CancellationToken);
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             return _propfindResponseParser.Parse(responseContent, response.StatusCode, response.Description);
@@ -120,7 +123,7 @@ namespace WebDav
             var requestParams = new RequestParameters { Headers = new RequestHeaders(), Content = new StringContent(requestBody) };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Proppatch, requestParams, parameters.CancellationToken);
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return ProppatchResponseParser.Parse(responseContent, response.StatusCode, response.Description);
+            return _proppatchResponseParser.Parse(responseContent, response.StatusCode, response.Description);
         }
 
         /// <summary>
@@ -640,13 +643,23 @@ namespace WebDav
         }
 
         /// <summary>
-        /// Sets the parser of WebDAV responses.
+        /// Sets the parser of PROPFIND responses.
         /// </summary>
-        /// <param name="responseParser">The parser of WebDAV responses.</param>
+        /// <param name="responseParser">The parser of WebDAV PROPFIND responses.</param>
         internal void SetPropfindResponseParser(IResponseParser<PropfindResponse> responseParser)
         {
             Guard.NotNull(responseParser, "responseParser");
             _propfindResponseParser = responseParser;
+        }
+
+        /// <summary>
+        /// Sets the parser of PROPPATCH responses.
+        /// </summary>
+        /// <param name="responseParser">The parser of WebDAV PROPPATCH responses.</param>
+        internal void SetProppatchResponseParser(IResponseParser<ProppatchResponse> responseParser)
+        {
+            Guard.NotNull(responseParser, "responseParser");
+            _proppatchResponseParser = responseParser;
         }
 
         private static HttpClient ConfigureHttpClient(WebDavClientParams @params)

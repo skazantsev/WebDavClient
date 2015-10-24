@@ -4,9 +4,9 @@ using System.Xml.Linq;
 
 namespace WebDav.Response
 {
-    internal static class ProppatchResponseParser
+    internal class ProppatchResponseParser : IResponseParser<ProppatchResponse>
     {
-        public static ProppatchResponse Parse(string response, int statusCode, string description)
+        public ProppatchResponse Parse(string response, int statusCode, string description)
         {
             if (string.IsNullOrEmpty(response))
                 return new ProppatchResponse(statusCode, description);

@@ -79,7 +79,9 @@
     <Compile Include="Responses.cs" />
     <Compile Include="Response\PropfindResponseParserTests.cs" />
     <Compile Include="TestDoubles\Dispatcher.cs" />
+    <Compile Include="WebDavClientTests\Predicates.cs" />
     <Compile Include="WebDavClientTests\PropfindTests.cs" />
+    <Compile Include="WebDavClientTests\ProppatchTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
