@@ -2,10 +2,13 @@
 {
     public class Responses
     {
-        public class Propfind
+        public class Common
         {
             public static readonly string EmptyMultiStatusResponse = @"<D:multistatus xmlns:D=""DAV:""></D:multistatus>";
+        }
 
+        public class Propfind
+        {
             public static readonly string ResponseWithoutProperties =
                 @"<?xml version=""1.0"" encoding=""utf-8"" ?>
 <D:multistatus xmlns:D=""DAV:"">
@@ -263,6 +266,29 @@
         <D:creationdate>Novemer 24, 2015</D:creationdate>
       </D:prop>
       <D:status>HTTP/1.1 200 OK</D:status>
+    </D:propstat>
+  </D:response>
+</D:multistatus>";
+        }
+
+        public class Proppatch
+        {
+            public static readonly string ResponseWithDifferentStatuses =
+                @"<?xml version=""1.0"" encoding=""utf-8""?>
+<D:multistatus xmlns:D=""DAV:"">
+  <D:response xmlns:ns=""http://ns.example.com/"">
+    <D:href>http://www.example.com/file</D:href>
+    <D:propstat>
+      <D:status>HTTP/1.1 200 OK</D:status>
+      <D:prop>
+        <D:getcontenttype/>
+      </D:prop>
+    </D:propstat>
+    <D:propstat>
+      <D:status>HTTP/1.1 424 Failed Dependency</D:status>
+      <D:prop>
+        <ns:myprop/>
+      </D:prop>
     </D:propstat>
   </D:response>
 </D:multistatus>";

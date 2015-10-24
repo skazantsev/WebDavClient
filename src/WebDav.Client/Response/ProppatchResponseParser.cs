@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace WebDav.Response
 {
@@ -11,8 +10,8 @@ namespace WebDav.Response
             if (string.IsNullOrEmpty(response))
                 return new ProppatchResponse(statusCode, description);
 
-            var xresponse = XDocument.Parse(response);
-            if (xresponse.Root == null)
+            var xresponse = XDocumentExt.TryParse(response);
+            if (xresponse == null ||  xresponse.Root == null)
                 return new ProppatchResponse(statusCode, description);
 
             var propStatuses = xresponse.Root.LocalNameElements("response", StringComparison.OrdinalIgnoreCase)

@@ -49,7 +49,7 @@ namespace WebDav.Client.Tests.Response
         public void When_EmptyMultiStatus_Should_ReturnEmptyResourcesCollection()
         {
             var parser = new PropfindResponseParser();
-            var response = parser.Parse(Responses.Propfind.EmptyMultiStatusResponse, 207, "Multi-Status");
+            var response = parser.Parse(Responses.Common.EmptyMultiStatusResponse, 207, "Multi-Status");
 
             Assert.Equal(207, response.StatusCode);
             Assert.Equal("Multi-Status", response.Description);
