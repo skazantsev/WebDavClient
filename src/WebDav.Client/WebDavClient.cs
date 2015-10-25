@@ -392,7 +392,10 @@ namespace WebDav
             Guard.NotNull(requestUri, "requestUri");
             Guard.NotNull(stream, "stream");
 
-            var requestParams = new RequestParameters { Content = new StreamContent(stream), ContentType = parameters.ContentType };
+            var headers = new RequestHeaders();
+            if (!string.IsNullOrEmpty(parameters.LockToken))
+                headers.Add(new KeyValuePair<string, string>("If", IfHeaderHelper.GetHeaderValue(parameters.LockToken)));
+            var requestParams = new RequestParameters { Headers = headers, Content = new StreamContent(stream), ContentType = parameters.ContentType };
             var response = await _dispatcher.Send(requestUri, HttpMethod.Put, requestParams, parameters.CancellationToken);
             return new WebDavResponse(response.StatusCode, response.Description);
         }

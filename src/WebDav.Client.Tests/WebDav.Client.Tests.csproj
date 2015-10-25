@@ -86,6 +86,7 @@
     <Compile Include="WebDavClientTests\Predicates.cs" />
     <Compile Include="WebDavClientTests\PropfindTests.cs" />
     <Compile Include="WebDavClientTests\ProppatchTests.cs" />
+    <Compile Include="WebDavClientTests\PutFileTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
