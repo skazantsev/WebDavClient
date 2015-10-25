@@ -17,12 +17,12 @@ namespace WebDav.Client.Tests.WebDavClientTests
             client.SetWebDavDispatcher(Dispatcher.Mock());
             client.GetFile(Arg.Any<Uri>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(new WebDavStreamResponse(200));
 
-            await client.GetRawFile(new Uri("http://example.com/new"));
-            await client.GetRawFile("http://example.com/new");
-            await client.GetRawFile(new Uri("http://example.com/new"), new GetFileParameters());
-            await client.GetRawFile("http://example.com/new", new GetFileParameters());
+            await client.GetRawFile(new Uri("http://example.com/file"));
+            await client.GetRawFile("http://example.com/file");
+            await client.GetRawFile(new Uri("http://example.com/file"), new GetFileParameters());
+            await client.GetRawFile("http://example.com/file", new GetFileParameters());
 
-            await client.Received(4).GetFile(Arg.Is<Uri>(x => x.ToString() == "http://example.com/new"), false, CancellationToken.None);
+            await client.Received(4).GetFile(Arg.Is<Uri>(x => x.ToString() == "http://example.com/file"), false, CancellationToken.None);
         }
 
         [Fact]
@@ -32,12 +32,12 @@ namespace WebDav.Client.Tests.WebDavClientTests
             client.SetWebDavDispatcher(Dispatcher.Mock());
             client.GetFile(Arg.Any<Uri>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(new WebDavStreamResponse(200));
 
-            await client.GetProcessedFile(new Uri("http://example.com/new"));
-            await client.GetProcessedFile("http://example.com/new");
-            await client.GetProcessedFile(new Uri("http://example.com/new"), new GetFileParameters());
-            await client.GetProcessedFile("http://example.com/new", new GetFileParameters());
+            await client.GetProcessedFile(new Uri("http://example.com/file"));
+            await client.GetProcessedFile("http://example.com/file");
+            await client.GetProcessedFile(new Uri("http://example.com/file"), new GetFileParameters());
+            await client.GetProcessedFile("http://example.com/file", new GetFileParameters());
 
-            await client.Received(4).GetFile(Arg.Is<Uri>(x => x.ToString() == "http://example.com/new"), true, CancellationToken.None);
+            await client.Received(4).GetFile(Arg.Is<Uri>(x => x.ToString() == "http://example.com/file"), true, CancellationToken.None);
         }
 
         [Fact]

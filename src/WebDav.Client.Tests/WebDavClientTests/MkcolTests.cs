@@ -38,7 +38,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         [Fact]
         public async void When_IsCalledWithDefaultArguments_Should_SendMkcolRequest()
         {
-            var requestUri = new Uri("http://example.com");
+            var requestUri = new Uri("http://example.com/new");
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient();
             client.SetWebDavDispatcher(dispatcher);
@@ -57,7 +57,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var client = new WebDavClient();
             client.SetWebDavDispatcher(dispatcher);
 
-            await client.Mkcol("http://example.com", new MkColParameters { CancellationToken = cts.Token });
+            await client.Mkcol("http://example.com/new", new MkColParameters { CancellationToken = cts.Token });
             await dispatcher.Received(1)
                 .Send(Arg.Any<Uri>(), WebDavMethod.Mkcol, Arg.Is<RequestParameters>(x => !x.Headers.Any() && x.Content == null), cts.Token);
         }
@@ -65,7 +65,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         [Fact]
         public async void When_IsCalledWithLockToken_Should_SetIfHeader()
         {
-            var requestUri = new Uri("http://example.com");
+            var requestUri = new Uri("http://example.com/new");
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient();
             client.SetWebDavDispatcher(dispatcher);
