@@ -65,7 +65,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         }
 
         [Fact]
-        public async void When_GetFile_Should_SendGetRequestWithNullContent()
+        public async void When_GetFile_Should_SendGetRequest()
         {
             var requestUri = new Uri("http://example.com/file");
             var dispatcher = Dispatcher.Mock();
