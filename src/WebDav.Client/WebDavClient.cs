@@ -259,7 +259,7 @@ namespace WebDav
             return GetFile(requestUri, true, parameters.CancellationToken);
         }
 
-        private async Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, CancellationToken cancellationToken)
+        internal async virtual Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, CancellationToken cancellationToken)
         {
             Guard.NotNull(requestUri, "requestUri");
 
