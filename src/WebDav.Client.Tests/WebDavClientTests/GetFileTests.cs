@@ -13,8 +13,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         [Fact]
         public async void When_GetRawFileIsCalled_Should_ProxyCallToGetFile()
         {
-            var client = Substitute.ForPartsOf<WebDavClient>();
-            client.SetWebDavDispatcher(Dispatcher.Mock());
+            var client = Substitute.ForPartsOf<WebDavClient>().SetWebDavDispatcher(Dispatcher.Mock());
             client.GetFile(Arg.Any<Uri>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(new WebDavStreamResponse(200));
 
             await client.GetRawFile(new Uri("http://example.com/file"));
@@ -28,8 +27,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         [Fact]
         public async void When_GetProcessedFileIsCalled_Should_ProxyCallToGetFile()
         {
-            var client = Substitute.ForPartsOf<WebDavClient>();
-            client.SetWebDavDispatcher(Dispatcher.Mock());
+            var client = Substitute.ForPartsOf<WebDavClient>().SetWebDavDispatcher(Dispatcher.Mock());
             client.GetFile(Arg.Any<Uri>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(new WebDavStreamResponse(200));
 
             await client.GetProcessedFile(new Uri("http://example.com/file"));
@@ -43,8 +41,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         [Fact]
         public async void When_RequestIsSuccessfull_Should_ReturnStatusCode200()
         {
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(Dispatcher.Mock());
+            var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.Mock());
             var response1 = await client.GetFile(new Uri("http://example.com/file"), false, CancellationToken.None);
             var response2 = await client.GetFile(new Uri("http://example.com/file"), true, CancellationToken.None);
 
@@ -55,8 +52,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         [Fact]
         public async void When_RequestIsFailed_Should_ReturnStatusCode500()
         {
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(Dispatcher.MockFaulted());
+            var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.MockFaulted());
             var response1 = await client.GetFile(new Uri("http://example.com/file"), false, CancellationToken.None);
             var response2 = await client.GetFile(new Uri("http://example.com/file"), true, CancellationToken.None);
 
@@ -69,8 +65,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         {
             var requestUri = new Uri("http://example.com/file");
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.GetFile(requestUri, false, CancellationToken.None);
@@ -84,8 +79,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         {
             var requestUri = new Uri("http://example.com/file");
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.GetFile(requestUri, false, CancellationToken.None);
@@ -98,8 +92,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         {
             var requestUri = new Uri("http://example.com/file");
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.GetFile(requestUri, true, CancellationToken.None);

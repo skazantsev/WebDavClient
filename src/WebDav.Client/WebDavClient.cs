@@ -639,30 +639,36 @@ namespace WebDav
         /// Sets the dispatcher of WebDAV requests.
         /// </summary>
         /// <param name="dispatcher">The dispatcher of WebDAV http requests.</param>
-        internal void SetWebDavDispatcher(IWebDavDispatcher dispatcher)
+        /// <returns>This instance of <see cref="WebDavClient" /> to support chain calls.</returns>
+        internal WebDavClient SetWebDavDispatcher(IWebDavDispatcher dispatcher)
         {
             Guard.NotNull(dispatcher, "dispather");
             _dispatcher = dispatcher;
+            return this;
         }
 
         /// <summary>
         /// Sets the parser of PROPFIND responses.
         /// </summary>
         /// <param name="responseParser">The parser of WebDAV PROPFIND responses.</param>
-        internal void SetPropfindResponseParser(IResponseParser<PropfindResponse> responseParser)
+        /// <returns>This instance of <see cref="WebDavClient" /> to support chain calls.</returns>
+        internal WebDavClient SetPropfindResponseParser(IResponseParser<PropfindResponse> responseParser)
         {
             Guard.NotNull(responseParser, "responseParser");
             _propfindResponseParser = responseParser;
+            return this;
         }
 
         /// <summary>
         /// Sets the parser of PROPPATCH responses.
         /// </summary>
         /// <param name="responseParser">The parser of WebDAV PROPPATCH responses.</param>
-        internal void SetProppatchResponseParser(IResponseParser<ProppatchResponse> responseParser)
+        /// <returns>This instance of <see cref="WebDavClient" /> to support chain calls.</returns>
+        internal WebDavClient SetProppatchResponseParser(IResponseParser<ProppatchResponse> responseParser)
         {
             Guard.NotNull(responseParser, "responseParser");
             _proppatchResponseParser = responseParser;
+            return this;
         }
 
         private static HttpClient ConfigureHttpClient(WebDavClientParams @params)

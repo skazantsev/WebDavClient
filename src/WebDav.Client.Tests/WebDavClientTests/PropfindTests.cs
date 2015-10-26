@@ -14,8 +14,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         [Fact]
         public async void When_RequestIsSuccessfull_Should_ReturnStatusCode200()
         {
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(Dispatcher.Mock());
+            var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.Mock());
             var response1 = await client.Propfind("http://example.com");
             var response2 = await client.Propfind(new Uri("http://example.com"));
             var response3 = await client.Propfind("http://example.com", new PropfindParameters());
@@ -32,9 +31,9 @@ namespace WebDav.Client.Tests.WebDavClientTests
         {
             var dispatcher = Dispatcher.Mock("response", 207, "Multi-Status");
             var propfindResponseParser = Substitute.For<IResponseParser<PropfindResponse>>();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
-            client.SetPropfindResponseParser(propfindResponseParser);
+            var client = new WebDavClient()
+                .SetWebDavDispatcher(dispatcher)
+                .SetPropfindResponseParser(propfindResponseParser);
 
             propfindResponseParser.DidNotReceiveWithAnyArgs().Parse("", 0, "");
             await client.Propfind("http://example");
@@ -44,8 +43,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         [Fact]
         public async void When_RequestIsFailed_Should_ReturnStatusCode500()
         {
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(Dispatcher.MockFaulted());
+            var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.MockFaulted());
             var response = await client.Propfind("http://example.com");
             Assert.Equal(500, response.StatusCode);
         }
@@ -55,8 +53,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         {
             var requestUri = new Uri("http://example.com");
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Propfind(requestUri);
@@ -68,8 +65,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         public async void When_IsAppliedToResourceAndAncestors_Should_SendDepthHeaderEqualsInfinity()
         {
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await client.Propfind("http://example.com", new PropfindParameters { ApplyTo = ApplyTo.Propfind.ResourceAndAncestors });
             await dispatcher.Received(1)
@@ -80,8 +76,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         public async void When_IsAppliedToResourceAndChildren_Should_SendDepthHeaderEqualsOne()
         {
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await client.Propfind("http://example.com", new PropfindParameters { ApplyTo = ApplyTo.Propfind.ResourceAndChildren });
             await dispatcher.Received(1)
@@ -92,8 +87,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         public async void When_IsAppliedToResourceOnly_Should_SendDepthHeaderEqualsZero()
         {
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await client.Propfind("http://example.com", new PropfindParameters { ApplyTo = ApplyTo.Propfind.ResourceOnly });
             await dispatcher.Received(1)
@@ -105,8 +99,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
         {
             var cts = new CancellationTokenSource();
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await client.Propfind("http://example.com", new PropfindParameters { CancellationToken = cts.Token });
             await dispatcher.Received(1)
@@ -122,8 +115,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
   <D:allprop />
 </D:propfind>";
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await client.Propfind("http://example.com");
             await dispatcher.Received(1)
@@ -143,8 +135,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
   </D:include>
 </D:propfind>";
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await client.Propfind("http://example.com",
                 new PropfindParameters
@@ -168,8 +159,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
   </D:include>
 </D:propfind>";
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await client.Propfind("http://example.com",
                 new PropfindParameters
@@ -193,8 +183,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
   </D:include>
 </D:propfind>";
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await client.Propfind("http://example.com",
                 new PropfindParameters
@@ -218,8 +207,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
   </D:include>
 </D:propfind>";
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await client.Propfind("http://example.com",
                 new PropfindParameters
@@ -244,8 +232,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
   </D:include>
 </D:propfind>";
             var dispatcher = Dispatcher.Mock();
-            var client = new WebDavClient();
-            client.SetWebDavDispatcher(dispatcher);
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
             await client.Propfind("http://example.com",
                 new PropfindParameters
