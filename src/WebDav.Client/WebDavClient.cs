@@ -466,9 +466,8 @@ namespace WebDav
         /// </summary>
         /// <param name="sourceUri">A string that represents the source <see cref="T:System.Uri"/>.</param>
         /// <param name="destUri">A string that represents the destination <see cref="T:System.Uri"/>.</param>
-        /// <param name="overwrite">A value indicating whether the server should overwrite a non-null destination.</param>
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
-        public Task<WebDavResponse> Move(string sourceUri, string destUri, bool overwrite = true)
+        public Task<WebDavResponse> Move(string sourceUri, string destUri)
         {
             return Move(CreateUri(sourceUri), CreateUri(destUri), new MoveParameters());
         }
@@ -478,9 +477,8 @@ namespace WebDav
         /// </summary>
         /// <param name="sourceUri">The source <see cref="T:System.Uri"/>.</param>
         /// <param name="destUri">The destination <see cref="T:System.Uri"/>.</param>
-        /// <param name="overwrite">A value indicating whether the server should overwrite a non-null destination.</param>
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
-        public Task<WebDavResponse> Move(Uri sourceUri, Uri destUri, bool overwrite = true)
+        public Task<WebDavResponse> Move(Uri sourceUri, Uri destUri)
         {
             return Move(sourceUri, destUri, new MoveParameters());
         }
