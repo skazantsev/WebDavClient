@@ -83,6 +83,7 @@
     <Compile Include="WebDavClientTests\CopyTests.cs" />
     <Compile Include="WebDavClientTests\DeleteTests.cs" />
     <Compile Include="WebDavClientTests\GetFileTests.cs" />
+    <Compile Include="WebDavClientTests\LockTests.cs" />
     <Compile Include="WebDavClientTests\MkcolTests.cs" />
     <Compile Include="WebDavClientTests\MoveTests.cs" />
     <Compile Include="WebDavClientTests\Predicates.cs" />
