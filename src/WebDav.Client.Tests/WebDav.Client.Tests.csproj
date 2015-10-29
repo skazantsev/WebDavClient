@@ -90,6 +90,7 @@
     <Compile Include="WebDavClientTests\PropfindTests.cs" />
     <Compile Include="WebDavClientTests\ProppatchTests.cs" />
     <Compile Include="WebDavClientTests\PutFileTests.cs" />
+    <Compile Include="WebDavClientTests\UnlockTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

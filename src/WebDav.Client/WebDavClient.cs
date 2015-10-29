@@ -588,7 +588,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
         public Task<WebDavResponse> Unlock(string requestUri, string lockToken)
         {
-            return Unlock(CreateUri(requestUri), new UnlockParameters { LockToken = lockToken });
+            return Unlock(CreateUri(requestUri), new UnlockParameters(lockToken));
         }
 
         /// <summary>
@@ -599,7 +599,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
         public Task<WebDavResponse> Unlock(Uri requestUri, string lockToken)
         {
-            return Unlock(requestUri, new UnlockParameters { LockToken = lockToken });
+            return Unlock(requestUri, new UnlockParameters(lockToken));
         }
 
         /// <summary>
