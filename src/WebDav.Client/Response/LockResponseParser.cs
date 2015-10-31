@@ -5,9 +5,9 @@ using System.Xml.Linq;
 
 namespace WebDav.Response
 {
-    internal static class LockResponseParser
+    internal class LockResponseParser : IResponseParser<LockResponse>
     {
-        public static LockResponse Parse(string response, int statusCode, string description)
+        public LockResponse Parse(string response, int statusCode, string description)
         {
             var xresponse = XDocumentExt.TryParse(response);
             if (xresponse == null || xresponse.Root == null)
@@ -18,7 +18,7 @@ namespace WebDav.Response
             return new LockResponse(statusCode, description, activeLocks);
         }
 
-        public static List<ActiveLock> ParseLockDiscovery(XElement lockdiscovery)
+        public List<ActiveLock> ParseLockDiscovery(XElement lockdiscovery)
         {
             if (lockdiscovery == null)
                 return new List<ActiveLock>();
@@ -29,7 +29,7 @@ namespace WebDav.Response
                 .ToList();
         }
 
-        private static ActiveLock CreateActiveLock(List<XElement> properties)
+        private ActiveLock CreateActiveLock(List<XElement> properties)
         {
             var activeLock =
                 new ActiveLock.Builder()

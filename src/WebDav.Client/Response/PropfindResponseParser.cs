@@ -7,6 +7,14 @@ namespace WebDav.Response
 {
     internal class PropfindResponseParser : IResponseParser<PropfindResponse>
     {
+        private readonly LockResponseParser _lockResponseParser;
+
+        public PropfindResponseParser(LockResponseParser lockResponseParser)
+        {
+            Guard.NotNull(lockResponseParser, "lockResponseParser");
+            _lockResponseParser = lockResponseParser;
+        }
+
         public PropfindResponse Parse(string response, int statusCode, string description)
         {
             if (string.IsNullOrEmpty(response))
@@ -33,7 +41,7 @@ namespace WebDav.Response
         {
             var properties = MultiStatusParser.GetProperties(propstats);
             var resourceBuilder = new WebDavResource.Builder()
-                .WithActiveLocks(LockResponseParser.ParseLockDiscovery(FindProp("{DAV:}lockdiscovery", properties)))
+                .WithActiveLocks(_lockResponseParser.ParseLockDiscovery(FindProp("{DAV:}lockdiscovery", properties)))
                 .WithContentLanguage(PropertyValueParser.ParseString(FindProp("{DAV:}getcontentlanguage", properties)))
                 .WithContentLength(PropertyValueParser.ParseInteger(FindProp("{DAV:}getcontentlength", properties)))
                 .WithContentType(PropertyValueParser.ParseString(FindProp("{DAV:}getcontenttype", properties)))

@@ -10,7 +10,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResponseIsNull_Should_ReturnEmptyResourcesCollection()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(null, 207, "Multi-Status");
 
             Assert.Equal(207, response.StatusCode);
@@ -23,7 +23,7 @@ namespace WebDav.Client.Tests.Response
         public void When_ResponseIsEmpty_Should_ReturnEmptyResourcesCollection()
         {
             const string htmlresponse = "";
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(htmlresponse, 207, "Multi-Status");
 
             Assert.Equal(207, response.StatusCode);
@@ -36,7 +36,7 @@ namespace WebDav.Client.Tests.Response
         public void When_NotValidXml_Should_ReturnEmptyResourcesCollection()
         {
             const string htmlresponse = "<root></";
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(htmlresponse, 207, "Multi-Status");
 
             Assert.Equal(207, response.StatusCode);
@@ -48,7 +48,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_EmptyMultiStatus_Should_ReturnEmptyResourcesCollection()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Common.EmptyMultiStatusResponse, 207, "Multi-Status");
 
             Assert.Equal(207, response.StatusCode);
@@ -60,7 +60,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResponseHasNoProperties_Should_ReturnOneElementWithDefaultValues()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithoutProperties, 207, "Multi-Status");
             var element = response.Resources.ElementAt(0);
 
@@ -83,7 +83,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResponseHasOneDeadProperty_Should_ReturnItsValue()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.FileResponseWithOneProperty, 207, "Multi-Status");
             var element = response.Resources.ElementAt(0);
             var property = element.Properties.ElementAt(0);
@@ -95,7 +95,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResponseHasOneDeadProperty_Should_ReturnItsStatus()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.FileResponseWithOneProperty, 207, "Multi-Status");
             var element = response.Resources.ElementAt(0);
             var status = element.PropertyStatuses.ElementAt(0);
@@ -110,7 +110,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResponseHasStandardProperties_Should_FillWebDavResourceProperties()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.FileResponseWithStandardProperties, 207, "Multi-Status");
             var element = response.Resources.ElementAt(0);
             var @lock = element.ActiveLocks.ElementAt(0);
@@ -145,7 +145,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_PropertyStatusOutOfRange2XX_Should_NotSuccessfullStatus()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.FileResponse403Status, 207, "Multi-Status");
             var status = response.Resources.ElementAt(0).PropertyStatuses.ElementAt(0);
 
@@ -157,7 +157,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_IsCollectionPropertyEqualsZero_Should_ReturnFile()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithIsCollectionZeroProperty, 207, "Multi-Status");
             var element = response.Resources.ElementAt(0);
 
@@ -167,7 +167,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_IsCollectionPropertyEqualsNotZero_Should_ReturnCollection()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithIsCollectionOneProperty, 207, "Multi-Status");
             var element = response.Resources.ElementAt(0);
 
@@ -177,7 +177,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResourceTypePropertyIsCollection_Should_ReturnCollection()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithResourceTypeCollectionProperty, 207, "Multi-Status");
             var element = response.Resources.ElementAt(0);
 
@@ -187,7 +187,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_PropertyHasComplexValue_Should_ReturnItsValueAsString()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithComplexProperties, 207, "Multi-Status");
             var property = response.Resources.ElementAt(0).Properties.ElementAt(0);
 
@@ -198,7 +198,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResponseHasSeveralResources_Should_ParseThemAll()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithTwoResources, 207, "Multi-Status");
 
             Assert.Equal(2, response.Resources.Count);
@@ -207,7 +207,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResponseHasPropertiesWithXmlNamespaces_Should_ReturnPropertyNameWithNamespace()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithPropertyWithXmlNamespace, 207, "Multi-Status");
             var property = response.Resources.ElementAt(0).Properties.ElementAt(0);
 
@@ -219,7 +219,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResponseHasRepeatedProperties_Should_TakeFirst()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.FileResponseWithMultipleSimilarProperties, 207, "Multi-Status");
             var property = response.Resources.ElementAt(0).Properties.ElementAt(0);
 
@@ -229,7 +229,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResourceHasWrongUriFormat_Should_ReturnStilReturnIt()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithWrongUriFormat, 207, "Multi-Status");
 
             Assert.Equal("URI", response.Resources.ElementAt(0).Uri);
@@ -238,7 +238,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_PropertyStatusHasWrongFormat_Should_ReturnItAnyway()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithWrongStatusFormat, 207, "Multi-Status");
             var status = response.Resources.ElementAt(0).PropertyStatuses.ElementAt(0);
 
@@ -251,7 +251,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResponseDoesNotHaveXmlDeclaration_Should_Handle()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithoutXmlDeclaration, 207, "Multi-Status");
 
             Assert.Equal(1, response.Resources.Count);
@@ -260,7 +260,7 @@ namespace WebDav.Client.Tests.Response
         [Fact]
         public void When_ResponseHasIncorrectCreationDateFormat_Should_ReturnNull()
         {
-            var parser = new PropfindResponseParser();
+            var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithIncorectCreationDateFormat, 207, "Multi-Status");
             var element = response.Resources.ElementAt(0);
 

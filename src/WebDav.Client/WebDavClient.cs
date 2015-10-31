@@ -23,6 +23,8 @@ namespace WebDav
 
         private IResponseParser<ProppatchResponse> _proppatchResponseParser;
 
+        private IResponseParser<LockResponse> _lockResponseParser;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WebDavClient"/> class.
         /// </summary>
@@ -38,8 +40,11 @@ namespace WebDav
         public WebDavClient(WebDavClientParams @params)
         {
             SetWebDavDispatcher(new WebDavDispatcher(ConfigureHttpClient(@params)));
-            SetPropfindResponseParser(new PropfindResponseParser());
+
+            var lockResponseParser = new LockResponseParser();
+            SetPropfindResponseParser(new PropfindResponseParser(lockResponseParser));
             SetProppatchResponseParser(new ProppatchResponseParser());
+            SetLockResponseParser(lockResponseParser);
         }
 
         /// <summary>
@@ -576,7 +581,7 @@ namespace WebDav
                 return new LockResponse(response.StatusCode, response.Description);
 
             var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return LockResponseParser.Parse(responseContent, response.StatusCode, response.Description);
+            return _lockResponseParser.Parse(responseContent, response.StatusCode, response.Description);
         }
 
 
@@ -666,6 +671,18 @@ namespace WebDav
         {
             Guard.NotNull(responseParser, "responseParser");
             _proppatchResponseParser = responseParser;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the parser of LOCK responses.
+        /// </summary>
+        /// <param name="responseParser">The parser of WebDAV LOCK responses.</param>
+        /// <returns>This instance of <see cref="WebDavClient" /> to support chain calls.</returns>
+        internal WebDavClient SetLockResponseParser(IResponseParser<LockResponse> responseParser)
+        {
+            Guard.NotNull(responseParser, "responseParser");
+            _lockResponseParser = responseParser;
             return this;
         }
 
