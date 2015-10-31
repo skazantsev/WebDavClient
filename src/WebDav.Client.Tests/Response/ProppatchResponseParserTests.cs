@@ -57,7 +57,7 @@ namespace WebDav.Client.Tests.Response
         }
 
         [Fact]
-        public void When_ResponseHasProperties_Should_TheirStatus()
+        public void When_ResponseHasProperties_Should_ReturnTheirStatus()
         {
             var parser = new ProppatchResponseParser();
             var response = parser.Parse(Responses.Proppatch.ResponseWithDifferentStatuses, 207, "Multi-Status");
