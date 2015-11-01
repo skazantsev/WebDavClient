@@ -51,8 +51,10 @@ namespace WebDav.Response
             return null;
         }
 
-        public static ApplyTo.Lock ParseLockDepth(XElement element)
+        public static ApplyTo.Lock? ParseLockDepth(XElement element)
         {
+            if (element == null)
+                return null;
             return element.Value.Equals("0") ? ApplyTo.Lock.ResourceOnly : ApplyTo.Lock.ResourceAndAncestors;
         }
 

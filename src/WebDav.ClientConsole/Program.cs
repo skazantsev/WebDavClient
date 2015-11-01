@@ -118,7 +118,7 @@ namespace WebDav.ClientConsole
             Console.WriteLine("LockToken: {0}", @lock.LockToken);
             Console.WriteLine("LockScope: {0}", @lock.LockScope.HasValue ? Enum.GetName(typeof(LockScope), @lock.LockScope) : "null");
             Console.WriteLine("LockOwner: {0}", @lock.Owner != null ? @lock.Owner.Value : "null");
-            Console.WriteLine("ApplyTo: {0}", Enum.GetName(typeof(ApplyTo.Lock), @lock.ApplyTo));
+            Console.WriteLine("ApplyTo: {0}", @lock.ApplyTo.HasValue ? Enum.GetName(typeof(ApplyTo.Lock), @lock.ApplyTo.Value) : "null");
             Console.WriteLine("Timeout: {0}", @lock.Timeout.HasValue ? @lock.Timeout.Value.TotalSeconds.ToString() : "infinity");
             Console.WriteLine();
         }

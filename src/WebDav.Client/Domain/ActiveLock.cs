@@ -15,7 +15,7 @@ namespace WebDav
         /// Gets a value indicating whether the lock is to be applied only to the resource or the resource and all its members.
         /// It corresponds to the WebDAV Depth header.
         /// </summary>
-        public ApplyTo.Lock ApplyTo { get; private set; }
+        public ApplyTo.Lock? ApplyTo { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether this lock is an exclusive lock or a shared lock.
@@ -47,7 +47,7 @@ namespace WebDav
         /// </summary>
         public class Builder
         {
-            private ApplyTo.Lock _applyTo;
+            private ApplyTo.Lock? _applyTo;
             private LockScope? _lockScope;
             private string _lockToken;
             private LockOwner _owner;
@@ -57,7 +57,7 @@ namespace WebDav
             /// <summary>
             /// Sets the ApplyTo parameter of an instance of the <see cref="ActiveLock"/> class.
             /// </summary>
-            public Builder WithApplyTo(ApplyTo.Lock applyTo)
+            public Builder WithApplyTo(ApplyTo.Lock? applyTo)
             {
                 _applyTo = applyTo;
                 return this;

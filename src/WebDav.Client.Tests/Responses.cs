@@ -293,5 +293,176 @@
   </D:response>
 </D:multistatus>";
         }
+
+        public class Lock
+        {
+            public static readonly string ResponseWithEmptyActiveLock =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock></D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithExclusiveLockScope =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+        <D:lockscope><D:exclusive/></D:lockscope>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithSharedLockScope =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+        <D:lockscope><D:shared/></D:lockscope>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithWrongLockScopeValue =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+        <D:lockscope><D:wrong/></D:lockscope>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithDepthEqualsInfinity =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+        <D:depth>infinity</D:depth>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithDepthEqualsZero =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+        <D:depth>0</D:depth>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithWrongDepthValue =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+        <D:depth>wrong</D:depth>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithHrefOwner =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+      <D:owner>
+        <D:href>http://example.org/~ejw/contact.html</D:href>
+      </D:owner>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithPrincipalOwner =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+      <D:owner>Chuck Norris</D:owner>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithTimeout =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+      <D:timeout>Second-119</D:timeout>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithWrongTimeoutFormat =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+      <D:timeout>119 seconds</D:timeout>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithLockToken =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+      <D:locktoken>
+        <D:href>urn:uuid:e71d4fae-5dec-22d6-fea5-00a0c91e6be4</D:href>
+      </D:locktoken>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithLockRoot =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+      <D:lockroot>
+        <D:href>http://example.com/workspace/webdav/proposal.doc</D:href>
+      </D:lockroot>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+
+            public static readonly string ResponseWithStandardProperties =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock>
+      <D:locktype>
+        <D:write/>
+      </D:locktype>
+      <D:lockscope>
+        <D:shared/>
+      </D:lockscope>
+      <D:depth>0</D:depth>
+      <D:owner>Chuck Norris</D:owner>
+      <D:timeout>Second-20</D:timeout>
+      <D:locktoken>
+        <D:href>opaquelocktoken:15f67ec5-e229-4816-8cc7-d73f88d32220.c88101d1141db2de</D:href>
+      </D:locktoken>
+      <D:lockroot>
+        <D:href>http://example.com/1.txt</D:href>
+      </D:lockroot>
+    </D:activelock>
+  </D:lockdiscovery>
+</D:prop>
+";
+
+            public static readonly string ResponseWithTwoLocks =
+                @"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<D:prop xmlns:D=""DAV:"">
+  <D:lockdiscovery>
+    <D:activelock></D:activelock>
+    <D:activelock></D:activelock>
+  </D:lockdiscovery>
+</D:prop>";
+        }
     }
 }
