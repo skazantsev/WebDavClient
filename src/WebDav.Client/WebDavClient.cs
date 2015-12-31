@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WebDav.Infrastructure;
@@ -96,7 +97,7 @@ namespace WebDav
             var requestBody = PropfindRequestBuilder.BuildRequestBody(parameters.CustomProperties, parameters.Namespaces);
             var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Propfind, requestParams, parameters.CancellationToken);
-            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
             return _propfindResponseParser.Parse(responseContent, response.StatusCode, response.Description);
         }
 
@@ -127,7 +128,7 @@ namespace WebDav
                     parameters.Namespaces);
             var requestParams = new RequestParameters { Headers = new RequestHeaders(), Content = new StringContent(requestBody) };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Proppatch, requestParams, parameters.CancellationToken);
-            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
             return _proppatchResponseParser.Parse(responseContent, response.StatusCode, response.Description);
         }
 
@@ -580,10 +581,9 @@ namespace WebDav
             if (!response.IsSuccessful)
                 return new LockResponse(response.StatusCode, response.Description);
 
-            var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
             return _lockResponseParser.Parse(responseContent, response.StatusCode, response.Description);
         }
-
 
         /// <summary>
         /// Removes the lock identified by the lock token from the resource identified by the request URI.
@@ -723,6 +723,27 @@ namespace WebDav
             return
                 new InvalidOperationException(
                     "An invalid request URI was provided. The request URI must either be an absolute URI or BaseAddress must be set.");
+        }
+
+        private static Encoding GetResponseEncoding(HttpContent content, Encoding fallbackEncoding)
+        {
+            if (content.Headers.ContentType == null || content.Headers.ContentType.CharSet == null)
+                return fallbackEncoding;
+
+            try
+            {
+                return Encoding.GetEncoding(content.Headers.ContentType.CharSet);
+            }
+            catch (ArgumentException)
+            {
+                return fallbackEncoding;
+            }
+        }
+
+        private static async Task<string> ReadContentAsString(HttpContent content)
+        {
+            var data = await content.ReadAsByteArrayAsync();
+            return GetResponseEncoding(content, Encoding.UTF8).GetString(data);
         }
 
         private Uri GetAbsoluteUri(Uri uri)
