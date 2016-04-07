@@ -40,7 +40,7 @@ namespace WebDav
         /// </summary>
         public CancellationToken CancellationToken { get; set; }
 
-		/// <summary>
+       	/// <summary>
         /// Gets or sets the LockToken
         /// </summary>
         public string LockToken { get; set; }
