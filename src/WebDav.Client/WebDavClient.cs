@@ -122,11 +122,14 @@ namespace WebDav
         {
             Guard.NotNull(requestUri, "requestUri");
 
+            var headers = new RequestHeaders();
+            if (!string.IsNullOrEmpty(parameters.LockToken))
+                headers.Add(new KeyValuePair<string, string>("If", IfHeaderHelper.GetHeaderValue(parameters.LockToken)));
             var requestBody = ProppatchRequestBuilder.BuildRequestBody(
                     parameters.PropertiesToSet,
                     parameters.PropertiesToRemove,
                     parameters.Namespaces);
-            var requestParams = new RequestParameters { Headers = new RequestHeaders(), Content = new StringContent(requestBody) };
+            var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Proppatch, requestParams, parameters.CancellationToken);
             var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
             return _proppatchResponseParser.Parse(responseContent, response.StatusCode, response.Description);
