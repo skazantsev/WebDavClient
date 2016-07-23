@@ -708,7 +708,12 @@ namespace WebDav
                 httpHandler.Proxy = @params.Proxy;
             }
 
-            var httpClient = new HttpClient(httpHandler, true) { BaseAddress = @params.BaseAddress };
+            var httpClient = new HttpClient(httpHandler, true)
+            {
+                BaseAddress = @params.BaseAddress,
+                Timeout = @params.Timeout
+            };
+
             foreach (var header in @params.DefaultRequestHeaders)
             {
                 httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
