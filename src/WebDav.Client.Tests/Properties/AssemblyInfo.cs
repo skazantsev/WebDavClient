@@ -7,5 +7,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © 2015 skazantsev")]
 [assembly: ComVisible(false)]
 [assembly: Guid("429c1b04-3658-42f1-b673-2cb90b1096bc")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.4.0")]
+[assembly: AssemblyFileVersion("1.0.4.0")]

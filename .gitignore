@@ -12,4 +12,5 @@ _ReSharper*/
 *.DotSettings.user
 _UpgradeReport.*
 packages/
+[Rr]elease/
 *.nupkg
