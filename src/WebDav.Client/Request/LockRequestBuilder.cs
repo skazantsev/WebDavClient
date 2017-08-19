@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Xml.Linq;
 
 namespace WebDav.Request
@@ -32,7 +31,7 @@ namespace WebDav.Request
                     lockscope.Add(new XElement("{DAV:}exclusive"));
                     break;
                 default:
-                    throw new InvalidEnumArgumentException(nameof(lockScope), (int)lockScope, typeof(LockScope));
+                    throw new ArgumentOutOfRangeException(nameof(lockScope));
             }
             return lockscope;
         }

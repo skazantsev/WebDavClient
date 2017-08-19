@@ -751,7 +751,7 @@ namespace WebDav
         private static async Task<string> ReadContentAsString(HttpContent content)
         {
             var data = await content.ReadAsByteArrayAsync();
-            return GetResponseEncoding(content, Encoding.UTF8).GetString(data);
+            return GetResponseEncoding(content, Encoding.UTF8).GetString(data, 0, data.Length);
         }
 
         private Uri GetAbsoluteUri(Uri uri)

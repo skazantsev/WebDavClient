@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using System;
 
 namespace WebDav
 {
@@ -15,7 +15,7 @@ namespace WebDav
                 case ApplyTo.Propfind.ResourceAndAncestors:
                     return "infinity";
                 default:
-                    throw new InvalidEnumArgumentException(nameof(applyTo), (int)applyTo, typeof(ApplyTo.Propfind));
+                    throw new ArgumentOutOfRangeException(nameof(applyTo));
             }
         }
 
@@ -28,7 +28,7 @@ namespace WebDav
                 case ApplyTo.Copy.ResourceAndAncestors:
                     return "infinity";
                 default:
-                    throw new InvalidEnumArgumentException(nameof(applyTo), (int)applyTo, typeof(ApplyTo.Copy));
+                    throw new ArgumentOutOfRangeException(nameof(applyTo));
             }
         }
 
@@ -41,7 +41,7 @@ namespace WebDav
                 case ApplyTo.Lock.ResourceAndAncestors:
                     return "infinity";
                 default:
-                    throw new InvalidEnumArgumentException(nameof(applyTo), (int)applyTo, typeof(ApplyTo.Lock));
+                    throw new ArgumentOutOfRangeException(nameof(applyTo));
             }
         }
     }

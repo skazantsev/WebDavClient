@@ -49,7 +49,7 @@ namespace WebDav.Response
                 .WithDisplayName(PropertyValueParser.ParseString(FindProp("{DAV:}displayname", properties)))
                 .WithETag(PropertyValueParser.ParseString(FindProp("{DAV:}getetag", properties)))
                 .WithLastModifiedDate(PropertyValueParser.ParseDateTime(FindProp("{DAV:}getlastmodified", properties)))
-                .WithProperties(properties.ConvertAll(x => new WebDavProperty(x.Name, x.GetInnerXml())))
+                .WithProperties(properties.Select(x => new WebDavProperty(x.Name, x.GetInnerXml())).ToList())
                 .WithPropertyStatuses(MultiStatusParser.GetPropertyStatuses(propstats));
 
             var isHidden = PropertyValueParser.ParseInteger(FindProp("{DAV:}ishidden", properties)) > 0;
