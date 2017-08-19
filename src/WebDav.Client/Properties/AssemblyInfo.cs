@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("skazantsev")]
 [assembly: AssemblyProduct("WebDav.Client")]
 [assembly: AssemblyDescription("An easy-to-use async WebDAV client for .NET")]
-[assembly: AssemblyCopyright("Copyright © 2016 skazantsev")]
+[assembly: AssemblyCopyright("Copyright © 2017 skazantsev")]
 [assembly: ComVisible(false)]
 [assembly: Guid("0cc4b1b7-57f0-456a-8512-b8d69e34a550")]
-[assembly: AssemblyVersion("1.0.4.0")]
-[assembly: AssemblyFileVersion("1.0.4.0")]
+[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyFileVersion("1.1.0.0")]
 
 #if SIGNED
 [assembly: InternalsVisibleTo("WebDav.Client.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100f130ca0ab17e20a726c71d1629f62002952816a0e1c5dc255118b348a8137f0e9c4b96f448d680a6fc72b30b1c28b7d8b19dca5c812f76230c51c8247e3ee687725635ec749a1f32bcf540913d9bd04d40cd834e9c1103cc4ec47669a0f6348a35fd11d1f935a39d8bfe9721e66f9996ccfa7e88cf38e1806e9cbc1b7256c9b6")]
