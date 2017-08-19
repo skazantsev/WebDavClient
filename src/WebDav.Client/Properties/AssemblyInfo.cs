@@ -1,6 +1,8 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security;
 
 [assembly: AssemblyTitle("WebDav.Client")]
 [assembly: AssemblyCompany("skazantsev")]
@@ -19,3 +21,6 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("WebDav.Client.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 #endif
+
+[assembly: CLSCompliant(true)]
+[assembly: AllowPartiallyTrustedCallers]
