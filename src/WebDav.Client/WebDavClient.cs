@@ -458,7 +458,7 @@ namespace WebDav
             var applyTo = parameters.ApplyTo ?? ApplyTo.Copy.ResourceAndAncestors;
             var headers = new RequestHeaders
             {
-                new KeyValuePair<string, string>("Destination", GetAbsoluteUri(destUri).ToString()),
+                new KeyValuePair<string, string>("Destination", GetAbsoluteUri(destUri).AbsoluteUri),
                 new KeyValuePair<string, string>("Depth", DepthHeaderHelper.GetValueForCopy(applyTo)),
                 new KeyValuePair<string, string>("Overwrite", parameters.Overwrite ? "T" : "F")
             };
@@ -518,7 +518,7 @@ namespace WebDav
 
             var headers = new RequestHeaders
             {
-                new KeyValuePair<string, string>("Destination", GetAbsoluteUri(destUri).ToString()),
+                new KeyValuePair<string, string>("Destination", GetAbsoluteUri(destUri).AbsoluteUri),
                 new KeyValuePair<string, string>("Overwrite", parameters.Overwrite ? "T" : "F")
             };
             if (!string.IsNullOrEmpty(parameters.SourceLockToken))
