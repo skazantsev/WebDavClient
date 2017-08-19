@@ -51,11 +51,11 @@ namespace WebDav
         /// <summary>
         /// Gets the stream of content of the resource.
         /// </summary>
-        public Stream Stream { get; private set; }
+        public Stream Stream { get; }
 
         public override string ToString()
         {
-            return string.Format("WebDAV stream response - StatusCode: {0}, Description: {1}", StatusCode, Description);
+            return $"WebDAV stream response - StatusCode: {StatusCode}, Description: {Description}";
         }
     }
 }

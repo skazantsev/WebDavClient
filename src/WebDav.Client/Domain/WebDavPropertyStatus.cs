@@ -35,17 +35,17 @@ namespace WebDav
         /// <summary>
         /// Gets the property name.
         /// </summary>
-        public XName Name { get; private set; }
+        public XName Name { get; }
 
         /// <summary>
         /// Gets the status code of the operation.
         /// </summary>
-        public int StatusCode { get;  private set; }
+        public int StatusCode { get; }
 
         /// <summary>
         /// Gets the description of the operation.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description { get; }
 
         /// <summary>
         /// Gets a value indicating whether the operation on the property was successful.
@@ -53,14 +53,11 @@ namespace WebDav
         /// <value>
         /// <c>true</c> if the operation was successfull; otherwise, <c>false</c>.
         /// </value>
-        public virtual bool IsSuccessful
-        {
-            get { return StatusCode >= 200 && StatusCode <= 299; }
-        }
+        public virtual bool IsSuccessful => StatusCode >= 200 && StatusCode <= 299;
 
         public override string ToString()
         {
-            return string.Format("{{ Name: {0}, StatusCode: {1}, Description: {2} }}", Name, StatusCode, Description);
+            return $"{{ Name: {Name}, StatusCode: {StatusCode}, Description: {Description} }}";
         }
     }
 }

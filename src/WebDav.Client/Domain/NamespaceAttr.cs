@@ -28,11 +28,11 @@
         /// <summary>
         /// Gets the prefix of this namespace.
         /// </summary>
-        public string Prefix { get; private set; }
+        public string Prefix { get; }
 
         /// <summary>
         /// Gets the namespace in form of URI specified at an xmlns attribute as follows. xmlns:prefix="URI".
         /// </summary>
-        public string Namespace { get; private set; }
+        public string Namespace { get; }
     }
 }

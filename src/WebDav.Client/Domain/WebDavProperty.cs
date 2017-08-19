@@ -23,16 +23,16 @@ namespace WebDav
         /// <summary>
         /// Gets the property name.
         /// </summary>
-        public XName Name { get; private set; }
+        public XName Name { get; }
 
         /// <summary>
         /// Gets the property value.
         /// </summary>
-        public string Value { get; private set; }
+        public string Value { get; }
 
         public override string ToString()
         {
-            return string.Format("{{ Name: {0}, Value: {1} }}", Name, Value);
+            return $"{{ Name: {Name}, Value: {Value} }}";
         }
     }
 }

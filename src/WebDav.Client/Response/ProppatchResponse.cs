@@ -52,11 +52,11 @@ namespace WebDav
         /// <summary>
         /// Gets the collection statuses of set/delete operation on the resource's properties.
         /// </summary>
-        public IReadOnlyCollection<WebDavPropertyStatus> PropertyStatuses { get; private set; }
+        public IReadOnlyCollection<WebDavPropertyStatus> PropertyStatuses { get; }
 
         public override string ToString()
         {
-            return string.Format("PROPPATCH WebDAV response - StatusCode: {0}, Description: {1}", StatusCode, Description);
+            return $"PROPPATCH WebDAV response - StatusCode: {StatusCode}, Description: {Description}";
         }
     }
 }

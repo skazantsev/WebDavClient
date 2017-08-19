@@ -53,11 +53,11 @@ namespace WebDav
         /// <summary>
         /// Gets the collection of WebDAV resources.
         /// </summary>
-        public IReadOnlyCollection<WebDavResource> Resources { get; private set; }
+        public IReadOnlyCollection<WebDavResource> Resources { get; }
 
         public override string ToString()
         {
-            return string.Format("PROPFIND WebDAV response - StatusCode: {0}, Description: {1}", StatusCode, Description);
+            return $"PROPFIND WebDAV response - StatusCode: {StatusCode}, Description: {Description}";
         }
     }
 }

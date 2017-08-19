@@ -16,15 +16,12 @@ namespace WebDav.Infrastructure
             Description = description;
         }
 
-        public HttpContent Content { get; private set; }
+        public HttpContent Content { get; }
 
-        public int StatusCode { get; private set; }
+        public int StatusCode { get; }
 
-        public string Description { get; private set; }
+        public string Description { get; }
 
-        public bool IsSuccessful
-        {
-            get { return StatusCode >= 200 && StatusCode <= 299; }
-        }
+        public bool IsSuccessful => StatusCode >= 200 && StatusCode <= 299;
     }
 }

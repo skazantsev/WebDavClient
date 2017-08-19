@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,23 +18,23 @@ namespace WebDav.ClientConsole
 
         private static async Task TestWebDav()
         {
-            using (var webDavClient = new WebDavClient(new WebDavClientParams { BaseAddress = new Uri("http://localhost:88/") }))
+            using (var webDavClient = new WebDavClient(new WebDavClientParams { BaseAddress = new Uri("http://mywebdav:88/") }))
             {
                 await webDavClient.Copy("1.txt", "_2.txt");
 
-                await webDavClient.Move("http://localhost:88/_2.txt", "2.txt");
+                await webDavClient.Move("http://mywebdav:88/_2.txt", "2.txt");
 
-                await webDavClient.Mkcol("http://localhost:88/mydir");
+                await webDavClient.Mkcol("http://mywebdav:88/mydir");
 
-                await webDavClient.PutFile("http://localhost:88/mydir/test.txt", File.OpenRead("test.txt"), "text/plain");
+                await webDavClient.PutFile("http://mywebdav:88/mydir/test.txt", File.OpenRead("test.txt"), "text/plain");
 
-                await webDavClient.Move("mydir/test.txt", "http://localhost:88/mydir/test_ren.txt");
+                await webDavClient.Move("mydir/test.txt", "http://mywebdav:88/mydir/test_ren.txt");
 
-                await webDavClient.Copy("http://localhost:88/mydir/", "http://localhost:88/mydir1/");
+                await webDavClient.Copy("http://mywebdav:88/mydir/", "http://mywebdav:88/mydir1/");
 
-                await webDavClient.Copy("http://localhost:88/mydir/", "http://localhost:88/mydir2/", new CopyParameters { ApplyTo = ApplyTo.Copy.ResourceOnly });
+                await webDavClient.Copy("http://mywebdav:88/mydir/", "http://mywebdav:88/mydir2/", new CopyParameters { ApplyTo = ApplyTo.Copy.ResourceOnly });
 
-                var response = await webDavClient.GetRawFile("http://localhost:88/mydir/test_ren.txt");
+                var response = await webDavClient.GetRawFile("http://mywebdav:88/mydir/test_ren.txt");
                 using (var reader = new StreamReader(response.Stream))
                 {
                     var fileOutput = await reader.ReadToEndAsync();
@@ -46,7 +47,7 @@ namespace WebDav.ClientConsole
 
                 await TestPropatch(webDavClient);
 
-                await webDavClient.Delete("http://localhost:88/mydir");
+                await webDavClient.Delete("http://mywebdav:88/mydir");
             }
         }
 
@@ -57,7 +58,7 @@ namespace WebDav.ClientConsole
                 CustomProperties = new XName[] {"testprop"},
                 Namespaces = new[] {new NamespaceAttr("http://example.com")}
             };
-            var response = await webDavClient.Propfind("http://localhost:88", propfindParams);
+            var response = await webDavClient.Propfind("http://mywebdav:88", propfindParams);
             Console.WriteLine(response.ToString());
             foreach (var res in response.Resources)
             {
@@ -77,7 +78,7 @@ namespace WebDav.ClientConsole
                 Console.WriteLine("ContentType: {0}", res.ContentType);
                 Console.WriteLine("ETag: {0}", res.ETag);
                 Console.WriteLine("LastModifiedDate: {0}", res.LastModifiedDate);
-                Console.WriteLine("Properties: {0}", "[\r\n " + string.Join("\r\n ", res.Properties.Select(x => string.Format("{0}: {1}", x.Name, x.Value))) + "\r\n]");
+                Console.WriteLine("Properties: {0}", "[\r\n " + string.Join("\r\n ", res.Properties.Select(x => $"{x.Name}: {x.Value}")) + "\r\n]");
                 Console.WriteLine("PropertyStatuses: {0}", "[\r\n " + string.Join("\r\n ", res.PropertyStatuses.Select(x => x.ToString())) + "\r\n]");
                 Console.WriteLine();
             }
@@ -85,7 +86,7 @@ namespace WebDav.ClientConsole
 
         public static async Task TestLock(WebDavClient webDavClient)
         {
-            var response = await webDavClient.Lock("http://localhost:88/1.txt",
+            var response = await webDavClient.Lock("http://mywebdav:88/1.txt",
                     new LockParameters { LockScope = LockScope.Shared, Owner = new PrincipalLockOwner("Chuck Norris"), Timeout = TimeSpan.FromSeconds(120) });
             var token = string.Empty;
             foreach (var @lock in response.ActiveLocks)
@@ -93,18 +94,18 @@ namespace WebDav.ClientConsole
                 token = @lock.LockToken;
                 PrintActiveLock(@lock);
             }
-            await webDavClient.Unlock("http://localhost:88/1.txt", token);
+            await webDavClient.Unlock("http://mywebdav:88/1.txt", token);
             Console.WriteLine("Unlocked!");
 
-            var response2 = await webDavClient.Lock("http://localhost:88/2.txt");
+            var response2 = await webDavClient.Lock("http://mywebdav:88/2.txt");
             var token2 = response2.ActiveLocks.First().LockToken;
-            var deleteResponse = await webDavClient.Delete("http://localhost:88/2.txt");
+            var deleteResponse = await webDavClient.Delete("http://mywebdav:88/2.txt");
             if (!deleteResponse.IsSuccessful)
             {
                 Console.WriteLine("Can't delete a resource. It's locked!");
             }
 
-            deleteResponse = await webDavClient.Delete("http://localhost:88/2.txt", new DeleteParameters { LockToken = token2 });
+            deleteResponse = await webDavClient.Delete("http://mywebdav:88/2.txt", new DeleteParameters { LockToken = token2 });
             if (deleteResponse.IsSuccessful)
             {
                 Console.WriteLine("The resource was deleted.");
@@ -119,7 +120,7 @@ namespace WebDav.ClientConsole
             Console.WriteLine("LockScope: {0}", @lock.LockScope.HasValue ? Enum.GetName(typeof(LockScope), @lock.LockScope) : "null");
             Console.WriteLine("LockOwner: {0}", @lock.Owner != null ? @lock.Owner.Value : "null");
             Console.WriteLine("ApplyTo: {0}", @lock.ApplyTo.HasValue ? Enum.GetName(typeof(ApplyTo.Lock), @lock.ApplyTo.Value) : "null");
-            Console.WriteLine("Timeout: {0}", @lock.Timeout.HasValue ? @lock.Timeout.Value.TotalSeconds.ToString() : "infinity");
+            Console.WriteLine("Timeout: {0}", @lock.Timeout?.TotalSeconds.ToString(CultureInfo.InvariantCulture) ?? "infinity");
             Console.WriteLine();
         }
 
@@ -132,7 +133,7 @@ namespace WebDav.ClientConsole
                 PropertiesToRemove = new List<XName> { "{DAV:}ETag" },
                 Namespaces = new List<NamespaceAttr> { new NamespaceAttr("x", xns) }
             };
-            var response = await webDavClient.Proppatch("http://localhost:88/1.txt", @params);
+            var response = await webDavClient.Proppatch("http://mywebdav:88/1.txt", @params);
             Console.WriteLine(response.ToString());
             Console.WriteLine("PropertyStatuses: {0}", "[\r\n " + string.Join("\r\n ", response.PropertyStatuses.Select(x => x.ToString())) + "\r\n]");
         }

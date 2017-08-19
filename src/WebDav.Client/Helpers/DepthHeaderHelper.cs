@@ -15,7 +15,7 @@ namespace WebDav
                 case ApplyTo.Propfind.ResourceAndAncestors:
                     return "infinity";
                 default:
-                    throw new InvalidEnumArgumentException("applyTo", (int)applyTo, typeof(ApplyTo.Propfind));
+                    throw new InvalidEnumArgumentException(nameof(applyTo), (int)applyTo, typeof(ApplyTo.Propfind));
             }
         }
 
@@ -28,7 +28,7 @@ namespace WebDav
                 case ApplyTo.Copy.ResourceAndAncestors:
                     return "infinity";
                 default:
-                    throw new InvalidEnumArgumentException("applyTo", (int)applyTo, typeof(ApplyTo.Copy));
+                    throw new InvalidEnumArgumentException(nameof(applyTo), (int)applyTo, typeof(ApplyTo.Copy));
             }
         }
 
@@ -41,7 +41,7 @@ namespace WebDav
                 case ApplyTo.Lock.ResourceAndAncestors:
                     return "infinity";
                 default:
-                    throw new InvalidEnumArgumentException("applyTo", (int)applyTo, typeof(ApplyTo.Lock));
+                    throw new InvalidEnumArgumentException(nameof(applyTo), (int)applyTo, typeof(ApplyTo.Lock));
             }
         }
     }

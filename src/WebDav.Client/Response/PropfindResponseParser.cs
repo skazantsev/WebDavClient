@@ -21,7 +21,7 @@ namespace WebDav.Response
                 return new PropfindResponse(statusCode, description);
 
             var xresponse = XDocumentExt.TryParse(response);
-            if (xresponse == null || xresponse.Root == null)
+            if (xresponse?.Root == null)
                 return new PropfindResponse(statusCode, description);
 
             var resources = xresponse.Root.LocalNameElements("response", StringComparison.OrdinalIgnoreCase)

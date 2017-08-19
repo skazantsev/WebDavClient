@@ -7,7 +7,7 @@ namespace WebDav.Response
     {
         public static string ParseString(XElement element)
         {
-            return element != null ? element.Value : null;
+            return element?.Value;
         }
 
         public static int? ParseInteger(XElement element)
@@ -82,7 +82,7 @@ namespace WebDav.Response
             if (value.StartsWith("Second-", StringComparison.OrdinalIgnoreCase))
             {
                 int seconds;
-                if (int.TryParse(value.Substring(value.IndexOf("-") + 1), out seconds))
+                if (int.TryParse(value.Substring(value.IndexOf("-", StringComparison.Ordinal) + 1), out seconds))
                     return TimeSpan.FromSeconds(seconds);
             }
             return null;

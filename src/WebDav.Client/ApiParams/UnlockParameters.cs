@@ -22,7 +22,7 @@ namespace WebDav
         /// <summary>
         /// Gets the resource lock token.
         /// </summary>
-        public string LockToken { get; private set; }
+        public string LockToken { get; }
 
         /// <summary>
         /// Gets or sets the cancellation token.

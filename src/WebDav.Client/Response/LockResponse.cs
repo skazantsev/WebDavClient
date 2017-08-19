@@ -54,11 +54,11 @@ namespace WebDav
         /// <summary>
         /// Gets a collection locks on this resource.
         /// </summary>
-        public IReadOnlyCollection<ActiveLock> ActiveLocks { get; private set; }
+        public IReadOnlyCollection<ActiveLock> ActiveLocks { get; }
 
         public override string ToString()
         {
-            return string.Format("LOCK response - StatusCode: {0}, Description: {1}", StatusCode, Description);
+            return $"LOCK response - StatusCode: {StatusCode}, Description: {Description}";
         }
     }
 }

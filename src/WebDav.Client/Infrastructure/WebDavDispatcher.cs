@@ -17,10 +17,7 @@ namespace WebDav.Infrastructure
             _httpClient = httpClient;
         }
 
-        public Uri BaseAddress
-        {
-            get { return _httpClient.BaseAddress; }
-        }
+        public Uri BaseAddress => _httpClient.BaseAddress;
 
         public async Task<HttpResponse> Send(Uri requestUri, HttpMethod method, RequestParameters requestParams, CancellationToken cancellationToken)
         {
@@ -51,10 +48,7 @@ namespace WebDav.Infrastructure
 
         protected virtual void DisposeManagedResources()
         {
-            if (_httpClient != null)
-            {
-                _httpClient.Dispose();
-            }
+            _httpClient?.Dispose();
         }
 
         #endregion

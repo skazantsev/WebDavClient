@@ -268,7 +268,7 @@ namespace WebDav
             return GetFile(requestUri, true, parameters.CancellationToken);
         }
 
-        internal async virtual Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, CancellationToken cancellationToken)
+        internal virtual async Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, CancellationToken cancellationToken)
         {
             Guard.NotNull(requestUri, "requestUri");
 
@@ -576,7 +576,7 @@ namespace WebDav
             if (parameters.ApplyTo.HasValue)
                 headers.Add(new KeyValuePair<string, string>("Depth", DepthHeaderHelper.GetValueForLock(parameters.ApplyTo.Value)));
             if (parameters.Timeout.HasValue)
-                headers.Add(new KeyValuePair<string, string>("Timeout", string.Format("Second-{0}", parameters.Timeout.Value.TotalSeconds)));
+                headers.Add(new KeyValuePair<string, string>("Timeout", $"Second-{parameters.Timeout.Value.TotalSeconds}"));
 
             var requestBody = LockRequestBuilder.BuildRequestBody(parameters);
             var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
@@ -633,7 +633,7 @@ namespace WebDav
 
             var headers = new RequestHeaders
             {
-                new KeyValuePair<string, string>("Lock-Token", string.Format("<{0}>", parameters.LockToken))
+                new KeyValuePair<string, string>("Lock-Token", $"<{parameters.LockToken}>")
             };
 
             var requestParams = new RequestParameters { Headers = headers };
@@ -735,7 +735,7 @@ namespace WebDav
 
         private static Encoding GetResponseEncoding(HttpContent content, Encoding fallbackEncoding)
         {
-            if (content.Headers.ContentType == null || content.Headers.ContentType.CharSet == null)
+            if (content.Headers.ContentType?.CharSet == null)
                 return fallbackEncoding;
 
             try
@@ -787,10 +787,7 @@ namespace WebDav
         protected virtual void DisposeManagedResources()
         {
             var disposableDispatcher = _dispatcher as IDisposable;
-            if (disposableDispatcher != null)
-            {
-                disposableDispatcher.Dispose();
-            }
+            disposableDispatcher?.Dispose();
         }
 
         #endregion

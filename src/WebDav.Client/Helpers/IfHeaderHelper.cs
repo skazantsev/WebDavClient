@@ -4,7 +4,7 @@
     {
         public static string GetHeaderValue(string lockToken)
         {
-            return string.Format("(<{0}>)", lockToken);
+            return $"(<{lockToken}>)";
         }
     }
 }

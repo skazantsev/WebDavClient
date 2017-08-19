@@ -10,7 +10,7 @@ namespace WebDav.Response
         public LockResponse Parse(string response, int statusCode, string description)
         {
             var xresponse = XDocumentExt.TryParse(response);
-            if (xresponse == null || xresponse.Root == null)
+            if (xresponse?.Root == null)
                 return new LockResponse(statusCode, description);
 
             var lockdiscovery = xresponse.Root.LocalNameElement("lockdiscovery", StringComparison.OrdinalIgnoreCase);

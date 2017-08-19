@@ -32,7 +32,7 @@ namespace WebDav.Request
                     lockscope.Add(new XElement("{DAV:}exclusive"));
                     break;
                 default:
-                    throw new InvalidEnumArgumentException("lockScope", (int)lockScope, typeof(LockScope));
+                    throw new InvalidEnumArgumentException(nameof(lockScope), (int)lockScope, typeof(LockScope));
             }
             return lockscope;
         }
@@ -59,7 +59,7 @@ namespace WebDav.Request
             }
             else
             {
-                throw new ArgumentException("Lock owner is invalid.", "lockOwner");
+                throw new ArgumentException("Lock owner is invalid.", nameof(lockOwner));
             }
             return owner;
         }

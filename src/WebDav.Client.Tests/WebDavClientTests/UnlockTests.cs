@@ -1,7 +1,7 @@
-﻿using NSubstitute;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading;
+using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
 using Xunit;
 

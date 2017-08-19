@@ -10,14 +10,14 @@ namespace WebDav
         public static string ToStringWithDeclaration(this XDocument doc)
         {
             if (doc == null)
-                throw new ArgumentNullException("doc");
+                throw new ArgumentNullException(nameof(doc));
 
             return doc.Declaration + Environment.NewLine + doc;
         }
 
         public static string GetValueOrNull(this XElement element)
         {
-            return element != null ? element.Value : null;
+            return element?.Value;
         }
 
         public static XElement LocalNameElement(this XElement parent, string localName)
