@@ -3,12 +3,14 @@ properties {
     $srcDir = "$baseDir\src"
     $slnPath = "$srcDir\WebDav.sln"
     $releaseDir = "$baseDir\release"
+    $nugetPath= "$baseDir\tools\nuget.exe"
     $global:config = "release"
 }
 
 task default -depends build, test, pack
 
 task build {
+    exec { . $nugetPath restore $slnPath -verbosity normal }
     exec { dotnet build $slnPath -c $config  /v:m /nologo }
 }
 
