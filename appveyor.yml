@@ -1,6 +1,9 @@
 image: Visual Studio 2017
 init:
-  - git config --global core.autocrlf true
-build:
-  verbosity: normal
+- cmd: git config --global core.autocrlf true
+nuget:
+  disable_publish_on_pr: true
+build_script:
+- cmd: .\build.cmd
+test: off
 deploy: off
