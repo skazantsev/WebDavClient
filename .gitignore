@@ -15,3 +15,4 @@ packages/
 [Rr]elease/
 *.nupkg
 .vs/
+.nuget/
