@@ -1,6 +1,6 @@
 # WebDAV .NET client [![Build status](https://ci.appveyor.com/api/projects/status/xee0yxvah59ffvd3?svg=true)](https://ci.appveyor.com/project/skazantsev/webdavclient)
 
-Asyncronous cross-platform WebDAV client for .NET Standard 1.1+. It aims to have a full support of [RFC4918](http://www.webdav.org/specs/rfc4918.html).
+Asynchronous cross-platform WebDAV client for .NET Standard 1.1+. It aims to have a full support of [RFC4918](http://www.webdav.org/specs/rfc4918.html).
 
 ## Installation
 Install WebDav.Client via [NuGet](https://www.nuget.org/packages/WebDav.Client/).
