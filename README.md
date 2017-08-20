@@ -15,7 +15,7 @@ Install-Package WebDav.Client
 - Xamarin
 - UWP
 
-For more information see [.NET Standard](https://docs.microsoft.com/en-us/dotnet/standard/net-standard)
+For more information see [.NET Standard](https://docs.microsoft.com/en-us/dotnet/standard/net-standard).
 
 ## Usage examples
 
