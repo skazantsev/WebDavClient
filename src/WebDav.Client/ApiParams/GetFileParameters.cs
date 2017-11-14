@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 
 namespace WebDav
 {
@@ -19,5 +20,15 @@ namespace WebDav
         /// Gets or sets the cancellation token.
         /// </summary>
         public CancellationToken CancellationToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the quoted ETag string use by the If-None-Match HTTP header.
+        /// </summary>
+        public string ETag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of the If-Modified-Since HTTP header.
+        /// </summary>
+        public DateTimeOffset? IfModifiedSince { get; set; }
     }
 }

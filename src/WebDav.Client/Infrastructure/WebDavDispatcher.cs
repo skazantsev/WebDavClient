@@ -35,7 +35,9 @@ namespace WebDav.Infrastructure
                 }
 
                 var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                return new HttpResponse(response.Content, (int)response.StatusCode, response.ReasonPhrase);
+                return new HttpResponse(response.Content, (int)response.StatusCode, response.ReasonPhrase) {
+                    ETag = response?.Headers?.ETag?.Tag
+                };
             }
         }
 

@@ -212,7 +212,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetRawFile(string requestUri, GetFileParameters parameters)
         {
-            return GetFile(CreateUri(requestUri), false, parameters.CancellationToken);
+            return GetFile(CreateUri(requestUri), false, parameters.CancellationToken, parameters.IfModifiedSince, parameters.ETag);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetRawFile(Uri requestUri, GetFileParameters parameters)
         {
-            return GetFile(requestUri, false, parameters.CancellationToken);
+            return GetFile(requestUri, false, parameters.CancellationToken, parameters.IfModifiedSince, parameters.ETag);
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetProcessedFile(string requestUri, GetFileParameters parameters)
         {
-            return GetFile(CreateUri(requestUri), true, parameters.CancellationToken);
+            return GetFile(CreateUri(requestUri), true, parameters.CancellationToken, parameters.IfModifiedSince, parameters.ETag);
         }
 
         /// <summary>
@@ -265,10 +265,10 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetProcessedFile(Uri requestUri, GetFileParameters parameters)
         {
-            return GetFile(requestUri, true, parameters.CancellationToken);
+            return GetFile(requestUri, true, parameters.CancellationToken, parameters.IfModifiedSince, parameters.ETag);
         }
 
-        internal virtual async Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, CancellationToken cancellationToken)
+        internal virtual async Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, CancellationToken cancellationToken, DateTimeOffset? ifModifiedSince = null, string eTag = null)
         {
             Guard.NotNull(requestUri, "requestUri");
 
@@ -276,10 +276,21 @@ namespace WebDav
             {
                 new KeyValuePair<string, string>("Translate", translate ? "t" : "f")
             };
+            if (eTag != null)
+            {
+                headers.Add(new KeyValuePair<string, string>("If-None-Match", eTag));
+            }
+            if (ifModifiedSince != null)
+            {
+                headers.Add(new KeyValuePair<string, string>("If-Modified-Since", ifModifiedSince.Value.ToString("R")));
+            }
             var requestParams = new RequestParameters { Headers = headers };
             var response = await _dispatcher.Send(requestUri, HttpMethod.Get, requestParams, cancellationToken);
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            return new WebDavStreamResponse(response.StatusCode, response.Description, stream);
+            return new WebDavStreamResponse(response.StatusCode, response.Description, stream) {
+                ETag = response.ETag,
+                LastModified = response.LastModified
+            };
         }
 
         /// <summary>
