@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 
 namespace WebDav.Infrastructure
 {
@@ -14,9 +15,14 @@ namespace WebDav.Infrastructure
             Content = content;
             StatusCode = statusCode;
             Description = description;
+            LastModified = content?.Headers?.LastModified;
         }
 
         public HttpContent Content { get; }
+
+        public string ETag { get; internal set; }
+
+        public DateTimeOffset? LastModified { get; }
 
         public int StatusCode { get; }
 

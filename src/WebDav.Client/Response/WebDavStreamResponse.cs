@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace WebDav
 {
@@ -47,6 +48,10 @@ namespace WebDav
         {
             Stream = stream;
         }
+
+        public string ETag { get; internal set; }
+
+        public DateTimeOffset? LastModified { get; internal set; }
 
         /// <summary>
         /// Gets the stream of content of the resource.
