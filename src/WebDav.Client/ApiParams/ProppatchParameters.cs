@@ -17,6 +17,7 @@ namespace WebDav
             PropertiesToSet = new Dictionary<XName, string>();
             PropertiesToRemove = new List<XName>();
             Namespaces = new List<NamespaceAttr>();
+            Headers = new List<KeyValuePair<string, string>>();
             CancellationToken = CancellationToken.None;
         }
 
@@ -34,6 +35,11 @@ namespace WebDav
         /// Gets or sets the collection of xml namespaces of properties.
         /// </summary>
         public IReadOnlyCollection<NamespaceAttr> Namespaces { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of http request headers.
+        /// </summary>
+        public IReadOnlyCollection<KeyValuePair<string, string>> Headers { get; set; }
 
         /// <summary>
         /// Gets or sets the cancellation token.

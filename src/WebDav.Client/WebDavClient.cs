@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using WebDav.Client.Domain;
 using WebDav.Infrastructure;
 using WebDav.Request;
 using WebDav.Response;
-using RequestHeaders = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, string>>;
 
 namespace WebDav
 {
@@ -90,10 +88,11 @@ namespace WebDav
             Guard.NotNull(requestUri, "requestUri");
 
             var applyTo = parameters.ApplyTo ?? ApplyTo.Propfind.ResourceAndChildren;
-            var headers = new RequestHeaders
-            {
-                new KeyValuePair<string, string>("Depth", DepthHeaderHelper.GetValueForPropfind(applyTo))
-            };
+            var headers = new HeaderBuilder()
+                .Add(WebDavHeaders.Depth, DepthHeaderHelper.GetValueForPropfind(applyTo))
+                .AddWithOverwrite(parameters.Headers)
+                .Build();
+
             var requestBody = PropfindRequestBuilder.BuildRequestBody(parameters.CustomProperties, parameters.Namespaces);
             var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Propfind, requestParams, parameters.CancellationToken);
@@ -122,9 +121,11 @@ namespace WebDav
         {
             Guard.NotNull(requestUri, "requestUri");
 
-            var headers = new RequestHeaders();
+            var headerBuilder = new HeaderBuilder();
             if (!string.IsNullOrEmpty(parameters.LockToken))
-                headers.Add(new KeyValuePair<string, string>("If", IfHeaderHelper.GetHeaderValue(parameters.LockToken)));
+                headerBuilder.Add(WebDavHeaders.If, IfHeaderHelper.GetHeaderValue(parameters.LockToken));
+
+            var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestBody = ProppatchRequestBuilder.BuildRequestBody(
                     parameters.PropertiesToSet,
                     parameters.PropertiesToRemove,
@@ -176,9 +177,11 @@ namespace WebDav
         {
             Guard.NotNull(requestUri, "requestUri");
 
-            var headers = new RequestHeaders();
+            var headerBuilder = new HeaderBuilder();
             if (!string.IsNullOrEmpty(parameters.LockToken))
-                headers.Add(new KeyValuePair<string, string>("If", IfHeaderHelper.GetHeaderValue(parameters.LockToken)));
+                headerBuilder.Add(WebDavHeaders.If, IfHeaderHelper.GetHeaderValue(parameters.LockToken));
+
+            var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestParams = new RequestParameters { Headers = headers };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Mkcol, requestParams, parameters.CancellationToken);
             return new WebDavResponse(response.StatusCode, response.Description);
@@ -191,7 +194,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetRawFile(string requestUri)
         {
-            return GetFile(CreateUri(requestUri), false, CancellationToken.None);
+            return GetFile(CreateUri(requestUri), false, new GetFileParameters());
         }
 
         /// <summary>
@@ -201,7 +204,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetRawFile(Uri requestUri)
         {
-            return GetFile(requestUri, false, CancellationToken.None);
+            return GetFile(requestUri, false, new GetFileParameters());
         }
 
         /// <summary>
@@ -212,7 +215,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetRawFile(string requestUri, GetFileParameters parameters)
         {
-            return GetFile(CreateUri(requestUri), false, parameters.CancellationToken);
+            return GetFile(CreateUri(requestUri), false, new GetFileParameters());
         }
 
         /// <summary>
@@ -223,7 +226,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetRawFile(Uri requestUri, GetFileParameters parameters)
         {
-            return GetFile(requestUri, false, parameters.CancellationToken);
+            return GetFile(requestUri, false, new GetFileParameters());
         }
 
         /// <summary>
@@ -233,7 +236,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetProcessedFile(string requestUri)
         {
-            return GetFile(CreateUri(requestUri), true, CancellationToken.None);
+            return GetFile(CreateUri(requestUri), true, new GetFileParameters());
         }
 
         /// <summary>
@@ -243,7 +246,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetProcessedFile(Uri requestUri)
         {
-            return GetFile(requestUri, true, CancellationToken.None);
+            return GetFile(requestUri, true, new GetFileParameters());
         }
 
         /// <summary>
@@ -254,7 +257,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetProcessedFile(string requestUri, GetFileParameters parameters)
         {
-            return GetFile(CreateUri(requestUri), true, parameters.CancellationToken);
+            return GetFile(CreateUri(requestUri), true, parameters);
         }
 
         /// <summary>
@@ -265,19 +268,20 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetProcessedFile(Uri requestUri, GetFileParameters parameters)
         {
-            return GetFile(requestUri, true, parameters.CancellationToken);
+            return GetFile(requestUri, true, parameters);
         }
 
-        internal virtual async Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, CancellationToken cancellationToken)
+        internal virtual async Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, GetFileParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
 
-            var headers = new RequestHeaders
-            {
-                new KeyValuePair<string, string>("Translate", translate ? "t" : "f")
-            };
+            var headers = new HeaderBuilder()
+                .Add(WebDavHeaders.Translate, translate ? "t" : "f")
+                .AddWithOverwrite(parameters.Headers)
+                .Build();
+
             var requestParams = new RequestParameters { Headers = headers };
-            var response = await _dispatcher.Send(requestUri, HttpMethod.Get, requestParams, cancellationToken);
+            var response = await _dispatcher.Send(requestUri, HttpMethod.Get, requestParams, parameters.CancellationToken);
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             return new WebDavStreamResponse(response.StatusCode, response.Description, stream);
         }
@@ -323,9 +327,11 @@ namespace WebDav
         {
             Guard.NotNull(requestUri, "requestUri");
 
-            var headers = new RequestHeaders();
+            var headerBuilder = new HeaderBuilder();
             if (!string.IsNullOrEmpty(parameters.LockToken))
-                headers.Add(new KeyValuePair<string, string>("If", IfHeaderHelper.GetHeaderValue(parameters.LockToken)));
+                headerBuilder.Add(WebDavHeaders.If, IfHeaderHelper.GetHeaderValue(parameters.LockToken));
+
+            var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestParams = new RequestParameters { Headers = headers };
             var response = await _dispatcher.Send(requestUri, HttpMethod.Delete, requestParams, parameters.CancellationToken);
             return new WebDavResponse(response.StatusCode, response.Description);
@@ -401,9 +407,11 @@ namespace WebDav
             Guard.NotNull(requestUri, "requestUri");
             Guard.NotNull(stream, "stream");
 
-            var headers = new RequestHeaders();
+            var headerBuilder = new HeaderBuilder();
             if (!string.IsNullOrEmpty(parameters.LockToken))
-                headers.Add(new KeyValuePair<string, string>("If", IfHeaderHelper.GetHeaderValue(parameters.LockToken)));
+                headerBuilder.Add(WebDavHeaders.If, IfHeaderHelper.GetHeaderValue(parameters.LockToken));
+
+            var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestParams = new RequestParameters { Headers = headers, Content = new StreamContent(stream), ContentType = parameters.ContentType };
             var response = await _dispatcher.Send(requestUri, HttpMethod.Put, requestParams, parameters.CancellationToken);
             return new WebDavResponse(response.StatusCode, response.Description);
@@ -456,15 +464,15 @@ namespace WebDav
             Guard.NotNull(destUri, "destUri");
 
             var applyTo = parameters.ApplyTo ?? ApplyTo.Copy.ResourceAndAncestors;
-            var headers = new RequestHeaders
-            {
-                new KeyValuePair<string, string>("Destination", GetAbsoluteUri(destUri).AbsoluteUri),
-                new KeyValuePair<string, string>("Depth", DepthHeaderHelper.GetValueForCopy(applyTo)),
-                new KeyValuePair<string, string>("Overwrite", parameters.Overwrite ? "T" : "F")
-            };
-            if (!string.IsNullOrEmpty(parameters.DestLockToken))
-                headers.Add(new KeyValuePair<string, string>("If", IfHeaderHelper.GetHeaderValue(parameters.DestLockToken)));
+            var headerBuilder = new HeaderBuilder()
+                .Add(WebDavHeaders.Destination, GetAbsoluteUri(destUri).AbsoluteUri)
+                .Add(WebDavHeaders.Depth, DepthHeaderHelper.GetValueForCopy(applyTo))
+                .Add(WebDavHeaders.Overwrite, parameters.Overwrite ? "T" : "F");
 
+            if (!string.IsNullOrEmpty(parameters.DestLockToken))
+                headerBuilder.Add(WebDavHeaders.If, IfHeaderHelper.GetHeaderValue(parameters.DestLockToken));
+
+            var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestParams = new RequestParameters { Headers = headers };
             var response = await _dispatcher.Send(sourceUri, WebDavMethod.Copy, requestParams, parameters.CancellationToken);
             return new WebDavResponse(response.StatusCode, response.Description);
@@ -516,16 +524,16 @@ namespace WebDav
             Guard.NotNull(sourceUri, "sourceUri");
             Guard.NotNull(destUri, "destUri");
 
-            var headers = new RequestHeaders
-            {
-                new KeyValuePair<string, string>("Destination", GetAbsoluteUri(destUri).AbsoluteUri),
-                new KeyValuePair<string, string>("Overwrite", parameters.Overwrite ? "T" : "F")
-            };
-            if (!string.IsNullOrEmpty(parameters.SourceLockToken))
-                headers.Add(new KeyValuePair<string, string>("If", IfHeaderHelper.GetHeaderValue(parameters.SourceLockToken)));
-            if (!string.IsNullOrEmpty(parameters.DestLockToken))
-                headers.Add(new KeyValuePair<string, string>("If", IfHeaderHelper.GetHeaderValue(parameters.DestLockToken)));
+            var headerBuilder = new HeaderBuilder()
+                .Add(WebDavHeaders.Destination, GetAbsoluteUri(destUri).AbsoluteUri)
+                .Add(WebDavHeaders.Overwrite, parameters.Overwrite ? "T" : "F");
 
+            if (!string.IsNullOrEmpty(parameters.SourceLockToken))
+                headerBuilder.Add(WebDavHeaders.If, IfHeaderHelper.GetHeaderValue(parameters.SourceLockToken));
+            if (!string.IsNullOrEmpty(parameters.DestLockToken))
+                headerBuilder.Add(WebDavHeaders.If, IfHeaderHelper.GetHeaderValue(parameters.DestLockToken));
+
+            var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestParams = new RequestParameters { Headers = headers };
             var response = await _dispatcher.Send(sourceUri, WebDavMethod.Move, requestParams, parameters.CancellationToken);
             return new WebDavResponse(response.StatusCode, response.Description);
@@ -572,12 +580,13 @@ namespace WebDav
         {
             Guard.NotNull(requestUri, "requestUri");
 
-            var headers = new RequestHeaders();
+            var headerBuilder = new HeaderBuilder();
             if (parameters.ApplyTo.HasValue)
-                headers.Add(new KeyValuePair<string, string>("Depth", DepthHeaderHelper.GetValueForLock(parameters.ApplyTo.Value)));
+                headerBuilder.Add(WebDavHeaders.Depth, DepthHeaderHelper.GetValueForLock(parameters.ApplyTo.Value));
             if (parameters.Timeout.HasValue)
-                headers.Add(new KeyValuePair<string, string>("Timeout", $"Second-{parameters.Timeout.Value.TotalSeconds}"));
+                headerBuilder.Add(WebDavHeaders.Timeout, $"Second-{parameters.Timeout.Value.TotalSeconds}");
 
+            var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestBody = LockRequestBuilder.BuildRequestBody(parameters);
             var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Lock, requestParams, parameters.CancellationToken);
@@ -631,10 +640,10 @@ namespace WebDav
         {
             Guard.NotNull(requestUri, "requestUri");
 
-            var headers = new RequestHeaders
-            {
-                new KeyValuePair<string, string>("Lock-Token", $"<{parameters.LockToken}>")
-            };
+            var headers = new HeaderBuilder()
+                .Add(WebDavHeaders.LockToken, $"<{parameters.LockToken}>")
+                .AddWithOverwrite(parameters.Headers)
+                .Build();
 
             var requestParams = new RequestParameters { Headers = headers };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Unlock, requestParams, parameters.CancellationToken);
@@ -702,6 +711,7 @@ namespace WebDav
             if (@params.Credentials != null)
             {
                 httpHandler.Credentials = @params.Credentials;
+                httpHandler.UseDefaultCredentials = false;
             }
             if (@params.Proxy != null)
             {

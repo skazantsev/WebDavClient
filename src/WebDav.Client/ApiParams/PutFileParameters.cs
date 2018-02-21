@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 
 namespace WebDav
 {
@@ -13,6 +14,7 @@ namespace WebDav
         public PutFileParameters()
         {
             ContentType = "application/octet-stream";
+            Headers = new List<KeyValuePair<string, string>>();
             CancellationToken = CancellationToken.None;
         }
 
@@ -26,6 +28,11 @@ namespace WebDav
         /// Gets or sets the resource lock token.
         /// </summary>
         public string LockToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of http request headers.
+        /// </summary>
+        public IReadOnlyCollection<KeyValuePair<string, string>> Headers { get; set; }
 
         /// <summary>
         /// Gets or sets the cancellation token.

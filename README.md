@@ -89,6 +89,21 @@ using (var webDavClient = new WebDavClient(clientParams))
 }
 ```
 
+**Custom headers:**
+``` csharp
+using (var webDavClient = new WebDavClient())
+{
+    var propfindParams = new PropfindParameters
+    {
+        Headers = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("User-Agent", "Not a browser")
+        }
+    };
+    var result = await webDavClient.Propfind("http://mywebdav/1.txt", propfindParams);
+}
+```
+
 **Synchronous API:**
 ``` csharp
   // will block the current thread, so use it cautiously
