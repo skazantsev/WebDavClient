@@ -702,6 +702,7 @@ namespace WebDav
             if (@params.Credentials != null)
             {
                 httpHandler.Credentials = @params.Credentials;
+                httpHandler.UseDefaultCredentials = false;
             }
             if (@params.Proxy != null)
             {
