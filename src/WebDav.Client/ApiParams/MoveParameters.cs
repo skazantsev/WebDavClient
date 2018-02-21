@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 
 namespace WebDav
 {
@@ -13,6 +14,7 @@ namespace WebDav
         public MoveParameters()
         {
             Overwrite = true;
+            Headers = new List<KeyValuePair<string, string>>();
             CancellationToken = CancellationToken.None;
         }
 
@@ -34,6 +36,11 @@ namespace WebDav
         /// <c>true</c> if the the server should overwrite a non-null destination; otherwise <c>false</c>. The default value is <c>true</c>.
         /// </value>
         public bool Overwrite { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of http request headers.
+        /// </summary>
+        public IReadOnlyCollection<KeyValuePair<string, string>> Headers { get; set; }
 
         /// <summary>
         /// Gets or sets the cancellation token.

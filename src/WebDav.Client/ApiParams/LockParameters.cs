@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace WebDav
@@ -13,6 +14,7 @@ namespace WebDav
         /// </summary>
         public LockParameters()
         {
+            Headers = new List<KeyValuePair<string, string>>();
             CancellationToken = CancellationToken.None;
         }
 
@@ -36,6 +38,11 @@ namespace WebDav
         /// Gets or sets the owner of this lock.
         /// </summary>
         public LockOwner Owner { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of http request headers.
+        /// </summary>
+        public IReadOnlyCollection<KeyValuePair<string, string>> Headers { get; set; }
 
         /// <summary>
         /// Gets or sets the cancellation token.

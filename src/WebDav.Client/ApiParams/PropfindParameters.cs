@@ -16,6 +16,7 @@ namespace WebDav
         {
             CustomProperties = new List<XName>();
             Namespaces = new List<NamespaceAttr>();
+            Headers = new List<KeyValuePair<string, string>>();
             CancellationToken = CancellationToken.None;
         }
 
@@ -34,6 +35,11 @@ namespace WebDav
         /// It corresponds to the WebDAV Depth header.
         /// </summary>
         public ApplyTo.Propfind? ApplyTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of http request headers.
+        /// </summary>
+        public IReadOnlyCollection<KeyValuePair<string, string>> Headers { get; set; }
 
         /// <summary>
         /// Gets or sets the cancellation token.
