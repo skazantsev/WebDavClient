@@ -215,7 +215,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetRawFile(string requestUri, GetFileParameters parameters)
         {
-            return GetFile(CreateUri(requestUri), false, new GetFileParameters());
+            return GetFile(CreateUri(requestUri), false, parameters);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavStreamResponse" /></returns>
         public Task<WebDavStreamResponse> GetRawFile(Uri requestUri, GetFileParameters parameters)
         {
-            return GetFile(requestUri, false, new GetFileParameters());
+            return GetFile(requestUri, false, parameters);
         }
 
         /// <summary>
