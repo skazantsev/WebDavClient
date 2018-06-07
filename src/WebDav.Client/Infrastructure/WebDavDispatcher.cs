@@ -23,15 +23,25 @@ namespace WebDav.Infrastructure
         {
             using (var request = new HttpRequestMessage(method, requestUri))
             {
-                foreach (var header in requestParams.Headers)
-                {
-                    request.Headers.Add(header.Key, header.Value);
-                }
                 if (requestParams.Content != null)
                 {
                     request.Content = requestParams.Content;
                     if (!string.IsNullOrEmpty(requestParams.ContentType))
                         request.Content.Headers.ContentType = new MediaTypeHeaderValue(requestParams.ContentType);
+                }
+
+                foreach (var header in requestParams.Headers)
+                {
+                    // When setting Content-Range as a Header on the HTTPRequestHeader directly, the call to SendAsync crashes out with the following exception:
+                    // "Misused header name. Make sure request headers are used with HttpRequestMessage, response headers with HttpResponseMessage, and content headers with HttpContent objects."
+                    if (header.Key.Equals("Content-Range"))
+                    {
+                        request.Content.Headers.ContentRange = ContentRangeHeaderValue.Parse(header.Value);
+                    }
+                    else
+                    {
+                        request.Headers.Add(header.Key, header.Value);
+                    }
                 }
 
                 var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
