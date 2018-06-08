@@ -233,6 +233,22 @@ namespace WebDav
         /// </summary>
         /// <param name="requestUri">A string that represents the request URI.</param>
         /// <param name="content">The content to pass to the request.</param>
+        /// <returns>An instance of <see cref="WebDavResponse" />.</returns>
+        Task<WebDavResponse> PutFile(string requestUri, HttpContent content);
+
+        /// <summary>
+        /// Requests the resource to be stored under the request URI.
+        /// </summary>
+        /// <param name="requestUri">The <see cref="Uri"/> to request.</param>
+        /// <param name="content">The content to pass to the request.</param>
+        /// <returns>An instance of <see cref="WebDavResponse" />.</returns>
+        Task<WebDavResponse> PutFile(Uri requestUri, HttpContent content);
+
+        /// <summary>
+        /// Requests the resource to be stored under the request URI.
+        /// </summary>
+        /// <param name="requestUri">A string that represents the request URI.</param>
+        /// <param name="content">The content to pass to the request.</param>
         /// <param name="parameters">Parameters of the PUT operation.</param>
         /// <returns>An instance of <see cref="WebDavResponse" />.</returns>
         Task<WebDavResponse> PutFile(string requestUri, HttpContent content, PutFileParameters parameters);

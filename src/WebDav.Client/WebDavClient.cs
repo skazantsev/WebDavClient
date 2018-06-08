@@ -256,6 +256,16 @@ namespace WebDav
           return PutFile(requestUri, new StreamContent(stream), parameters);
         }
 
+        public Task<WebDavResponse> PutFile(string requestUri, HttpContent content)
+        {
+            return PutFile(CreateUri(requestUri), content, new PutFileParameters());
+        }
+
+        public Task<WebDavResponse> PutFile(Uri requestUri, HttpContent content)
+        {
+            return PutFile(requestUri, content, new PutFileParameters());
+        }
+
         public Task<WebDavResponse> PutFile(string requestUri, HttpContent content, PutFileParameters parameters)
         {
             return PutFile(CreateUri(requestUri), content, parameters);
