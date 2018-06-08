@@ -109,7 +109,7 @@ namespace WebDav
 
             var requestBody = PropfindRequestBuilder.BuildRequestBody(parameters.CustomProperties, parameters.Namespaces);
             var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
-            var response = await _dispatcher.Send(requestUri, WebDavMethod.Propfind, requestParams, parameters.CancellationToken);
+            var response = await _dispatcher.Send(requestUri, WebDavMethod.Propfind, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
             return _propfindResponseParser.Parse(responseContent, response.StatusCode, response.Description);
         }
@@ -145,7 +145,7 @@ namespace WebDav
                     parameters.PropertiesToRemove,
                     parameters.Namespaces);
             var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
-            var response = await _dispatcher.Send(requestUri, WebDavMethod.Proppatch, requestParams, parameters.CancellationToken);
+            var response = await _dispatcher.Send(requestUri, WebDavMethod.Proppatch, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
             return _proppatchResponseParser.Parse(responseContent, response.StatusCode, response.Description);
         }
@@ -197,7 +197,7 @@ namespace WebDav
 
             var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestParams = new RequestParameters { Headers = headers };
-            var response = await _dispatcher.Send(requestUri, WebDavMethod.Mkcol, requestParams, parameters.CancellationToken);
+            var response = await _dispatcher.Send(requestUri, WebDavMethod.Mkcol, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             return new WebDavResponse(response.StatusCode, response.Description);
         }
 
@@ -295,7 +295,7 @@ namespace WebDav
                 .Build();
 
             var requestParams = new RequestParameters { Headers = headers };
-            var response = await _dispatcher.Send(requestUri, HttpMethod.Get, requestParams, parameters.CancellationToken);
+            var response = await _dispatcher.Send(requestUri, HttpMethod.Get, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             return new WebDavStreamResponse(response.StatusCode, response.Description, stream);
         }
@@ -347,7 +347,7 @@ namespace WebDav
 
             var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestParams = new RequestParameters { Headers = headers };
-            var response = await _dispatcher.Send(requestUri, HttpMethod.Delete, requestParams, parameters.CancellationToken);
+            var response = await _dispatcher.Send(requestUri, HttpMethod.Delete, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             return new WebDavResponse(response.StatusCode, response.Description);
         }
 
@@ -452,7 +452,7 @@ namespace WebDav
 
             var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestParams = new RequestParameters { Headers = headers, Content = content, ContentType = parameters.ContentType };
-            var response = await _dispatcher.Send(requestUri, HttpMethod.Put, requestParams, parameters.CancellationToken);
+            var response = await _dispatcher.Send(requestUri, HttpMethod.Put, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             return new WebDavResponse(response.StatusCode, response.Description);
         }
 
@@ -513,7 +513,7 @@ namespace WebDav
 
             var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestParams = new RequestParameters { Headers = headers };
-            var response = await _dispatcher.Send(sourceUri, WebDavMethod.Copy, requestParams, parameters.CancellationToken);
+            var response = await _dispatcher.Send(sourceUri, WebDavMethod.Copy, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             return new WebDavResponse(response.StatusCode, response.Description);
         }
 
@@ -574,7 +574,7 @@ namespace WebDav
 
             var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestParams = new RequestParameters { Headers = headers };
-            var response = await _dispatcher.Send(sourceUri, WebDavMethod.Move, requestParams, parameters.CancellationToken);
+            var response = await _dispatcher.Send(sourceUri, WebDavMethod.Move, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             return new WebDavResponse(response.StatusCode, response.Description);
         }
 
@@ -628,7 +628,7 @@ namespace WebDav
             var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestBody = LockRequestBuilder.BuildRequestBody(parameters);
             var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
-            var response = await _dispatcher.Send(requestUri, WebDavMethod.Lock, requestParams, parameters.CancellationToken);
+            var response = await _dispatcher.Send(requestUri, WebDavMethod.Lock, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessful)
                 return new LockResponse(response.StatusCode, response.Description);
 
@@ -685,7 +685,7 @@ namespace WebDav
                 .Build();
 
             var requestParams = new RequestParameters { Headers = headers };
-            var response = await _dispatcher.Send(requestUri, WebDavMethod.Unlock, requestParams, parameters.CancellationToken);
+            var response = await _dispatcher.Send(requestUri, WebDavMethod.Unlock, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             return new WebDavResponse(response.StatusCode, response.Description);
         }
 
@@ -803,7 +803,7 @@ namespace WebDav
 
         private static async Task<string> ReadContentAsString(HttpContent content)
         {
-            var data = await content.ReadAsByteArrayAsync();
+            var data = await content.ReadAsByteArrayAsync().ConfigureAwait(false);
             return GetResponseEncoding(content, Encoding.UTF8).GetString(data, 0, data.Length);
         }
 
