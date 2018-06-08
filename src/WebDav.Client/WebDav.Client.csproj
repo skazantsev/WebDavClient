@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <Version>2.1.0</Version>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <Version>2.2.0</Version>
     <AssemblyName>WebDav.Client</AssemblyName>
     <Title>WebDav.Client</Title>
     <Product>WebDav.Client</Product>
@@ -27,7 +27,7 @@
     <Summary>An easy-to-use async WebDAV client for .NET</Summary>
     <NeutralLanguage>en</NeutralLanguage>
     <Authors>skazantsev</Authors>
-    <Copyright>Copyright © 2017 skazantsev</Copyright>
+    <Copyright>Copyright © 2018 skazantsev</Copyright>
     <PackageId>WebDav.Client</PackageId>
     <PackageTags>WebDAV WebDAVClient WebDAV.Client</PackageTags>
     <PackageLicenseUrl>https://raw.githubusercontent.com/skazantsev/WebDavClient/master/LICENSE.txt</PackageLicenseUrl>

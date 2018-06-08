@@ -125,4 +125,4 @@ var result = await _client.PutFile("http://mywebdav/1.txt", content);
 ```
 
 ## License
-WebDAVClient is licensed under the MIT License. See [LICENSE.txt](https://github.com/skazantsev/WebDavClient/blob/master/LICENSE.txt) for more details.
+WebDavClient is licensed under the MIT License. See [LICENSE.txt](https://github.com/skazantsev/WebDavClient/blob/master/LICENSE.txt) for more details.
