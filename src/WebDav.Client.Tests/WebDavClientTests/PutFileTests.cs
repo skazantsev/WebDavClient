@@ -21,7 +21,7 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var response2 = await client.PutFile(new Uri("http://example.com/file"), stream);
             var response3 = await client.PutFile("http://example.com/file", stream, "text/xml");
             var response4 = await client.PutFile(new Uri("http://example.com/file"), stream, "text/xml");
-            var response5 = await client.PutFile(new Uri("http://example.com/file"), stream, new PutFileParameters());
+            var response5 = await client.PutFile("http://example.com/file", stream, new PutFileParameters());
             var response6 = await client.PutFile(new Uri("http://example.com/file"), stream, new PutFileParameters());
 
             Assert.Equal(200, response1.StatusCode);
