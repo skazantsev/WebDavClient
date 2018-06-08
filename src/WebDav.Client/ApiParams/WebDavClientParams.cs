@@ -17,7 +17,6 @@ namespace WebDav
             UseDefaultCredentials = true;
             DefaultRequestHeaders = new Dictionary<string, string>();
             PreAuthenticate = true;
-            Timeout = TimeSpan.FromMilliseconds(System.Threading.Timeout.Infinite);
             UseProxy = true;
         }
 
@@ -60,7 +59,7 @@ namespace WebDav
         /// <summary>
         /// Gets or sets a timeout for WebDAV operations.
         /// </summary>
-        public TimeSpan Timeout { get; set; }
+        public TimeSpan? Timeout { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a proxy should be used for requests.

@@ -759,9 +759,13 @@ namespace WebDav
 
             var httpClient = new HttpClient(httpHandler, true)
             {
-                BaseAddress = @params.BaseAddress,
-                Timeout = @params.Timeout
+                BaseAddress = @params.BaseAddress
             };
+
+            if (@params.Timeout.HasValue)
+            {
+                httpClient.Timeout = @params.Timeout.Value;
+            }
 
             foreach (var header in @params.DefaultRequestHeaders)
             {
