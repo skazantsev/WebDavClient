@@ -17,61 +17,73 @@ Install-Package WebDav.Client
 
 For more information see [.NET Standard](https://docs.microsoft.com/en-us/dotnet/standard/net-standard).
 
+## Usage notes
+`WebDavClient` uses `HttpClient` under the hood that is why it is a good practice to [share a single instance for the lifetime of the application](https://aspnetmonsters.com/2016/08/2016-08-27-httpclientwrong/).
+
+If you use a dependency injection container to manage dependencies it is a good practice to register `WebDavClient` as a singleton.
+
+It's also possible to instantiate `WebDavClient` with a pre-configured instance of `HttpClient`.
+
 ## Usage examples
 
 **Basic usage:**
 ``` csharp
-using (var webDavClient = new WebDavClient())
+class Example
 {
-    var result = await webDavClient.Propfind("http://mywebdav/1.txt");
-    if (result.IsSuccessful)
-        // continue ...
-    else
-        // handle an error
+    public static IWebDavClient _client = new WebDavClient();
+
+    public void MakeCalls()
+    {
+        var result = await _client.Propfind("http://mywebdav/1.txt");
+        if (result.IsSuccessful)
+            // continue ...
+        else
+            // handle an error
+    }
 }
 ```
 
 **Using BaseAddress:**
 ``` csharp
 var clientParams = new WebDavClientParams { BaseAddress = new Uri("http://mywebdav/") };
-using (var webDavClient = new WebDavClient(clientParams))
+using (var client = new WebDavClient(clientParams))
 {
-    await webDavClient.Propfind("1.txt");
+    await client.Propfind("1.txt");
 }
 ```
 
 **Operations with files and directories (resources & collections):**
 ``` csharp
 var clientParams = new WebDavClientParams { BaseAddress = new Uri("http://mywebdav/") };
-using (var webDavClient = new WebDavClient(clientParams))
+using (var client = new WebDavClient(clientParams))
 {
-    await webDavClient.Mkcol("mydir"); // create a directory
+    await client.Mkcol("mydir"); // create a directory
 
-    await webDavClient.Copy("source.txt", "dest.txt"); // copy a file
+    await client.Copy("source.txt", "dest.txt"); // copy a file
 
-    await webDavClient.Move("source.txt", "dest.txt"); // move a file
+    await client.Move("source.txt", "dest.txt"); // move a file
 
-    await webDavClient.Delete("file.txt", "dest.txt"); // delete a file
+    await client.Delete("file.txt", "dest.txt"); // delete a file
 
-    await webDavClient.GetRawFile("file.txt"); // get a file without processing from the server
+    await client.GetRawFile("file.txt"); // get a file without processing from the server
 
-    await webDavClient.GetProcessedFile("file.txt"); // get a file that can be processed by the server
+    await client.GetProcessedFile("file.txt"); // get a file that can be processed by the server
 
-    await webDavClient.PutFile("file.xml", File.OpenRead("file.xml"), "text/xml"); // upload a resource
+    await client.PutFile("file.xml", File.OpenRead("file.xml")); // upload a resource
 }
 ```
 
 **PROPFIND example:**
 ``` csharp
 // list files & subdirectories in 'mydir'
-var result = await webDavClient.Propfind("http://mywebdav/mydir");
+var result = await _client.Propfind("http://mywebdav/mydir");
 if (result.IsSuccessful)
 {
     foreach (var res in result.Resources)
     {
         Trace.WriteLine("Name: " + res.DisplayName);
         Trace.WriteLine("Is directory: " + res.IsCollection);
-        // other params
+        // etc.
     }
 }
 ```
@@ -83,31 +95,33 @@ var clientParams = new WebDavClientParams
     BaseAddress = new Uri("http://mywebdav/"),
     Credentials = new NetworkCredential("user", "12345")
 };
-using (var webDavClient = new WebDavClient(clientParams))
-{
-    // call webdav methods...
-}
+_client = new WebDavClient(clientParams);
 ```
 
 **Custom headers:**
 ``` csharp
-using (var webDavClient = new WebDavClient())
+var propfindParams = new PropfindParameters
 {
-    var propfindParams = new PropfindParameters
+    Headers = new List<KeyValuePair<string, string>>
     {
-        Headers = new List<KeyValuePair<string, string>>
-        {
-            new KeyValuePair<string, string>("User-Agent", "Not a browser")
-        }
-    };
-    var result = await webDavClient.Propfind("http://mywebdav/1.txt", propfindParams);
-}
+        new KeyValuePair<string, string>("User-Agent", "Not a browser")
+    }
+};
+var result = await _client.Propfind("http://mywebdav/1.txt", propfindParams);
+```
+
+**Content-Range or other content headers:**
+``` csharp
+// Content headers need to be set directly on HttpContent instance.
+var content = new StreamContent(File.OpenRead("test.txt"));
+content.Headers.ContentRange = new ContentRangeHeaderValue(0, 2);
+var result = await _client.PutFile("http://mywebdav/1.txt", content);
 ```
 
 **Synchronous API:**
 ``` csharp
   // will block the current thread, so use it cautiously
-  var result = webDavClient.Propfind("1.txt").Result;
+  var result = _client.Propfind("1.txt").Result;
 ```
 
 ## License
