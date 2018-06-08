@@ -345,7 +345,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
         public Task<WebDavResponse> PutFile(string requestUri, Stream stream)
         {
-            return PutFile(CreateUri(requestUri), stream, new PutFileParameters());
+            return PutFile(CreateUri(requestUri), new StreamContent(stream), new PutFileParameters());
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
         public Task<WebDavResponse> PutFile(Uri requestUri, Stream stream)
         {
-            return PutFile(requestUri, stream, new PutFileParameters());
+            return PutFile(requestUri, new StreamContent(stream), new PutFileParameters());
         }
 
         /// <summary>
@@ -368,7 +368,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
         public Task<WebDavResponse> PutFile(string requestUri, Stream stream, string contentType)
         {
-            return PutFile(CreateUri(requestUri), stream, new PutFileParameters { ContentType = contentType });
+            return PutFile(CreateUri(requestUri), new StreamContent(stream), new PutFileParameters { ContentType = contentType });
         }
 
         /// <summary>
@@ -380,7 +380,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
         public Task<WebDavResponse> PutFile(Uri requestUri, Stream stream, string contentType)
         {
-            return PutFile(requestUri, stream, new PutFileParameters { ContentType = contentType });
+            return PutFile(requestUri, new StreamContent(stream), new PutFileParameters { ContentType = contentType });
         }
 
         /// <summary>
@@ -392,7 +392,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
         public Task<WebDavResponse> PutFile(string requestUri, Stream stream, PutFileParameters parameters)
         {
-            return PutFile(CreateUri(requestUri), stream, parameters);
+            return PutFile(CreateUri(requestUri), new StreamContent(stream), parameters);
         }
 
         /// <summary>
@@ -402,17 +402,42 @@ namespace WebDav
         /// <param name="stream">The stream of content of the resource.</param>
         /// <param name="parameters">Parameters of the PUT operation.</param>
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
-        public async Task<WebDavResponse> PutFile(Uri requestUri, Stream stream, PutFileParameters parameters)
+        /// 
+        public Task<WebDavResponse> PutFile(Uri requestUri, Stream stream, PutFileParameters parameters)
+        {
+          return PutFile(requestUri, new StreamContent(stream), parameters);
+        }
+
+        /// <summary>
+        /// Requests the resource to be stored under the request URI.
+        /// </summary>
+        /// <param name="requestUri">A string that represents the request <see cref="T:System.Uri"/>.</param>
+        /// <param name="content">The content to pass to the request, containing the stream.</param>
+        /// <param name="parameters">Parameters of the PUT operation.</param>
+        /// <returns>An instance of <see cref="WebDavResponse" /></returns>
+        public Task<WebDavResponse> PutFile(string requestUri, HttpContent content, PutFileParameters parameters)
+        {
+            return PutFile(CreateUri(requestUri), content, parameters);
+        }
+
+        /// <summary>
+        /// Requests the resource to be stored under the request URI.
+        /// </summary>
+        /// <param name="requestUri">A string that represents the request <see cref="T:System.Uri"/>.</param>
+        /// <param name="content">The content to pass to the request, containing the stream.</param>
+        /// <param name="parameters">Parameters of the PUT operation.</param>
+        /// <returns>An instance of <see cref="WebDavResponse" /></returns>
+        public async Task<WebDavResponse> PutFile(Uri requestUri, HttpContent content, PutFileParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
-            Guard.NotNull(stream, "stream");
+            Guard.NotNull(content, "content");
 
             var headerBuilder = new HeaderBuilder();
             if (!string.IsNullOrEmpty(parameters.LockToken))
                 headerBuilder.Add(WebDavHeaders.If, IfHeaderHelper.GetHeaderValue(parameters.LockToken));
 
             var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
-            var requestParams = new RequestParameters { Headers = headers, Content = new StreamContent(stream), ContentType = parameters.ContentType };
+            var requestParams = new RequestParameters { Headers = headers, Content = content, ContentType = parameters.ContentType };
             var response = await _dispatcher.Send(requestUri, HttpMethod.Put, requestParams, parameters.CancellationToken);
             return new WebDavResponse(response.StatusCode, response.Description);
         }
