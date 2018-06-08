@@ -23,6 +23,8 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var response4 = await client.PutFile(new Uri("http://example.com/file"), stream, "text/xml");
             var response5 = await client.PutFile("http://example.com/file", stream, new PutFileParameters());
             var response6 = await client.PutFile(new Uri("http://example.com/file"), stream, new PutFileParameters());
+            var response7 = await client.PutFile("http://example.com/file", new StreamContent(stream), new PutFileParameters());
+            var response8 = await client.PutFile(new Uri("http://example.com/file"), new StreamContent(stream), new PutFileParameters());
 
             Assert.Equal(200, response1.StatusCode);
             Assert.Equal(200, response2.StatusCode);
@@ -30,6 +32,8 @@ namespace WebDav.Client.Tests.WebDavClientTests
             Assert.Equal(200, response4.StatusCode);
             Assert.Equal(200, response5.StatusCode);
             Assert.Equal(200, response6.StatusCode);
+            Assert.Equal(200, response7.StatusCode);
+            Assert.Equal(200, response8.StatusCode);
         }
 
         [Fact]
