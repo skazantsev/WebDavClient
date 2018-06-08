@@ -412,7 +412,7 @@ namespace WebDav
         /// Requests the resource to be stored under the request URI.
         /// </summary>
         /// <param name="requestUri">A string that represents the request <see cref="T:System.Uri"/>.</param>
-        /// <param name="content">The content to pass to the request, containing the stream.</param>
+        /// <param name="content">The content to pass to the request.</param>
         /// <param name="parameters">Parameters of the PUT operation.</param>
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
         public Task<WebDavResponse> PutFile(string requestUri, HttpContent content, PutFileParameters parameters)
@@ -423,8 +423,8 @@ namespace WebDav
         /// <summary>
         /// Requests the resource to be stored under the request URI.
         /// </summary>
-        /// <param name="requestUri">A string that represents the request <see cref="T:System.Uri"/>.</param>
-        /// <param name="content">The content to pass to the request, containing the stream.</param>
+        /// <param name="requestUri">The <see cref="System.Uri"/> to request.</param>
+        /// <param name="content">The content to pass to the request.</param>
         /// <param name="parameters">Parameters of the PUT operation.</param>
         /// <returns>An instance of <see cref="WebDavResponse" /></returns>
         public async Task<WebDavResponse> PutFile(Uri requestUri, HttpContent content, PutFileParameters parameters)
