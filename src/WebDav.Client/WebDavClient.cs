@@ -38,7 +38,21 @@ namespace WebDav
         /// <param name="params">The parameters of the WebDAV client.</param>
         public WebDavClient(WebDavClientParams @params)
         {
-            SetWebDavDispatcher(new WebDavDispatcher(ConfigureHttpClient(@params)));
+            Initialize(ConfigureHttpClient(@params));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WebDavClient"/> class.
+        /// </summary>
+        /// <param name="httpClient">The pre-configured instance of <see cref="HttpClient"/>.</param>
+        public WebDavClient(HttpClient httpClient)
+        {
+            Initialize(httpClient);
+        }
+
+        private void Initialize(HttpClient httpClient)
+        {
+            SetWebDavDispatcher(new WebDavDispatcher(httpClient));
 
             var lockResponseParser = new LockResponseParser();
             SetPropfindResponseParser(new PropfindResponseParser(lockResponseParser));
