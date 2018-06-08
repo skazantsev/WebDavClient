@@ -34,11 +34,13 @@
     <PackageProjectUrl>https://github.com/skazantsev/WebDavClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/skazantsev/WebDavClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\..\webdavclient.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
 </Project>
