@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
@@ -40,7 +39,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Lock(requestUri);
             await dispatcher.Received(1)
                 .Send(requestUri, WebDavMethod.Lock, Arg.Any<RequestParameters>(), CancellationToken.None);
@@ -53,7 +51,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Lock(requestUri);
             await dispatcher.Received(1)
                 .Send(requestUri, WebDavMethod.Lock, Arg.Is<RequestParameters>(x => !x.Headers.Any()), CancellationToken.None);

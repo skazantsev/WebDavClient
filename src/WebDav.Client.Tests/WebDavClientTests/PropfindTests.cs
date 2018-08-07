@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading;
 using System.Xml.Linq;
 using NSubstitute;
@@ -35,7 +34,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
                 .SetWebDavDispatcher(dispatcher)
                 .SetPropfindResponseParser(propfindResponseParser);
 
-            propfindResponseParser.DidNotReceiveWithAnyArgs().Parse("", 0, "");
             await client.Propfind("http://example");
             propfindResponseParser.Received(1).Parse("response", 207, "Multi-Status");
         }
@@ -55,7 +53,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Propfind(requestUri);
             await dispatcher.Received(1)
                 .Send(requestUri, WebDavMethod.Propfind, Arg.Is(Predicates.CompareHeader("Depth", "1")), CancellationToken.None);

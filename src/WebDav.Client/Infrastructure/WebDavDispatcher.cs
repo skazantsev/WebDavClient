@@ -19,7 +19,12 @@ namespace WebDav.Infrastructure
 
         public Uri BaseAddress => _httpClient.BaseAddress;
 
-        public async Task<HttpResponse> Send(Uri requestUri, HttpMethod method, RequestParameters requestParams, CancellationToken cancellationToken)
+        public async Task<HttpResponseMessage> Send(
+            Uri requestUri,
+            HttpMethod method,
+            RequestParameters requestParams,
+            CancellationToken cancellationToken,
+            HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead)
         {
             using (var request = new HttpRequestMessage(method, requestUri))
             {
@@ -34,8 +39,8 @@ namespace WebDav.Infrastructure
                         request.Content.Headers.ContentType = new MediaTypeHeaderValue(requestParams.ContentType);
                 }
 
-                var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                return new HttpResponse(response.Content, (int)response.StatusCode, response.ReasonPhrase);
+                var response = await _httpClient.SendAsync(request, httpCompletionOption, cancellationToken).ConfigureAwait(false);
+                return response;
             }
         }
 

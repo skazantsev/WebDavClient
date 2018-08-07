@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Xml.Linq;
 using NSubstitute;
@@ -33,7 +32,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
                 .SetWebDavDispatcher(dispatcher)
                 .SetProppatchResponseParser(proppatchResponseParser);
 
-            proppatchResponseParser.DidNotReceiveWithAnyArgs().Parse("", 0, "");
             await client.Proppatch("http://example", new ProppatchParameters());
             proppatchResponseParser.Received(1).Parse("response", 207, "Multi-Status");
         }
@@ -53,7 +51,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Proppatch(requestUri, new ProppatchParameters());
             await dispatcher.Received(1)
                 .Send(requestUri, WebDavMethod.Proppatch, Arg.Is<RequestParameters>(x => !x.Headers.Any()), CancellationToken.None);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using NSubstitute;
@@ -13,7 +14,8 @@ namespace WebDav.Client.Tests.WebDavClientTests
         public async void When_GetRawFileIsCalled_Should_ProxyCallToGetFile()
         {
             var client = Substitute.ForPartsOf<WebDavClient>().SetWebDavDispatcher(Dispatcher.Mock());
-            client.GetFile(Arg.Any<Uri>(), Arg.Any<bool>(), Arg.Any<GetFileParameters>()).Returns(new WebDavStreamResponse(200));
+            client.GetFile(Arg.Any<Uri>(), Arg.Any<bool>(), Arg.Any<GetFileParameters>())
+                .Returns(new WebDavStreamResponse(new HttpResponseMessage { StatusCode = HttpStatusCode.OK }, null));
 
             await client.GetRawFile(new Uri("http://example.com/file"));
             await client.GetRawFile("http://example.com/file");
@@ -27,7 +29,8 @@ namespace WebDav.Client.Tests.WebDavClientTests
         public async void When_GetProcessedFileIsCalled_Should_ProxyCallToGetFile()
         {
             var client = Substitute.ForPartsOf<WebDavClient>().SetWebDavDispatcher(Dispatcher.Mock());
-            client.GetFile(Arg.Any<Uri>(), Arg.Any<bool>(), Arg.Any<GetFileParameters>()).Returns(new WebDavStreamResponse(200));
+            client.GetFile(Arg.Any<Uri>(), Arg.Any<bool>(), Arg.Any<GetFileParameters>())
+                .Returns(new WebDavStreamResponse(new HttpResponseMessage { StatusCode = HttpStatusCode.OK }, null));
 
             await client.GetProcessedFile(new Uri("http://example.com/file"));
             await client.GetProcessedFile("http://example.com/file");
@@ -66,11 +69,10 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.GetFile(requestUri, false, new GetFileParameters());
             await client.GetFile(requestUri, true, new GetFileParameters());
             await dispatcher.Received(2)
-                .Send(requestUri, HttpMethod.Get, Arg.Is<RequestParameters>(x => x.Content == null), CancellationToken.None);
+                .Send(requestUri, HttpMethod.Get, Arg.Is<RequestParameters>(x => x.Content == null), CancellationToken.None, HttpCompletionOption.ResponseHeadersRead);
         }
 
         [Fact]
@@ -80,10 +82,9 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.GetFile(requestUri, false, new GetFileParameters());
             await dispatcher.Received(1)
-                .Send(requestUri, HttpMethod.Get, Arg.Is(Predicates.CompareHeader("Translate", "f")), CancellationToken.None);
+                .Send(requestUri, HttpMethod.Get, Arg.Is(Predicates.CompareHeader("Translate", "f")), CancellationToken.None, HttpCompletionOption.ResponseHeadersRead);
         }
 
         [Fact]
@@ -93,10 +94,9 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(requestUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.GetFile(requestUri, true, new GetFileParameters());
             await dispatcher.Received(1)
-                .Send(requestUri, HttpMethod.Get, Arg.Is(Predicates.CompareHeader("Translate", "t")), CancellationToken.None);
+                .Send(requestUri, HttpMethod.Get, Arg.Is(Predicates.CompareHeader("Translate", "t")), CancellationToken.None, HttpCompletionOption.ResponseHeadersRead);
         }
     }
 }

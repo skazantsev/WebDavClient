@@ -34,7 +34,7 @@ namespace WebDav.ClientConsole
 
                 await webDavClient.Copy("http://mywebdav:88/mydir/", "http://mywebdav:88/mydir2/", new CopyParameters { ApplyTo = ApplyTo.Copy.ResourceOnly });
 
-                var response = await webDavClient.GetRawFile("http://mywebdav:88/mydir/test_ren.txt");
+                using (var response = await webDavClient.GetRawFile("http://mywebdav:88/mydir/test_ren.txt"))
                 using (var reader = new StreamReader(response.Stream))
                 {
                     var fileOutput = await reader.ReadToEndAsync();
