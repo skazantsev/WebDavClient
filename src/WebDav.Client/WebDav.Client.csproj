@@ -18,13 +18,13 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AssemblyVersion>2.2.1.0</AssemblyVersion>
-    <Version>2.2.1</Version>
+    <AssemblyVersion>2.2.2.0</AssemblyVersion>
+    <Version>2.2.2</Version>
     <AssemblyName>WebDav.Client</AssemblyName>
     <Title>WebDav.Client</Title>
     <Product>WebDav.Client</Product>
-    <Description>An easy-to-use async WebDAV client for .NET Standard 1.1+</Description>
-    <Summary>An easy-to-use async WebDAV client for .NET Standard 1.1+</Summary>
+    <Description>An easy-to-use async WebDAV client for .NET Standard</Description>
+    <Summary>An easy-to-use async WebDAV client for .NET Standard</Summary>
     <NeutralLanguage>en</NeutralLanguage>
     <Authors>skazantsev</Authors>
     <Copyright>Copyright © 2018 skazantsev</Copyright>
