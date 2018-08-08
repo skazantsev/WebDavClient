@@ -1,6 +1,6 @@
 # WebDAV .NET client [![Build status](https://ci.appveyor.com/api/projects/status/xee0yxvah59ffvd3?svg=true)](https://ci.appveyor.com/project/skazantsev/webdavclient)
 
-Asynchronous cross-platform WebDAV client for .NET Standard 1.1+. It aims to have a full support of [RFC4918](http://www.webdav.org/specs/rfc4918.html).
+Asynchronous cross-platform WebDAV client for .NET Standard. It aims to have a full support of [RFC4918](http://www.webdav.org/specs/rfc4918.html).
 
 ## Installation
 Install WebDav.Client via [NuGet](https://www.nuget.org/packages/WebDav.Client/).
@@ -23,6 +23,8 @@ For more information see [.NET Standard](https://docs.microsoft.com/en-us/dotnet
 If you use a dependency injection container to manage dependencies it is a good practice to register `WebDavClient` as a singleton.
 
 It's also possible to instantiate `WebDavClient` with a pre-configured instance of `HttpClient`.
+
+When using `GetRawFile` / `GetProcessedFile` don't forget to dispose the response.
 
 ## Usage examples
 
@@ -65,9 +67,15 @@ using (var client = new WebDavClient(clientParams))
 
     await client.Delete("file.txt", "dest.txt"); // delete a file
 
-    await client.GetRawFile("file.txt"); // get a file without processing from the server
+    using (var response = await client.GetRawFile("file.txt")) // get a file without processing from the server
+    {
+        // use response.Stream
+    }
 
-    await client.GetProcessedFile("file.txt"); // get a file that can be processed by the server
+    using (var response = await client.GetProcessedFile("file.txt")) // get a file that can be processed by the server
+    {
+        // use response.Stream
+    }
 
     await client.PutFile("file.xml", File.OpenRead("file.xml")); // upload a resource
 }
