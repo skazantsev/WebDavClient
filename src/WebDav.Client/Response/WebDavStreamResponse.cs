@@ -1,50 +1,26 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Net.Http;
 
 namespace WebDav
 {
     /// <summary>
     /// Represents a response of the GET operation.
+    /// The class has to be properly disposed.
     /// </summary>
-    public class WebDavStreamResponse : WebDavResponse
+    public class WebDavStreamResponse : WebDavResponse, IDisposable
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WebDavStreamResponse"/> class.
-        /// </summary>
-        /// <param name="statusCode">The status code of the operation.</param>
-        public WebDavStreamResponse(int statusCode)
-            : this(statusCode, null, null)
-        {
-        }
+        private readonly HttpResponseMessage _response;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebDavStreamResponse"/> class.
         /// </summary>
-        /// <param name="statusCode">The status code of the response.</param>
-        /// <param name="stream">The stream of resource's content.</param>
-        public WebDavStreamResponse(int statusCode, Stream stream)
-            : this(statusCode, null, stream)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WebDavStreamResponse"/> class.
-        /// </summary>
-        /// <param name="statusCode">The status code of the response.</param>
-        /// <param name="description">The description of the response.</param>
-        public WebDavStreamResponse(int statusCode, string description)
-            : this(statusCode, description, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WebDavStreamResponse"/> class.
-        /// </summary>
-        /// <param name="statusCode">The status code of the response.</param>
-        /// <param name="description">The description of the response.</param>
+        /// <param name="response">The raw http response.</param>
         /// <param name="stream">The stream of content of the resource.</param>
-        public WebDavStreamResponse(int statusCode, string description, Stream stream)
-            : base(statusCode, description)
+        public WebDavStreamResponse(HttpResponseMessage response, Stream stream)
+            : base((int)response.StatusCode, response.ReasonPhrase)
         {
+            _response = response;
             Stream = stream;
         }
 
@@ -56,6 +32,12 @@ namespace WebDav
         public override string ToString()
         {
             return $"WebDAV stream response - StatusCode: {StatusCode}, Description: {Description}";
+        }
+
+        public void Dispose()
+        {
+            Stream?.Dispose();
+            _response?.Dispose();
         }
     }
 }

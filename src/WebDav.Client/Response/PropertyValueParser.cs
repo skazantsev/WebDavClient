@@ -15,8 +15,15 @@ namespace WebDav.Response
             if (element == null)
                 return null;
 
-            int value;
-            return int.TryParse(element.Value, out value) ? (int?)value : null;
+            return int.TryParse(element.Value, out var value) ? (int?)value : null;
+        }
+
+        public static long? ParseLong(XElement element)
+        {
+            if (element == null)
+                return null;
+
+            return long.TryParse(element.Value, out var value) ? (long?)value : null;
         }
 
         public static DateTime? ParseDateTime(XElement element)

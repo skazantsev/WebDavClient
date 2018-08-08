@@ -43,7 +43,7 @@ namespace WebDav.Response
             var resourceBuilder = new WebDavResource.Builder()
                 .WithActiveLocks(_lockResponseParser.ParseLockDiscovery(FindProp("{DAV:}lockdiscovery", properties)))
                 .WithContentLanguage(PropertyValueParser.ParseString(FindProp("{DAV:}getcontentlanguage", properties)))
-                .WithContentLength(PropertyValueParser.ParseInteger(FindProp("{DAV:}getcontentlength", properties)))
+                .WithContentLength(PropertyValueParser.ParseLong(FindProp("{DAV:}getcontentlength", properties)))
                 .WithContentType(PropertyValueParser.ParseString(FindProp("{DAV:}getcontenttype", properties)))
                 .WithCreationDate(PropertyValueParser.ParseDateTime(FindProp("{DAV:}creationdate", properties)))
                 .WithDisplayName(PropertyValueParser.ParseString(FindProp("{DAV:}displayname", properties)))

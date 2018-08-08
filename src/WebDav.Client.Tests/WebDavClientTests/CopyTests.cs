@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Net.Http;
 using System.Threading;
 using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
@@ -41,7 +40,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(sourceUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Copy(sourceUri, new Uri("http://example.com/new"));
             await dispatcher.Received(1)
                 .Send(sourceUri, WebDavMethod.Copy, Arg.Is(CheckCopyRequestParameters()), CancellationToken.None);
@@ -54,7 +52,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(sourceUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Copy(sourceUri, new Uri("http://example.com/new"));
             await dispatcher.Received(1)
                 .Send(sourceUri, WebDavMethod.Copy, Arg.Is(Predicates.CompareHeader("Destination", "http://example.com/new")), CancellationToken.None);
@@ -67,7 +64,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(sourceUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Copy(sourceUri, new Uri("http://example.com/new"));
             await dispatcher.Received(1)
                 .Send(sourceUri, WebDavMethod.Copy, Arg.Is(Predicates.CompareHeader("Overwrite", "T")), CancellationToken.None);
@@ -80,7 +76,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(sourceUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Copy(sourceUri, new Uri("http://example.com/new"));
             await dispatcher.Received(1)
                 .Send(sourceUri, WebDavMethod.Copy, Arg.Is(Predicates.CompareHeader("Depth", "infinity")), CancellationToken.None);
@@ -93,7 +88,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(sourceUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Copy(sourceUri, new Uri("http://example.com/new"), new CopyParameters { Overwrite = false });
             await dispatcher.Received(1)
                 .Send(sourceUri, WebDavMethod.Copy, Arg.Is(Predicates.CompareHeader("Overwrite", "F")), CancellationToken.None);
@@ -106,7 +100,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(sourceUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Copy(sourceUri, new Uri("http://example.com/new"), new CopyParameters { Overwrite = true });
             await dispatcher.Received(1)
                 .Send(sourceUri, WebDavMethod.Copy, Arg.Is(Predicates.CompareHeader("Overwrite", "T")), CancellationToken.None);
@@ -131,7 +124,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(sourceUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Copy(sourceUri, new Uri("http://example.com/new"), new CopyParameters { ApplyTo = ApplyTo.Copy.ResourceAndAncestors});
             await dispatcher.Received(1)
                 .Send(sourceUri, WebDavMethod.Copy, Arg.Is(Predicates.CompareHeader("Depth", "infinity")), CancellationToken.None);
@@ -144,7 +136,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(sourceUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Copy(sourceUri, new Uri("http://example.com/new"), new CopyParameters { ApplyTo = ApplyTo.Copy.ResourceOnly });
             await dispatcher.Received(1)
                 .Send(sourceUri, WebDavMethod.Copy, Arg.Is(Predicates.CompareHeader("Depth", "0")), CancellationToken.None);
@@ -157,7 +148,6 @@ namespace WebDav.Client.Tests.WebDavClientTests
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await dispatcher.DidNotReceiveWithAnyArgs().Send(sourceUri, Arg.Any<HttpMethod>(), new RequestParameters(), CancellationToken.None);
             await client.Copy(sourceUri, new Uri("http://example.com/new"), new CopyParameters { DestLockToken = "urn:uuid:e71d4fae-5dec-22d6-fea5-00a0c91e6be4" });
             await dispatcher.Received(1)
                 .Send(sourceUri, WebDavMethod.Copy, Arg.Is(Predicates.CompareHeader("If", "(<urn:uuid:e71d4fae-5dec-22d6-fea5-00a0c91e6be4>)")), CancellationToken.None);
