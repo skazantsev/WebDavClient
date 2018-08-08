@@ -30,7 +30,7 @@ namespace WebDav
         /// <summary>
         /// Gets the content length of this resource.
         /// </summary>
-        public int? ContentLength { get; private set; }
+        public long? ContentLength { get; private set; }
 
         /// <summary>
         /// Gets the content type of this resource.
@@ -95,7 +95,7 @@ namespace WebDav
         {
             private IReadOnlyCollection<ActiveLock> _activeLocks;
             private string _contentLanguage;
-            private int? _contentLength;
+            private long? _contentLength;
             private string _contentType;
             private DateTime? _creationDate;
             private string _displayName;
@@ -128,7 +128,7 @@ namespace WebDav
             /// <summary>
             /// Sets the ContentLength parameter of an instance of the <see cref="WebDavResource"/> class.
             /// </summary>
-            public Builder WithContentLength(int? contentLength)
+            public Builder WithContentLength(long? contentLength)
             {
                 _contentLength = contentLength;
                 return this;
