@@ -1,6 +1,6 @@
 # WebDAV .NET client [![Build status](https://ci.appveyor.com/api/projects/status/xee0yxvah59ffvd3?svg=true)](https://ci.appveyor.com/project/skazantsev/webdavclient)
 
-Asynchronous cross-platform WebDAV client for .NET Standard. It aims to have a full support of [RFC4918](http://www.webdav.org/specs/rfc4918.html).
+Asynchronous cross-platform WebDAV client for .NET Standard. It aims to have a full support of [RFC4918](https://tools.ietf.org/html/rfc4918).
 
 ## Installation
 Install WebDav.Client via [NuGet](https://www.nuget.org/packages/WebDav.Client/).
@@ -81,6 +81,16 @@ using (var client = new WebDavClient(clientParams))
 }
 ```
 
+**Authentication:**
+``` csharp
+var clientParams = new WebDavClientParams
+{
+    BaseAddress = new Uri("http://mywebdav/"),
+    Credentials = new NetworkCredential("user", "12345")
+};
+_client = new WebDavClient(clientParams);
+```
+
 **PROPFIND example:**
 ``` csharp
 // list files & subdirectories in 'mydir'
@@ -96,14 +106,14 @@ if (result.IsSuccessful)
 }
 ```
 
-**Authentication example:**
+**PROPFIND with custom properties:**
 ``` csharp
-var clientParams = new WebDavClientParams
+var propfindParams = new PropfindParameters
 {
-    BaseAddress = new Uri("http://mywebdav/"),
-    Credentials = new NetworkCredential("user", "12345")
+    Namespaces = new [] { new NamespaceAttr("myns", "https://example.com/") },
+    CustomProperties = new [] { XName.Get("myprop", "https://example.com/") }
 };
-_client = new WebDavClient(clientParams);
+var result = await client.Propfind("http://mywebdav/mydir", propfindParams);
 ```
 
 **Custom headers:**
