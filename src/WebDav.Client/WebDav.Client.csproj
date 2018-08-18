@@ -1,12 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.1;net45</TargetFrameworks>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <TargetFrameworks>netstandard1.1;netstandard2.0;net45</TargetFrameworks>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
-    <PackageReference Include="NETStandard.Library" Version="1.6.1" />
-  </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="Microsoft.CSharp" />
@@ -18,8 +13,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AssemblyVersion>2.2.3.0</AssemblyVersion>
-    <Version>2.2.3</Version>
+    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <Version>2.3.0</Version>
     <AssemblyName>WebDav.Client</AssemblyName>
     <Title>WebDav.Client</Title>
     <Product>WebDav.Client</Product>
