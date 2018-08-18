@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AssemblyVersion>2.2.2.0</AssemblyVersion>
-    <Version>2.2.2</Version>
+    <AssemblyVersion>2.2.3.0</AssemblyVersion>
+    <Version>2.2.3</Version>
     <AssemblyName>WebDav.Client</AssemblyName>
     <Title>WebDav.Client</Title>
     <Product>WebDav.Client</Product>
