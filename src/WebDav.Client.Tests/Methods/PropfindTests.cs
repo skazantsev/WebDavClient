@@ -239,5 +239,29 @@ namespace WebDav.Client.Tests.Methods
             await dispatcher.Received(1)
                 .Send(Arg.Any<Uri>(), WebDavMethod.Propfind, Arg.Is(Predicates.CompareRequestContent(expectedContent)), CancellationToken.None);
         }
+
+        [Fact]
+        public async void When_NamedRequestIsCalled_Should_SendPropRequest()
+        {
+            const string expectedContent =
+                @"<?xml version=""1.0"" encoding=""utf-8""?>
+<D:propfind xmlns:D=""DAV:"">
+  <D:prop xmlns:P1=""http://p1.example.com"">
+    <D:displayname />
+    <P1:myprop1 />
+  </D:prop>
+</D:propfind>";
+            var dispatcher = Dispatcher.Mock();
+            var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
+
+            await client.Propfind("http://example.com", new PropfindParameters
+            {
+                RequestType = PropfindRequestType.NamedProperties,
+                CustomProperties = new XName[] { "{DAV:}displayname", "{http://p1.example.com}myprop1" },
+                Namespaces = new[] { new NamespaceAttr("P1", "http://p1.example.com") }
+            });
+            await dispatcher.Received(1)
+                .Send(Arg.Any<Uri>(), WebDavMethod.Propfind, Arg.Is(Predicates.CompareRequestContent(expectedContent)), CancellationToken.None);
+        }
     }
 }
