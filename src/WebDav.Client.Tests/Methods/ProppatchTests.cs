@@ -5,10 +5,9 @@ using System.Threading;
 using System.Xml.Linq;
 using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
-using WebDav.Response;
 using Xunit;
 
-namespace WebDav.Client.Tests.WebDavClientTests
+namespace WebDav.Client.Tests.Methods
 {
     public class ProppatchTests
     {

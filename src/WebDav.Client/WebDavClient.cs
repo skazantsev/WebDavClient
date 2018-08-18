@@ -4,10 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using WebDav.Client.Domain;
-using WebDav.Infrastructure;
-using WebDav.Request;
-using WebDav.Response;
 
 namespace WebDav
 {

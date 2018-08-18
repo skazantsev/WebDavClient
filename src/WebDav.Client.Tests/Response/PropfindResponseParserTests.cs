@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using WebDav.Response;
 using Xunit;
 
 namespace WebDav.Client.Tests.Response

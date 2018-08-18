@@ -8,7 +8,7 @@ using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
 using Xunit;
 
-namespace WebDav.Client.Tests.WebDavClientTests
+namespace WebDav.Client.Tests.Methods
 {
     public class PutFileTests
     {

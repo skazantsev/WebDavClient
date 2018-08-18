@@ -1,4 +1,4 @@
-﻿namespace WebDav.Response
+﻿namespace WebDav
 {
     internal interface IResponseParser<out TResponse>
     {

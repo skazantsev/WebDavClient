@@ -1,4 +1,4 @@
-﻿namespace WebDav.Client.Domain
+﻿namespace WebDav
 {
     internal static class WebDavHeaders
     {

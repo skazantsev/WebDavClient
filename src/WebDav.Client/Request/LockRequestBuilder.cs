@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 
-namespace WebDav.Request
+namespace WebDav
 {
     internal static class LockRequestBuilder
     {

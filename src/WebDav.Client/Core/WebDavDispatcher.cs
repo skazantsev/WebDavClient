@@ -4,8 +4,20 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WebDav.Infrastructure
+namespace WebDav
 {
+    internal interface IWebDavDispatcher
+    {
+        Uri BaseAddress { get; }
+
+        Task<HttpResponseMessage> Send(
+            Uri requestUri,
+            HttpMethod method,
+            RequestParameters requestParams,
+            CancellationToken cancellationToken,
+            HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead);
+    }
+
     internal class WebDavDispatcher : IWebDavDispatcher, IDisposable
     {
         private readonly HttpClient _httpClient;

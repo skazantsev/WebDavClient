@@ -1,4 +1,4 @@
-﻿namespace WebDav.Response
+﻿namespace WebDav
 {
     internal enum ResourceType
     {

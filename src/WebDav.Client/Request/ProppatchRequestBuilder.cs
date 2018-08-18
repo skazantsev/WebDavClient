@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 
-namespace WebDav.Request
+namespace WebDav
 {
     internal static class ProppatchRequestBuilder
     {

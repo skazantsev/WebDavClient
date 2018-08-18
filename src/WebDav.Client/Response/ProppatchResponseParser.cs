@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace WebDav.Response
+namespace WebDav
 {
     internal class ProppatchResponseParser : IResponseParser<ProppatchResponse>
     {

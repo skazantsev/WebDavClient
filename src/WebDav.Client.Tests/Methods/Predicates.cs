@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace WebDav.Client.Tests.WebDavClientTests
+namespace WebDav.Client.Tests.Methods
 {
     internal static class Predicates
     {
