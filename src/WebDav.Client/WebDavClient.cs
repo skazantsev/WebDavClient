@@ -800,7 +800,7 @@ namespace WebDav
 
         private static Uri CreateUri(string requestUri)
         {
-            return !string.IsNullOrEmpty(requestUri) ? new Uri(requestUri, UriKind.RelativeOrAbsolute) : null;
+            return requestUri != null ? new Uri(requestUri, UriKind.RelativeOrAbsolute) : null;
         }
 
         private static Exception CreateInvalidUriException()
