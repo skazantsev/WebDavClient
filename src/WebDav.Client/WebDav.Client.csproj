@@ -33,6 +33,7 @@
     <RepositoryUrl>https://github.com/skazantsev/WebDavClient</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/skazantsev/WebDavClient/master/LICENSE.txt</PackageLicenseUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
