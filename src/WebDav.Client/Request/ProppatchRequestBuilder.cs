@@ -20,24 +20,26 @@ namespace WebDav
             if (propertiesToSet.Any())
             {
                 var setEl = new XElement("{DAV:}set");
+                var propEl = new XElement("{DAV:}prop");
                 foreach (var prop in propertiesToSet)
                 {
                     var el = new XElement(prop.Key);
                     el.SetInnerXml(prop.Value);
-                    setEl.Add(new XElement(XName.Get("prop", "DAV:"), el));
+                    propEl.Add(el);
                 }
+                setEl.Add(propEl);
                 propertyupdate.Add(setEl);
             }
 
             if (propertiesToRemove.Any())
             {
                 var removeEl = new XElement("{DAV:}remove");
+                var propEl = new XElement("{DAV:}prop");
                 foreach (var prop in propertiesToRemove)
                 {
-                    removeEl.Add(
-                        new XElement(XName.Get("prop", "DAV:"),
-                            new XElement(prop)));
+                    propEl.Add(new XElement(prop));
                 }
+                removeEl.Add(propEl);
                 propertyupdate.Add(removeEl);
             }
 

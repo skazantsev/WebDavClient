@@ -90,8 +90,6 @@ namespace WebDav.Client.Tests.Methods
   <D:set>
     <D:prop>
       <prop1>value1</prop1>
-    </D:prop>
-    <D:prop>
       <prop2>value2</prop2>
     </D:prop>
   </D:set>
@@ -118,8 +116,6 @@ namespace WebDav.Client.Tests.Methods
   <D:set>
     <D:prop>
       <X:prop1>value1</X:prop1>
-    </D:prop>
-    <D:prop>
       <prop2>value2</prop2>
     </D:prop>
   </D:set>
@@ -151,8 +147,6 @@ namespace WebDav.Client.Tests.Methods
   <D:remove>
     <D:prop>
       <prop1 />
-    </D:prop>
-    <D:prop>
       <prop2 />
     </D:prop>
   </D:remove>
@@ -174,8 +168,6 @@ namespace WebDav.Client.Tests.Methods
   <D:remove>
     <D:prop>
       <X:prop1 />
-    </D:prop>
-    <D:prop>
       <prop2 />
     </D:prop>
   </D:remove>
