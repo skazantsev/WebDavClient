@@ -286,6 +286,15 @@ namespace WebDav
 
         internal virtual async Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, GetFileParameters parameters)
         {
+            var response = await GetFileResponse(requestUri, translate, parameters);
+
+            var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+            return new WebDavStreamResponse(response, stream);
+        }
+
+        public async Task<HttpResponseMessage> GetFileResponse(Uri requestUri, bool translate, GetFileParameters parameters)
+        {
             Guard.NotNull(requestUri, "requestUri");
 
             var headers = new HeaderBuilder()
@@ -293,17 +302,14 @@ namespace WebDav
                 .AddWithOverwrite(parameters.Headers)
                 .Build();
 
-            var requestParams = new RequestParameters { Headers = headers };
+            var requestParams = new RequestParameters {Headers = headers};
             var response = await _dispatcher.Send(
                 requestUri,
                 HttpMethod.Get,
                 requestParams,
                 parameters.CancellationToken,
                 HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-
-            var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-            return new WebDavStreamResponse(response, stream);
+            return response;
         }
 
         /// <summary>
