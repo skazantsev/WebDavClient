@@ -103,8 +103,11 @@ namespace WebDav
                 .AddWithOverwrite(parameters.Headers)
                 .Build();
 
-            var requestBody = PropfindRequestBuilder.BuildRequest(parameters.RequestType, parameters.CustomProperties, parameters.Namespaces);
-            var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
+            HttpContent requestBody = parameters.RequestType == PropfindRequestType.AllPropertiesImplied
+                ? null
+                : new StringContent(PropfindRequestBuilder.BuildRequest(parameters.RequestType, parameters.CustomProperties, parameters.Namespaces));
+
+            var requestParams = new RequestParameters { Headers = headers, Content = requestBody };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Propfind, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
             return _propfindResponseParser.Parse(responseContent, (int)response.StatusCode, response.ReasonPhrase);

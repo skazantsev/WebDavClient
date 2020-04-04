@@ -8,6 +8,11 @@
     public enum PropfindRequestType
     {
         AllProperties,
-        NamedProperties
+        NamedProperties,
+
+        /// <summary>
+        /// Don't pass a body
+        /// </summary>
+        AllPropertiesImplied,
     }
 }
