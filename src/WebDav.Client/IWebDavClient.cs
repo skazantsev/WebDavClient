@@ -147,6 +147,15 @@ namespace WebDav
         Task<WebDavStreamResponse> GetProcessedFile(Uri requestUri, GetFileParameters parameters);
 
         /// <summary>
+        /// Retrieves the raw http response of a file identified by the request URI.
+        /// </summary>
+        /// <param name="requestUri">The <see cref="Uri"/> to request.</param>
+        /// <param name="translate">A parameter indicating if the response can be processed by the web server.</param>
+        /// <param name="parameters">Parameters of the GET operation.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage" />.</returns>
+        Task<HttpResponseMessage> GetFileResponse(Uri requestUri, bool translate, GetFileParameters parameters);
+
+        /// <summary>
         /// Deletes the resource identified by the request URI.
         /// </summary>
         /// <param name="requestUri">A string that represents the request URI.</param>
