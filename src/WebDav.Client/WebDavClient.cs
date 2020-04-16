@@ -286,7 +286,7 @@ namespace WebDav
 
         internal virtual async Task<WebDavStreamResponse> GetFile(Uri requestUri, bool translate, GetFileParameters parameters)
         {
-            var response = await GetFileResponse(requestUri, translate, parameters);
+            var response = await GetFileResponse(requestUri, translate, parameters).ConfigureAwait(false);
 
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
