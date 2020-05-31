@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,8 +48,10 @@ namespace WebDav
                 if (requestParams.Content != null)
                 {
                     request.Content = requestParams.Content;
-                    if (!string.IsNullOrEmpty(requestParams.ContentType))
-                        request.Content.Headers.ContentType = new MediaTypeHeaderValue(requestParams.ContentType);
+                    if (requestParams.ContentType != null)
+                    {
+                        request.Content.Headers.ContentType = requestParams.ContentType;
+                    }
                 }
 
                 var response = await _httpClient.SendAsync(request, httpCompletionOption, cancellationToken).ConfigureAwait(false);

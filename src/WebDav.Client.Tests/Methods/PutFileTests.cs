@@ -123,9 +123,9 @@ namespace WebDav.Client.Tests.Methods
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
 
-            await client.PutFile(requestUri, stream, new PutFileParameters { ContentType = "text/xml" });
+            await client.PutFile(requestUri, stream, new PutFileParameters { ContentType = new MediaTypeHeaderValue("text/xml") });
             await dispatcher.Received(1)
-                .Send(requestUri, HttpMethod.Put, Arg.Is<RequestParameters>(x => x.ContentType == "text/xml"), CancellationToken.None);
+                .Send(requestUri, HttpMethod.Put, Arg.Is<RequestParameters>(x => x.ContentType.MediaType == "text/xml"), CancellationToken.None);
         }
     }
 }
