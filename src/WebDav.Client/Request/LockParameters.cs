@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Threading;
+using WebDav.Client.Core;
 
 namespace WebDav
 {
@@ -14,6 +16,7 @@ namespace WebDav
         /// </summary>
         public LockParameters()
         {
+            ContentType = MediaTypes.XmlMediaType;
             Headers = new List<KeyValuePair<string, string>>();
             CancellationToken = CancellationToken.None;
         }
@@ -38,6 +41,12 @@ namespace WebDav
         /// Gets or sets the owner of this lock.
         /// </summary>
         public LockOwner Owner { get; set; }
+
+        /// <summary>
+        /// Gets or sets the content type of the request body.
+        /// The default value is application/xml; charset=utf-8.
+        /// </summary>
+        public MediaTypeHeaderValue ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of http request headers.

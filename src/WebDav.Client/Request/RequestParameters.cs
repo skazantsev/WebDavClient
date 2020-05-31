@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace WebDav
 {
@@ -14,6 +15,6 @@ namespace WebDav
 
         public HttpContent Content { get; set; }
 
-        public string ContentType { get; set; }
+        public MediaTypeHeaderValue ContentType { get; set; }
     }
 }

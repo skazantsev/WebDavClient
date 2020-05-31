@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -107,7 +108,7 @@ namespace WebDav
                 ? null
                 : new StringContent(PropfindRequestBuilder.BuildRequest(parameters.RequestType, parameters.CustomProperties, parameters.Namespaces));
 
-            var requestParams = new RequestParameters { Headers = headers, Content = requestBody };
+            var requestParams = new RequestParameters { Headers = headers, Content = requestBody, ContentType = parameters.ContentType };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Propfind, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
             return _propfindResponseParser.Parse(responseContent, (int)response.StatusCode, response.ReasonPhrase);
@@ -143,7 +144,7 @@ namespace WebDav
                     parameters.PropertiesToSet,
                     parameters.PropertiesToRemove,
                     parameters.Namespaces);
-            var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
+            var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody), ContentType = parameters.ContentType };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Proppatch, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
             return _proppatchResponseParser.Parse(responseContent, (int)response.StatusCode, response.ReasonPhrase);
@@ -401,7 +402,8 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavResponse" />.</returns>
         public Task<WebDavResponse> PutFile(string requestUri, Stream stream, string contentType)
         {
-            return PutFile(CreateUri(requestUri), new StreamContent(stream), new PutFileParameters { ContentType = contentType });
+            var @params = new PutFileParameters { ContentType = new MediaTypeHeaderValue(contentType) };
+            return PutFile(CreateUri(requestUri), new StreamContent(stream), @params);
         }
 
         /// <summary>
@@ -413,7 +415,8 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavResponse" />.</returns>
         public Task<WebDavResponse> PutFile(Uri requestUri, Stream stream, string contentType)
         {
-            return PutFile(requestUri, new StreamContent(stream), new PutFileParameters { ContentType = contentType });
+            var @params = new PutFileParameters { ContentType = new MediaTypeHeaderValue(contentType) };
+            return PutFile(requestUri, new StreamContent(stream), @params);
         }
 
         /// <summary>
@@ -667,7 +670,7 @@ namespace WebDav
 
             var headers = headerBuilder.AddWithOverwrite(parameters.Headers).Build();
             var requestBody = LockRequestBuilder.BuildRequestBody(parameters);
-            var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody) };
+            var requestParams = new RequestParameters { Headers = headers, Content = new StringContent(requestBody), ContentType = parameters.ContentType };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Lock, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new LockResponse((int)response.StatusCode, response.ReasonPhrase);
