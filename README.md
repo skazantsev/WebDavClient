@@ -1,6 +1,6 @@
 # WebDAV .NET client [![Build status](https://ci.appveyor.com/api/projects/status/xee0yxvah59ffvd3?svg=true)](https://ci.appveyor.com/project/skazantsev/webdavclient)
 
-Asynchronous cross-platform WebDAV client for .NET Standard. It aims to have a full support of [RFC4918](https://tools.ietf.org/html/rfc4918).
+Asynchronous cross-platform WebDAV client for .NET Core and other runtimes. It aims to have a full support of [RFC4918](https://tools.ietf.org/html/rfc4918).
 
 ## Installation
 Install WebDav.Client via [NuGet](https://www.nuget.org/packages/WebDav.Client/).
@@ -9,8 +9,8 @@ Install-Package WebDav.Client
 ```
 
 ## Supported platforms
+- .NET Core 1.0+
 - .NET Framework 4.5+
-- .NET Core
 - Mono
 - Xamarin
 - UWP
@@ -28,7 +28,7 @@ When using `GetRawFile` / `GetProcessedFile` don't forget to dispose the respons
 
 ## Usage examples
 
-**Basic usage:**
+**Basic usage**
 ``` csharp
 class Example
 {
@@ -45,7 +45,7 @@ class Example
 }
 ```
 
-**Using BaseAddress:**
+**Using BaseAddress**
 ``` csharp
 var clientParams = new WebDavClientParams { BaseAddress = new Uri("http://mywebdav/") };
 using (var client = new WebDavClient(clientParams))
@@ -54,7 +54,7 @@ using (var client = new WebDavClient(clientParams))
 }
 ```
 
-**Operations with files and directories (resources & collections):**
+**Operations with files and directories (resources & collections)**
 ``` csharp
 var clientParams = new WebDavClientParams { BaseAddress = new Uri("http://mywebdav/") };
 using (var client = new WebDavClient(clientParams))
@@ -81,17 +81,25 @@ using (var client = new WebDavClient(clientParams))
 }
 ```
 
-**Authentication:**
+**Authentication using an access token**
+``` csharp
+var httpClient = new HttpClient();
+httpClient.DefaultRequestHeaders.Authorization = 
+    new AuthenticationHeaderValue("Bearer", accessToken);
+var client = new WebDavClient(httpClient);
+```
+
+**Authentication using NetworkCredential**
 ``` csharp
 var clientParams = new WebDavClientParams
 {
     BaseAddress = new Uri("http://mywebdav/"),
     Credentials = new NetworkCredential("user", "12345")
 };
-_client = new WebDavClient(clientParams);
+var client = new WebDavClient(clientParams);
 ```
 
-**PROPFIND example:**
+**PROPFIND example**
 ``` csharp
 // list files & subdirectories in 'mydir'
 var result = await _client.Propfind("http://mywebdav/mydir");
@@ -106,7 +114,7 @@ if (result.IsSuccessful)
 }
 ```
 
-**PROPFIND with custom properties:**
+**PROPFIND with custom properties**
 ``` csharp
 var propfindParams = new PropfindParameters
 {
@@ -116,7 +124,7 @@ var propfindParams = new PropfindParameters
 var result = await client.Propfind("http://mywebdav/mydir", propfindParams);
 ```
 
-**Custom headers:**
+**Custom headers**
 ``` csharp
 var propfindParams = new PropfindParameters
 {
@@ -128,7 +136,7 @@ var propfindParams = new PropfindParameters
 var result = await _client.Propfind("http://mywebdav/1.txt", propfindParams);
 ```
 
-**Content-Range or other content headers:**
+**Content-Range or other content headers**
 ``` csharp
 // Content headers need to be set directly on HttpContent instance.
 var content = new StreamContent(File.OpenRead("test.txt"));
@@ -136,7 +144,7 @@ content.Headers.ContentRange = new ContentRangeHeaderValue(0, 2);
 var result = await _client.PutFile("http://mywebdav/1.txt", content);
 ```
 
-**Synchronous API:**
+**Synchronous API**
 ``` csharp
   // will block the current thread, so use it cautiously
   var result = _client.Propfind("1.txt").Result;
