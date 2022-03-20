@@ -48,6 +48,23 @@ namespace WebDav.ClientConsole
                 await TestPropatch(webDavClient);
 
                 await webDavClient.Delete("http://mywebdav:88/mydir");
+
+                await webDavClient.Search(new Uri("http://mywebdav:88/"),
+                       new Client.Request.SearchParameters()
+                       {
+                           SearchKeyword = "Test%",
+                           SearchPath = "/example/",
+                           SelectProperties = new[]
+                           {
+                                new XElement("{DAV:}displayname"),
+                                new XElement("{DAV:}getcontenttype")
+                           },
+                           WhereProperties = new[]
+                           {
+                                new XElement("{DAV:}displayname")
+                           }
+                       }
+               );
             }
         }
 

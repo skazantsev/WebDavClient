@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using WebDav.Client.Request;
 
 namespace WebDav
 {
@@ -730,6 +731,28 @@ namespace WebDav
             var requestParams = new RequestParameters { Headers = headers };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Unlock, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             return new WebDavResponse((int)response.StatusCode, response.ReasonPhrase);
+        }
+
+        /// <summary>
+        /// Use WebDav SEARCH command.
+        /// </summary>
+        /// <param name="requestUri">Base URI.</param>
+        /// <param name="parameters">Set additional search parameters.</param>
+        /// <returns></returns>
+        public async Task<WebDavResponse> Search(Uri requestUri, SearchParameters parameters)
+        {
+            Guard.NotNull(requestUri, "requestUri");
+
+            var headers = new HeaderBuilder()
+                .AddWithOverwrite(parameters.Headers)
+                .Build();
+
+            HttpContent requestBody = new StringContent(SearchRequestBuilder.BuildRequestBody(parameters.SelectProperties, parameters.SearchPath, parameters.SearchKeyword, parameters.WhereProperties, parameters.Namespaces));
+
+            var requestParams = new RequestParameters { Headers = headers, Content = requestBody, ContentType = new MediaTypeHeaderValue("text/xml") };
+            var response = await _dispatcher.Send(requestUri, WebDavMethod.Search, requestParams, parameters.CancellationToken).ConfigureAwait(false);
+            var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);
+            return _propfindResponseParser.Parse(responseContent, (int)response.StatusCode, response.ReasonPhrase);
         }
 
         /// <summary>
