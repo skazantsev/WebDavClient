@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using WebDav.Client.Request;
 
 namespace WebDav
 {
@@ -403,11 +402,19 @@ namespace WebDav
         Task<WebDavResponse> Unlock(Uri requestUri, UnlockParameters parameters);
 
         /// <summary>
-        /// Use WebDav SEARCH Method.
+        /// Executes a SEARCH operation.
         /// </summary>
-        /// <param name="requestUri">Request uri.</param>
-        /// <param name="parameters">SEARCH parameters.</param>
-        /// <returns></returns>
+        /// <param name="requestUri">A string that represents the request URI.</param>
+        /// <param name="parameters">Parameters of the SEARCH operation.</param>
+        /// <returns>An instance of <see cref="PropfindResponse" />.</returns>
+        Task<PropfindResponse> Search(string requestUri, SearchParameters parameters);
+
+        /// <summary>
+        /// Executes a SEARCH operation.
+        /// </summary>
+        /// <param name="requestUri">The <see cref="Uri"/> to request.</param>
+        /// <param name="parameters">Parameters of the SEARCH operation.</param>
+        /// <returns>An instance of <see cref="PropfindResponse" />.</returns>
         Task<PropfindResponse> Search(Uri requestUri, SearchParameters parameters);
     }
 }

@@ -19,28 +19,31 @@ namespace WebDav
             }
             if (propertiesToSet.Any())
             {
-                var setEl = new XElement("{DAV:}set");
-                var propEl = new XElement("{DAV:}prop");
-                foreach (var prop in propertiesToSet)
-                {
-                    var el = new XElement(prop.Key);
-                    el.SetInnerXml(prop.Value);
-                    propEl.Add(el);
-                }
-                setEl.Add(propEl);
-                propertyupdate.Add(setEl);
+                var set = new XElement(
+                    "{DAV:}set",
+                    new XElement(
+                        "{DAV:}prop",
+                        propertiesToSet.Select(prop =>
+                        {
+                            var el = new XElement(prop.Key);
+                            el.SetInnerXml(prop.Value);
+                            return el;
+                        }).ToArray()
+                    )
+                );
+                propertyupdate.Add(set);
             }
 
             if (propertiesToRemove.Any())
             {
-                var removeEl = new XElement("{DAV:}remove");
-                var propEl = new XElement("{DAV:}prop");
-                foreach (var prop in propertiesToRemove)
-                {
-                    propEl.Add(new XElement(prop));
-                }
-                removeEl.Add(propEl);
-                propertyupdate.Add(removeEl);
+                var remove = new XElement(
+                    "{DAV:}remove",
+                    new XElement(
+                        "{DAV:}prop",
+                        propertiesToRemove.Select(prop => new XElement(prop)).ToArray()
+                    )
+                );
+                propertyupdate.Add(remove);
             }
 
             doc.Add(propertyupdate);

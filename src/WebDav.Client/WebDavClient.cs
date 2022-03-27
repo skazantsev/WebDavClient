@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using WebDav.Client.Request;
 
 namespace WebDav
 {
@@ -105,9 +104,12 @@ namespace WebDav
                 .AddWithOverwrite(parameters.Headers)
                 .Build();
 
-            HttpContent requestBody = parameters.RequestType == PropfindRequestType.AllPropertiesImplied
-                ? null
-                : new StringContent(PropfindRequestBuilder.BuildRequest(parameters.RequestType, parameters.CustomProperties, parameters.Namespaces));
+            HttpContent requestBody = null;
+            if (parameters.RequestType != PropfindRequestType.AllPropertiesImplied)
+            {
+                var content = PropfindRequestBuilder.BuildRequest(parameters.RequestType, parameters.CustomProperties, parameters.Namespaces);
+                requestBody = new StringContent(content);
+            }
 
             var requestParams = new RequestParameters { Headers = headers, Content = requestBody, ContentType = parameters.ContentType };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Propfind, requestParams, parameters.CancellationToken).ConfigureAwait(false);
@@ -311,7 +313,7 @@ namespace WebDav
                 .AddWithOverwrite(parameters.Headers)
                 .Build();
 
-            var requestParams = new RequestParameters {Headers = headers};
+            var requestParams = new RequestParameters { Headers = headers };
             var response = await _dispatcher.Send(
                 requestUri,
                 HttpMethod.Get,
@@ -441,7 +443,7 @@ namespace WebDav
         /// <returns>An instance of <see cref="WebDavResponse" />.</returns>
         public Task<WebDavResponse> PutFile(Uri requestUri, Stream stream, PutFileParameters parameters)
         {
-          return PutFile(requestUri, new StreamContent(stream), parameters);
+            return PutFile(requestUri, new StreamContent(stream), parameters);
         }
 
         /// <summary>
@@ -734,21 +736,32 @@ namespace WebDav
         }
 
         /// <summary>
-        /// Use WebDav SEARCH command.
+        /// Executes a SEARCH operation.
         /// </summary>
-        /// <param name="requestUri">Base URI.</param>
-        /// <param name="parameters">Set additional search parameters.</param>
-        /// <returns></returns>
+        /// <param name="requestUri">A string that represents the request URI.</param>
+        /// <param name="parameters">Parameters of the SEARCH operation.</param>
+        /// <returns>An instance of <see cref="PropfindResponse" />.</returns>
+        public Task<PropfindResponse> Search(string requestUri, SearchParameters parameters)
+        {
+            return Search(CreateUri(requestUri), parameters);
+        }
+
+        /// <summary>
+        /// Executes a SEARCH operation.
+        /// </summary>
+        /// <param name="requestUri">The <see cref="Uri"/> to request.</param>
+        /// <param name="parameters">Parameters of the SEARCH operation.</param>
+        /// <returns>An instance of <see cref="PropfindResponse" />.</returns>
         public async Task<PropfindResponse> Search(Uri requestUri, SearchParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
+            parameters.AssertParametersAreValid();
 
             var headers = new HeaderBuilder()
                 .AddWithOverwrite(parameters.Headers)
                 .Build();
 
-            HttpContent requestBody = new StringContent(SearchRequestBuilder.BuildRequestBody(parameters));
-
+            var requestBody = new StringContent(SearchRequestBuilder.BuildRequestBody(parameters));
             var requestParams = new RequestParameters { Headers = headers, Content = requestBody, ContentType = new MediaTypeHeaderValue("text/xml") };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Search, requestParams, parameters.CancellationToken).ConfigureAwait(false);
             var responseContent = await ReadContentAsString(response.Content).ConfigureAwait(false);

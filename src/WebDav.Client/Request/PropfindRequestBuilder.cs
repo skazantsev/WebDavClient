@@ -19,8 +19,11 @@ namespace WebDav
         private static string BuildAllPropRequest(IReadOnlyCollection<XName> customProperties, IReadOnlyCollection<NamespaceAttr> namespaces)
         {
             var doc = new XDocument(new XDeclaration("1.0", "utf-8", null));
-            var propfind = new XElement("{DAV:}propfind", new XAttribute(XNamespace.Xmlns + "D", "DAV:"));
-            propfind.Add(new XElement("{DAV:}allprop"));
+            var propfind = new XElement(
+                "{DAV:}propfind",
+                new XAttribute(XNamespace.Xmlns + "D", "DAV:"),
+                new XElement("{DAV:}allprop")
+            );
             if (customProperties.Any())
             {
                 var include = new XElement("{DAV:}include");

@@ -1,79 +1,68 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
-using WebDav.Client.Request;
 
 namespace WebDav
 {
     internal static class SearchRequestBuilder
     {
-        /// <summary>
-        /// Build the WEBDAV XML body.
-        /// </summary>
-        /// <param name="parameters">Set the SEARCH requests parameters</param>
-        /// <returns></returns>
         public static string BuildRequestBody(SearchParameters parameters)
         {
             var doc = new XDocument(new XDeclaration("1.0", "utf-8", null));
-            var searchrequest = new XElement("{DAV:}searchrequest", new XAttribute(XNamespace.Xmlns + "D", "DAV:"));
-            if (!string.IsNullOrEmpty(parameters.SearchPath))
+            var search = new XElement("{DAV:}searchrequest", new XAttribute(XNamespace.Xmlns + "D", "DAV:"));
+
+            foreach (var ns in parameters.Namespaces)
             {
-                var propBs = new XElement("{DAV:}basicsearch");
-                foreach (var ns in parameters.Namespaces)
-                {
-                    var nsAttr = string.IsNullOrEmpty(ns.Prefix) ? "xmlns" : XNamespace.Xmlns + ns.Prefix;
-                    searchrequest.SetAttributeValue(nsAttr, ns.Namespace);
-                }
-
-                //Select part
-                var propSelect = new XElement("{DAV:}select");
-                var propSelectProp = new XElement("{DAV:}prop");
-
-                foreach (var prop in parameters.SelectProperties)
-                {
-                    propSelectProp.Add(new XElement(prop));
-                }
-
-                propSelect.Add(new XElement(propSelectProp));
-
-                //From
-                var propFrom = new XElement("{DAV:}from");
-                var propFromScope = new XElement("{DAV:}scope");
-
-                var propFromScopeHref = new XElement("{DAV:}href", parameters.SearchPath);
-
-                //Hardcoded depth for now.
-                var propFromScopeDepth = new XElement("{DAV:}depth", "infinity");
-
-                propFromScope.Add(new XElement(propFromScopeHref));
-                propFromScope.Add(new XElement(propFromScopeDepth));
-
-                propFrom.Add(new XElement(propFromScope));
-
-                //Where
-                var propWhere = new XElement("{DAV:}where");
-                var propWhereLike = new XElement("{DAV:}like");
-                var propWhereLikeProp = new XElement("{DAV:}prop");
-
-                foreach (var prop in parameters.WhereProperties)
-                {
-                    propWhereLikeProp.Add(new XElement(prop));
-                }
-
-                var propWhereLikeLiteral = new XElement("{DAV:}literal", parameters.SearchKeyword);
-
-                propWhereLike.Add(new XElement(propWhereLikeProp));
-                propWhereLike.Add(new XElement(propWhereLikeLiteral));
-                propWhere.Add(new XElement(propWhereLike));
-
-                propBs.Add(new XElement(propSelect));
-                propBs.Add(new XElement(propFrom));
-                propBs.Add(new XElement(propWhere));
-
-                searchrequest.Add(propBs);
+                var nsAttr = string.IsNullOrEmpty(ns.Prefix) ? "xmlns" : XNamespace.Xmlns + ns.Prefix;
+                search.SetAttributeValue(nsAttr, ns.Namespace);
             }
-            doc.Add(searchrequest);
+
+            var basicSearch = new XElement(
+                "{DAV:}basicsearch",
+                BuildSelect(parameters),
+                BuildFrom(parameters),
+                BuildWhere(parameters)
+            );
+            search.Add(basicSearch);
+
+            doc.Add(search);
             return doc.ToStringWithDeclaration();
+        }
+
+        private static XElement BuildSelect(SearchParameters parameters)
+        {
+            return new XElement(
+                "{DAV:}select",
+                parameters.SelectProperties.Any()
+                    ? new XElement(
+                        "{DAV:}prop",
+                        parameters.SelectProperties.Select(prop => new XElement(prop)).ToArray()
+                    )
+                    : new XElement("{DAV:}allprop")
+            );
+        }
+
+        private static XElement BuildFrom(SearchParameters parameters)
+        {
+            return new XElement(
+                "{DAV:}from",
+                new XElement(
+                    "{DAV:}scope",
+                    new XElement("{DAV:}href", parameters.Scope),
+                    new XElement("{DAV:}depth", "infinity")
+                )
+            );
+        }
+
+        private static XElement BuildWhere(SearchParameters parameters)
+        {
+            return new XElement(
+                "{DAV:}where",
+                new XElement(
+                    "{DAV:}like",
+                    new XElement("{DAV:}prop", new XElement(parameters.SearchProperty)),
+                    new XElement("{DAV:}literal", parameters.SearchKeyword)
+                )
+            );
         }
     }
 }

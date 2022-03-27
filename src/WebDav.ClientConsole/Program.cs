@@ -43,29 +43,32 @@ namespace WebDav.ClientConsole
 
                 await TestPropfind(webDavClient);
 
+                await TestSearch(webDavClient);
+
                 await TestLock(webDavClient);
 
                 await TestPropatch(webDavClient);
 
                 await webDavClient.Delete("http://mywebdav:88/mydir");
-
-                await webDavClient.Search(new Uri("http://mywebdav:88/"),
-                       new Client.Request.SearchParameters()
-                       {
-                           SearchKeyword = "Test%",
-                           SearchPath = "/example/",
-                           SelectProperties = new[]
-                           {
-                                new XElement("{DAV:}displayname"),
-                                new XElement("{DAV:}getcontenttype")
-                           },
-                           WhereProperties = new[]
-                           {
-                                new XElement("{DAV:}displayname")
-                           }
-                       }
-               );
             }
+        }
+
+        public static async Task TestSearch(WebDavClient webDavClient)
+        {
+            var response = await webDavClient.Search(new Uri("http://mywebdav:88/"),
+                new SearchParameters()
+                {
+                    Scope = "/mydir/",
+                    SearchProperty = "{DAV:}displayname",
+                    SearchKeyword = "test%",
+                    SelectProperties = new XName[]
+                    {
+                        "{DAV:}displayname",
+                        "{DAV:}getcontenttype"
+                    },
+                }
+            );
+            Console.WriteLine(response.ToString());
         }
 
         public static async Task TestPropfind(WebDavClient webDavClient)

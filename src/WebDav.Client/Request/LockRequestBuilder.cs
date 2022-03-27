@@ -8,9 +8,15 @@ namespace WebDav
         public static string BuildRequestBody(LockParameters lockParams)
         {
             var doc = new XDocument(new XDeclaration("1.0", "utf-8", null));
-            var lockinfo = new XElement("{DAV:}lockinfo", new XAttribute(XNamespace.Xmlns + "D", "DAV:"));
-            lockinfo.Add(GetLockScope(lockParams.LockScope));
-            lockinfo.Add(GetLockType());
+            var lockinfo = new XElement(
+                "{DAV:}lockinfo",
+                new XAttribute(XNamespace.Xmlns + "D", "DAV:"),
+                GetLockScope(lockParams.LockScope),
+                new XElement(
+                    "{DAV:}locktype",
+                    new XElement("{DAV:}write")
+                )
+            );
             if (lockParams.Owner != null)
                 lockinfo.Add(GetLockOwner(lockParams.Owner));
 
@@ -34,13 +40,6 @@ namespace WebDav
                     throw new ArgumentOutOfRangeException(nameof(lockScope));
             }
             return lockscope;
-        }
-
-        private static XElement GetLockType()
-        {
-            var locktype = new XElement("{DAV:}locktype");
-            locktype.Add(new XElement("{DAV:}write"));
-            return locktype;
         }
 
         private static XElement GetLockOwner(LockOwner lockOwner)

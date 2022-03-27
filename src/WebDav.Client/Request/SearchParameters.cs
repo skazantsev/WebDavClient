@@ -1,36 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Xml.Linq;
 
-namespace WebDav.Client.Request
+namespace WebDav
 {
     public class SearchParameters
     {
         public SearchParameters()
         {
+            Scope = "/";
             Namespaces = new List<NamespaceAttr>();
+            SelectProperties = new List<XName>();
             Headers = new List<KeyValuePair<string, string>>();
-            SelectProperties = new List<XElement>();
-            WhereProperties = new List<XElement>();
             CancellationToken = CancellationToken.None;
         }
 
         /// <summary>
-        /// Root directory where to search from.
+        /// Gets or sets a directory to search in.
         /// </summary>
-        public string SearchPath { get; set; }
-       
+        public string Scope { get; set; }
+
         /// <summary>
-        /// Keyword on what to search. For example: 'test%' (without quotes), results in LIKE test%.
+        /// Gets or sets the search property in the DAV:like element.
+        /// </summary>
+        public XName SearchProperty { get; set; }
+
+        /// <summary>
+        /// Gets or sets the search keyword to be used in the DAV:like element.
+        /// Example: 'test%' (without quotes), results in 'LIKE test%' search.
         /// </summary>
         public string SearchKeyword { get; set; }
-       
-        /// <summary>
-        /// Set the cancellation token.
-        /// </summary>
-        public CancellationToken CancellationToken { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of xml namespaces of properties.
@@ -38,18 +38,30 @@ namespace WebDav.Client.Request
         public IReadOnlyCollection<NamespaceAttr> Namespaces { get; set; }
 
         /// <summary>
+        /// Gets or sets the Select properties.
+        /// </summary>
+        public IReadOnlyCollection<XName> SelectProperties { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of the headers.
         /// </summary>
         public IReadOnlyCollection<KeyValuePair<string, string>> Headers { get; set; }
 
         /// <summary>
-        /// Gets or sets the Select properties.
+        /// Gets or sets the cancellation token.
         /// </summary>
-        public IReadOnlyCollection<XElement> SelectProperties { get; set; }
+        public CancellationToken CancellationToken { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Where properties.
-        /// </summary>
-        public IReadOnlyCollection<XElement> WhereProperties { get; set; }
+        public void AssertParametersAreValid()
+        {
+            if (string.IsNullOrEmpty(Scope))
+                throw new ArgumentException("Scope is required.", nameof(Scope));
+
+            if (SearchProperty == null)
+                throw new ArgumentException("Search property is required.", nameof(SearchProperty));
+
+            if (string.IsNullOrEmpty(SearchKeyword))
+                throw new ArgumentException("Search keyword is required.", nameof(SearchKeyword));
+        }
     }
 }
