@@ -739,7 +739,7 @@ namespace WebDav
         /// <param name="requestUri">Base URI.</param>
         /// <param name="parameters">Set additional search parameters.</param>
         /// <returns></returns>
-        public async Task<WebDavResponse> Search(Uri requestUri, SearchParameters parameters)
+        public async Task<PropfindResponse> Search(Uri requestUri, SearchParameters parameters)
         {
             Guard.NotNull(requestUri, "requestUri");
 
@@ -747,7 +747,7 @@ namespace WebDav
                 .AddWithOverwrite(parameters.Headers)
                 .Build();
 
-            HttpContent requestBody = new StringContent(SearchRequestBuilder.BuildRequestBody(parameters.SelectProperties, parameters.SearchPath, parameters.SearchKeyword, parameters.WhereProperties, parameters.Namespaces));
+            HttpContent requestBody = new StringContent(SearchRequestBuilder.BuildRequestBody(parameters));
 
             var requestParams = new RequestParameters { Headers = headers, Content = requestBody, ContentType = new MediaTypeHeaderValue("text/xml") };
             var response = await _dispatcher.Send(requestUri, WebDavMethod.Search, requestParams, parameters.CancellationToken).ConfigureAwait(false);

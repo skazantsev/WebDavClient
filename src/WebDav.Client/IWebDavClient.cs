@@ -408,6 +408,6 @@ namespace WebDav
         /// <param name="requestUri">Request uri.</param>
         /// <param name="parameters">SEARCH parameters.</param>
         /// <returns></returns>
-        Task<WebDavResponse> Search(Uri requestUri, SearchParameters parameters)
+        Task<PropfindResponse> Search(Uri requestUri, SearchParameters parameters);
     }
 }
