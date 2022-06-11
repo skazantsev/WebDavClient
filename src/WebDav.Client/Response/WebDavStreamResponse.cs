@@ -29,6 +29,14 @@ namespace WebDav
         /// </summary>
         public Stream Stream { get; }
 
+        public long? ContentLength
+        {
+            get
+            {
+                return _response?.Content?.Headers?.ContentLength;
+            }
+        }
+
         public override string ToString()
         {
             return $"WebDAV stream response - StatusCode: {StatusCode}, Description: {Description}";
