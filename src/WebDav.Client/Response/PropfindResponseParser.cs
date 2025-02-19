@@ -37,7 +37,7 @@ namespace WebDav
             return CreateResource(uriValue, propstats);
         }
 
-        private WebDavResource CreateResource(string uri, List<MultiStatusParser.Propstat> propstats)
+        private WebDavResource CreateResource(string? uri, List<MultiStatusParser.Propstat> propstats)
         {
             var properties = MultiStatusParser.GetProperties(propstats);
             var resourceBuilder = new WebDavResource.Builder()
@@ -61,7 +61,7 @@ namespace WebDav
             if (isCollection)
             {
                 resourceBuilder.IsCollection();
-                resourceBuilder.WithUri(uri.TrimEnd('/') + "/");
+                resourceBuilder.WithUri(uri?.TrimEnd('/') + "/");
             }
             else
             {

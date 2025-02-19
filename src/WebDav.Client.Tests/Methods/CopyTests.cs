@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Threading.Tasks;
 using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
 using Xunit;
@@ -11,7 +12,7 @@ namespace WebDav.Client.Tests.Methods
     public class CopyTests
     {
         [Fact]
-        public async void When_RequestIsSuccessfull_Should_ReturnStatusCode200()
+        public async Task When_RequestIsSuccessfull_Should_ReturnStatusCode200()
         {
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.Mock());
             var response1 = await client.Copy("http://example.com/old", "http://example.com/new");
@@ -26,7 +27,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_RequestIsFailed_Should_ReturnStatusCode500()
+        public async Task When_RequestIsFailed_Should_ReturnStatusCode500()
         {
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.MockFaulted());
             var response = await client.Copy("http://example.com/old", "http://example.com/new");
@@ -34,7 +35,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalled_Should_SendCopyRequest()
+        public async Task When_IsCalled_Should_SendCopyRequest()
         {
             var sourceUri = new Uri("http://example.com/old");
             var dispatcher = Dispatcher.Mock();
@@ -46,7 +47,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalled_Should_SendDestinationHeader()
+        public async Task When_IsCalled_Should_SendDestinationHeader()
         {
             var sourceUri = new Uri("http://example.com/old");
             var dispatcher = Dispatcher.Mock();
@@ -58,7 +59,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithDefaultParameters_Should_SendOverwriteHeaderEqualsT()
+        public async Task When_IsCalledWithDefaultParameters_Should_SendOverwriteHeaderEqualsT()
         {
             var sourceUri = new Uri("http://example.com/old");
             var dispatcher = Dispatcher.Mock();
@@ -70,7 +71,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithDefaultParameters_Should_SendDepthHeaderEqualsInfinity()
+        public async Task When_IsCalledWithDefaultParameters_Should_SendDepthHeaderEqualsInfinity()
         {
             var sourceUri = new Uri("http://example.com/old");
             var dispatcher = Dispatcher.Mock();
@@ -82,7 +83,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithOverwriteOff_Should_SendOverwriteHeaderEqualsF()
+        public async Task When_IsCalledWithOverwriteOff_Should_SendOverwriteHeaderEqualsF()
         {
             var sourceUri = new Uri("http://example.com/old");
             var dispatcher = Dispatcher.Mock();
@@ -94,7 +95,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithOverwriteOn_Should_SendOverwriteHeaderEqualsT()
+        public async Task When_IsCalledWithOverwriteOn_Should_SendOverwriteHeaderEqualsT()
         {
             var sourceUri = new Uri("http://example.com/old");
             var dispatcher = Dispatcher.Mock();
@@ -106,7 +107,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
+        public async Task When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
         {
             var cts = new CancellationTokenSource();
             var dispatcher = Dispatcher.Mock();
@@ -118,7 +119,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsAppliedToResourceAndAncestors_Should_SendDepthHeaderEqualsInfinity()
+        public async Task When_IsAppliedToResourceAndAncestors_Should_SendDepthHeaderEqualsInfinity()
         {
             var sourceUri = new Uri("http://example.com/old");
             var dispatcher = Dispatcher.Mock();
@@ -130,7 +131,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsAppliedToResourceOnly_Should_SendDepthHeaderEqualsZero()
+        public async Task When_IsAppliedToResourceOnly_Should_SendDepthHeaderEqualsZero()
         {
             var sourceUri = new Uri("http://example.com/old");
             var dispatcher = Dispatcher.Mock();
@@ -142,7 +143,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithLockToken_Should_SetIfHeader()
+        public async Task When_IsCalledWithLockToken_Should_SetIfHeader()
         {
             var sourceUri = new Uri("http://example.com/old");
             var dispatcher = Dispatcher.Mock();

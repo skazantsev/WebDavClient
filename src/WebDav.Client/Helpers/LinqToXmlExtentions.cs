@@ -15,7 +15,7 @@ namespace WebDav
             return doc.Declaration + Environment.NewLine + doc;
         }
 
-        public static string GetValueOrNull(this XElement element)
+        public static string? GetValueOrNull(this XElement element)
         {
             return element?.Value;
         }

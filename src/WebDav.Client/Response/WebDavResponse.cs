@@ -19,7 +19,7 @@
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>
         /// <param name="description">The description of the response.</param>
-        public WebDavResponse(int statusCode, string description)
+        public WebDavResponse(int statusCode, string? description)
         {
             StatusCode = statusCode;
             Description = description;
@@ -33,7 +33,7 @@
         /// <summary>
         /// Gets the description of the response.
         /// </summary>
-        public string Description { get; }
+        public string? Description { get; }
 
         /// <summary>
         /// Gets a value indicating whether the operation was successful.

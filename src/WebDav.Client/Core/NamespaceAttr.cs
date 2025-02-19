@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets the prefix of this namespace.
         /// </summary>
-        public string Prefix { get; }
+        public string? Prefix { get; }
 
         /// <summary>
         /// Gets the namespace in form of URI specified at an xmlns attribute as follows. xmlns:prefix="URI".

@@ -33,7 +33,7 @@ namespace WebDav
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>
         /// <param name="description">The description of the response.</param>
-        public LockResponse(int statusCode, string description)
+        public LockResponse(int statusCode, string? description)
             : this(statusCode, description, new List<ActiveLock>())
         {
         }
@@ -44,7 +44,7 @@ namespace WebDav
         /// <param name="statusCode">The status code of the response.</param>
         /// <param name="description">The description of the response.</param>
         /// <param name="activeLocks">The active locks of the resource.</param>
-        public LockResponse(int statusCode, string description, IEnumerable<ActiveLock> activeLocks)
+        public LockResponse(int statusCode, string? description, IEnumerable<ActiveLock> activeLocks)
             : base(statusCode, description)
         {
             Guard.NotNull(activeLocks, "activeLocks");

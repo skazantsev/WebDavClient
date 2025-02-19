@@ -4,7 +4,7 @@ namespace WebDav
 {
     internal static class XDocumentExt
     {
-        public static XDocument TryParse(string text)
+        public static XDocument? TryParse(string text)
         {
             try
             {

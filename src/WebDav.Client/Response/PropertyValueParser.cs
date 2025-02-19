@@ -5,7 +5,7 @@ namespace WebDav
 {
     internal static class PropertyValueParser
     {
-        public static string ParseString(XElement element)
+        public static string? ParseString(XElement element)
         {
             return element?.Value;
         }
@@ -65,7 +65,7 @@ namespace WebDav
             return element.Value.Equals("0") ? ApplyTo.Lock.ResourceOnly : ApplyTo.Lock.ResourceAndAncestors;
         }
 
-        public static LockOwner ParseOwner(XElement element)
+        public static LockOwner? ParseOwner(XElement element)
         {
             if (element == null)
                 return null;

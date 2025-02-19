@@ -13,8 +13,8 @@ namespace WebDav
 
         public IReadOnlyCollection<KeyValuePair<string, string>> Headers { get; set; }
 
-        public HttpContent Content { get; set; }
+        public HttpContent? Content { get; set; }
 
-        public MediaTypeHeaderValue ContentType { get; set; }
+        public MediaTypeHeaderValue? ContentType { get; set; }
     }
 }

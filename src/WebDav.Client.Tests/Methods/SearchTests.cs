@@ -1,6 +1,7 @@
 ﻿using NSubstitute;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using WebDav.Client.Tests.TestDoubles;
 using Xunit;
@@ -10,7 +11,7 @@ namespace WebDav.Client.Tests.Methods
     public class SearchTests
     {
         [Fact]
-        public async void When_RequestIsSuccessfull_Should_ReturnStatusCode200()
+        public async Task When_RequestIsSuccessfull_Should_ReturnStatusCode200()
         {
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
@@ -25,7 +26,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_PassingNoSelectProperties_Should_IncludeAllProp()
+        public async Task When_PassingNoSelectProperties_Should_IncludeAllProp()
         {
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
@@ -68,7 +69,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_PassingSelectProperties_Should_IncludeThem()
+        public async Task When_PassingSelectProperties_Should_IncludeThem()
         {
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
@@ -119,7 +120,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void Should_SupportPropertiesWithDifferentNamespaces()
+        public async Task Should_SupportPropertiesWithDifferentNamespaces()
         {
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);

@@ -23,11 +23,11 @@ namespace WebDav
         /// <param name="name">The property name.</param>
         /// <param name="statusCode">The status code of the operation.</param>
         /// <param name="description">The description of the operation.</param>
-        public WebDavPropertyStatus(XName name, int statusCode, string description)
+        public WebDavPropertyStatus(XName name, int statusCode, string? description)
         {
             Guard.NotNullOrEmpty((name ?? "").ToString(), "name");
 
-            Name = name;
+            Name = name!;
             StatusCode = statusCode;
             Description = description;
         }
@@ -45,7 +45,7 @@ namespace WebDav
         /// <summary>
         /// Gets the description of the operation.
         /// </summary>
-        public string Description { get; }
+        public string? Description { get; }
 
         /// <summary>
         /// Gets a value indicating whether the operation on the property was successful.

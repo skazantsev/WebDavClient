@@ -25,17 +25,17 @@ namespace WebDav
         /// <summary>
         /// Gets the resource lock token.
         /// </summary>
-        public string LockToken { get; private set; }
+        public string? LockToken { get; private set; }
 
         /// <summary>
         /// Gets the owner of this lock.
         /// </summary>
-        public LockOwner Owner { get; private set; }
+        public LockOwner? Owner { get; private set; }
 
         /// <summary>
         /// Gets the root URL of the lock, which is the URL through which the resource was addressed in the LOCK request.
         /// </summary>
-        public string LockRoot { get; private set; }
+        public string? LockRoot { get; private set; }
 
         /// <summary>
         /// Gets the duration of this lock.
@@ -49,9 +49,9 @@ namespace WebDav
         {
             private ApplyTo.Lock? _applyTo;
             private LockScope? _lockScope;
-            private string _lockToken;
-            private LockOwner _owner;
-            private string _lockRoot;
+            private string? _lockToken;
+            private LockOwner? _owner;
+            private string? _lockRoot;
             private TimeSpan? _timeout;
 
             /// <summary>
@@ -75,7 +75,7 @@ namespace WebDav
             /// <summary>
             /// Sets the LockToken parameter of an instance of the <see cref="ActiveLock"/> class.
             /// </summary>
-            public Builder WithLockToken(string lockToken)
+            public Builder WithLockToken(string? lockToken)
             {
                 _lockToken = lockToken;
                 return this;
@@ -84,7 +84,7 @@ namespace WebDav
             /// <summary>
             /// Sets the Owner parameter of an instance of the <see cref="ActiveLock"/> class.
             /// </summary>
-            public Builder WithOwner(LockOwner owner)
+            public Builder WithOwner(LockOwner? owner)
             {
                 _owner = owner;
                 return this;
@@ -93,7 +93,7 @@ namespace WebDav
             /// <summary>
             /// Sets the LockRoot parameter of an instance of the <see cref="ActiveLock"/> class.
             /// </summary>
-            public Builder WithLockRoot(string lockRoot)
+            public Builder WithLockRoot(string? lockRoot)
             {
                 _lockRoot = lockRoot;
                 return this;

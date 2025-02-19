@@ -40,7 +40,7 @@ namespace WebDav
         /// <summary>
         /// Gets or sets the owner of this lock.
         /// </summary>
-        public LockOwner Owner { get; set; }
+        public LockOwner? Owner { get; set; }
 
         /// <summary>
         /// Gets or sets the content type of the request body.

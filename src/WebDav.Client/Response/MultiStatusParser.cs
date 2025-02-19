@@ -32,7 +32,7 @@ namespace WebDav
         public static List<WebDavPropertyStatus> GetPropertyStatuses(List<Propstat> propstats)
         {
             return propstats
-                .SelectMany(x => x.Element.LocalNameElements("prop", StringComparison.OrdinalIgnoreCase)
+                .SelectMany(x => x.Element?.LocalNameElements("prop", StringComparison.OrdinalIgnoreCase)
                     .SelectMany(p => p.Elements())
                     .Select(p => new { Prop = p, StatusCode = x.StatusCode, Description = x.Description }))
                 .Select(x => new WebDavPropertyStatus(x.Prop.Name, x.StatusCode, x.Description))
@@ -43,7 +43,7 @@ namespace WebDav
         {
             return propstats
                 .Where(x => IsSuccessStatusCode(x.StatusCode))
-                .SelectMany(x => x.Element.LocalNameElements("prop", StringComparison.OrdinalIgnoreCase))
+                .SelectMany(x => x.Element?.LocalNameElements("prop", StringComparison.OrdinalIgnoreCase))
                 .SelectMany(x => x.Elements())
                 .ToList();
         }
@@ -53,7 +53,7 @@ namespace WebDav
             return statusCode >= 200 && statusCode <= 299;
         }
 
-        private static string GetDescriptionFromPropstat(XElement propstat)
+        private static string? GetDescriptionFromPropstat(XElement propstat)
         {
             return
                 propstat.LocalNameElement("responsedescription", StringComparison.OrdinalIgnoreCase).GetValueOrNull() ??
@@ -79,11 +79,11 @@ namespace WebDav
 
         internal class Propstat
         {
-            public XElement Element { get; set; }
+            public XElement? Element { get; set; }
 
             public int StatusCode { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
         }
     }
 }
