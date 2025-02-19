@@ -24,13 +24,13 @@ namespace WebDav
         /// <summary>
         /// Gets or sets the search property in the DAV:like element.
         /// </summary>
-        public XName SearchProperty { get; set; }
+        public XName? SearchProperty { get; set; }
 
         /// <summary>
         /// Gets or sets the search keyword to be used in the DAV:like element.
         /// Example: 'test%' (without quotes), results in 'LIKE test%' search.
         /// </summary>
-        public string SearchKeyword { get; set; }
+        public string? SearchKeyword { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of xml namespaces of properties.

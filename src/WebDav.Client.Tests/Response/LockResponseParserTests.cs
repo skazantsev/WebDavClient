@@ -53,7 +53,7 @@ namespace WebDav.Client.Tests.Response
             Assert.Equal(207, response.StatusCode);
             Assert.Equal("Multi-Status", response.Description);
             Assert.True(response.IsSuccessful);
-            Assert.Equal(1, response.ActiveLocks.Count);
+            Assert.Single(response.ActiveLocks);
 
             Assert.Null(activeLock.ApplyTo);
             Assert.Null(activeLock.LockScope);
@@ -135,7 +135,7 @@ namespace WebDav.Client.Tests.Response
             var activeLock = response.ActiveLocks.ElementAt(0);
 
             Assert.NotNull(activeLock.Owner);
-            Assert.IsType(typeof (UriLockOwner), activeLock.Owner);
+            Assert.IsType<UriLockOwner>(activeLock.Owner);
             Assert.Equal("http://example.org/~ejw/contact.html", activeLock.Owner.Value);
         }
 
@@ -147,7 +147,7 @@ namespace WebDav.Client.Tests.Response
             var activeLock = response.ActiveLocks.ElementAt(0);
 
             Assert.NotNull(activeLock.Owner);
-            Assert.IsType(typeof(PrincipalLockOwner), activeLock.Owner);
+            Assert.IsType<PrincipalLockOwner>(activeLock.Owner);
             Assert.Equal("Chuck Norris", activeLock.Owner.Value);
         }
 

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
 using Xunit;
@@ -11,7 +12,7 @@ namespace WebDav.Client.Tests.Methods
     public class GetFileTests
     {
         [Fact]
-        public async void When_GetRawFileIsCalled_Should_ProxyCallToGetFile()
+        public async Task When_GetRawFileIsCalled_Should_ProxyCallToGetFile()
         {
             var client = Substitute.ForPartsOf<WebDavClient>().SetWebDavDispatcher(Dispatcher.Mock());
             client.GetFile(Arg.Any<Uri>(), Arg.Any<bool>(), Arg.Any<GetFileParameters>())
@@ -26,7 +27,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_GetProcessedFileIsCalled_Should_ProxyCallToGetFile()
+        public async Task When_GetProcessedFileIsCalled_Should_ProxyCallToGetFile()
         {
             var client = Substitute.ForPartsOf<WebDavClient>().SetWebDavDispatcher(Dispatcher.Mock());
             client.GetFile(Arg.Any<Uri>(), Arg.Any<bool>(), Arg.Any<GetFileParameters>())
@@ -41,7 +42,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_RequestIsSuccessfull_Should_ReturnStatusCode200()
+        public async Task When_RequestIsSuccessfull_Should_ReturnStatusCode200()
         {
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.Mock());
             var response1 = await client.GetFile(new Uri("http://example.com/file"), false, new GetFileParameters());
@@ -52,7 +53,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_RequestIsFailed_Should_ReturnStatusCode500()
+        public async Task When_RequestIsFailed_Should_ReturnStatusCode500()
         {
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.MockFaulted());
             var response1 = await client.GetFile(new Uri("http://example.com/file"), false, new GetFileParameters());
@@ -63,7 +64,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_GetFile_Should_SendGetRequest()
+        public async Task When_GetFile_Should_SendGetRequest()
         {
             var requestUri = new Uri("http://example.com/file");
             var dispatcher = Dispatcher.Mock();
@@ -76,7 +77,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithTranslateOff_Should_SendTranslateHeaderEqualsF()
+        public async Task When_IsCalledWithTranslateOff_Should_SendTranslateHeaderEqualsF()
         {
             var requestUri = new Uri("http://example.com/file");
             var dispatcher = Dispatcher.Mock();
@@ -88,7 +89,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithTranslateOn_Should_SendTranslateHeaderEqualsT()
+        public async Task When_IsCalledWithTranslateOn_Should_SendTranslateHeaderEqualsT()
         {
             var requestUri = new Uri("http://example.com/file");
             var dispatcher = Dispatcher.Mock();

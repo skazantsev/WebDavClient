@@ -21,12 +21,12 @@ namespace WebDav
         /// <summary>
         /// Gets or sets the lock token for the moving resource.
         /// </summary>
-        public string SourceLockToken { get; set; }
+        public string? SourceLockToken { get; set; }
 
         /// <summary>
         /// Gets or sets the lock token for the destination resource.
         /// </summary>
-        public string DestLockToken { get; set; }
+        public string? DestLockToken { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the server should overwrite a non-null destination.

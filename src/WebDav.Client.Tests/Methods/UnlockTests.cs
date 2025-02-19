@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
 using Xunit;
@@ -9,7 +10,7 @@ namespace WebDav.Client.Tests.Methods
     public class UnlockTests
     {
         [Fact]
-        public async void When_RequestIsSuccessfull_Should_ReturnStatusCode200()
+        public async Task When_RequestIsSuccessfull_Should_ReturnStatusCode200()
         {
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.Mock());
             var response1 = await client.Unlock("http://example.com/file", "lock-token");
@@ -24,7 +25,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_RequestIsFailed_Should_ReturnStatusCode500()
+        public async Task When_RequestIsFailed_Should_ReturnStatusCode500()
         {
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.MockFaulted());
             var response = await client.Unlock("http://example.com/file", "lock-token");
@@ -32,7 +33,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithDefaultArguments_Should_SendUnlockRequest()
+        public async Task When_IsCalledWithDefaultArguments_Should_SendUnlockRequest()
         {
             var requestUri = new Uri("http://example.com/file");
             var dispatcher = Dispatcher.Mock();
@@ -44,7 +45,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
+        public async Task When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
         {
             var cts = new CancellationTokenSource();
             var dispatcher = Dispatcher.Mock();
@@ -56,7 +57,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithLockToken_Should_SendLockTokenHeader()
+        public async Task When_IsCalledWithLockToken_Should_SendLockTokenHeader()
         {
             var requestUri = new Uri("http://example.com/file");
             var dispatcher = Dispatcher.Mock();

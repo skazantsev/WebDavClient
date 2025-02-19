@@ -58,6 +58,6 @@ namespace WebDav
         /// <summary>
         /// Gets or sets the resource lock token.
         /// </summary>
-        public string LockToken { get; set; }
+        public string? LockToken { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
 using Xunit;
@@ -10,7 +11,7 @@ namespace WebDav.Client.Tests.Methods
     public class LockTests
     {
         [Fact]
-        public async void When_RequestIsSuccessfull_Should_ReturnStatusCode200()
+        public async Task When_RequestIsSuccessfull_Should_ReturnStatusCode200()
         {
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.Mock());
             var response1 = await client.Lock("http://example.com/new");
@@ -25,7 +26,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_RequestIsFailed_Should_ReturnStatusCode500()
+        public async Task When_RequestIsFailed_Should_ReturnStatusCode500()
         {
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.MockFaulted());
             var response = await client.Lock("http://example.com/new");
@@ -33,7 +34,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalled_Should_SendLockRequest()
+        public async Task When_IsCalled_Should_SendLockRequest()
         {
             var requestUri = new Uri("http://example.com/new");
             var dispatcher = Dispatcher.Mock();
@@ -45,7 +46,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithDefaultArguments_Should_SendNoHeaders()
+        public async Task When_IsCalledWithDefaultArguments_Should_SendNoHeaders()
         {
             var requestUri = new Uri("http://example.com/new");
             var dispatcher = Dispatcher.Mock();
@@ -57,7 +58,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
+        public async Task When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
         {
             var cts = new CancellationTokenSource();
             var dispatcher = Dispatcher.Mock();
@@ -69,7 +70,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsAppliedToResourceAndAncestors_Should_SendDepthHeaderEqualsInfinity()
+        public async Task When_IsAppliedToResourceAndAncestors_Should_SendDepthHeaderEqualsInfinity()
         {
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
@@ -80,7 +81,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsAppliedToResourceOnly_Should_SendDepthHeaderEqualsZero()
+        public async Task When_IsAppliedToResourceOnly_Should_SendDepthHeaderEqualsZero()
         {
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
@@ -91,7 +92,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithTimeout_Should_SendTimeoutHeaderInSeconds()
+        public async Task When_IsCalledWithTimeout_Should_SendTimeoutHeaderInSeconds()
         {
             var dispatcher = Dispatcher.Mock();
             var client = new WebDavClient().SetWebDavDispatcher(dispatcher);
@@ -102,7 +103,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithDefaultArguments_Should_SendLockInfo()
+        public async Task When_IsCalledWithDefaultArguments_Should_SendLockInfo()
         {
             const string expectedContent =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -123,7 +124,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithLockScopeShared_Should_AddSharedLockScopeToContent()
+        public async Task When_IsCalledWithLockScopeShared_Should_AddSharedLockScopeToContent()
         {
             const string expectedContent =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -144,7 +145,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithLockScopeExclusive_Should_AddExclusiveLockScopeToContent()
+        public async Task When_IsCalledWithLockScopeExclusive_Should_AddExclusiveLockScopeToContent()
         {
             const string expectedContent =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -165,7 +166,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithPrincipalLockOwner_Should_AddOwnerToContent()
+        public async Task When_IsCalledWithPrincipalLockOwner_Should_AddOwnerToContent()
         {
             const string expectedContent =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -187,7 +188,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithUriLockOwner_Should_AddOwnerToContent()
+        public async Task When_IsCalledWithUriLockOwner_Should_AddOwnerToContent()
         {
             const string expectedContent =
 @"<?xml version=""1.0"" encoding=""utf-8""?>

@@ -31,12 +31,12 @@ namespace WebDav
         /// <summary>
         /// Gets or sets the base address of the resource's URI used when sending requests.
         /// </summary>
-        public Uri BaseAddress { get; set; }
+        public Uri? BaseAddress { get; set; }
 
         /// <summary>
         /// Gets or sets authentication information used by the WebDavClient.
         /// </summary>
-        public ICredentials Credentials { get; set; }
+        public ICredentials? Credentials { get; set; }
 
         /// <summary>
         /// Gets or sets the headers which should be sent with each request.
@@ -54,7 +54,7 @@ namespace WebDav
         /// <summary>
         /// Gets or sets proxy information used by the WebDavClient.
         /// </summary>
-        public IWebProxy Proxy { get; set; }
+        public IWebProxy? Proxy { get; set; }
 
         /// <summary>
         /// Gets or sets a timeout for WebDAV operations.

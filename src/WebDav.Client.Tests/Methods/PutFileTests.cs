@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
 using Xunit;
@@ -13,7 +14,7 @@ namespace WebDav.Client.Tests.Methods
     public class PutFileTests
     {
         [Fact]
-        public async void When_RequestIsSuccessfull_Should_ReturnStatusCode200()
+        public async Task When_RequestIsSuccessfull_Should_ReturnStatusCode200()
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes("<content/>"));
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.Mock());
@@ -38,7 +39,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_RequestIsFailed_Should_ReturnStatusCode500()
+        public async Task When_RequestIsFailed_Should_ReturnStatusCode500()
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes("<content/>"));
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.MockFaulted());
@@ -47,7 +48,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalled_Should_SendPutRequestWithContent()
+        public async Task When_IsCalled_Should_SendPutRequestWithContent()
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes("<content/>"));
             var requestUri = new Uri("http://example.com/file");
@@ -60,7 +61,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
+        public async Task When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes("<content/>"));
             var cts = new CancellationTokenSource();
@@ -73,7 +74,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithLockToken_Should_SetIfHeader()
+        public async Task When_IsCalledWithLockToken_Should_SetIfHeader()
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes("<content/>"));
             var requestUri = new Uri("http://example.com/file");
@@ -86,7 +87,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithContentRange_Should_SendRangeHeader()
+        public async Task When_IsCalledWithContentRange_Should_SendRangeHeader()
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes("<content/>"));
             var content = new StreamContent(stream);
@@ -101,7 +102,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithContentLength_Should_SendContentLengthHeader()
+        public async Task When_IsCalledWithContentLength_Should_SendContentLengthHeader()
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes("<content/>"));
             var content = new StreamContent(stream);
@@ -116,7 +117,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithContentType_Should_SetPassItToDispatcher()
+        public async Task When_IsCalledWithContentType_Should_SetPassItToDispatcher()
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes("<content/>"));
             var requestUri = new Uri("http://example.com/file");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using NSubstitute;
 using WebDav.Client.Tests.TestDoubles;
 using Xunit;
@@ -10,7 +11,7 @@ namespace WebDav.Client.Tests.Methods
     public class MkcolTests
     {
         [Fact]
-        public async void When_RequestIsSuccessfull_Should_ReturnStatusCode200()
+        public async Task When_RequestIsSuccessfull_Should_ReturnStatusCode200()
         {
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.Mock());
             var response1 = await client.Mkcol("http://example.com/new");
@@ -25,7 +26,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_RequestIsFailed_Should_ReturnStatusCode500()
+        public async Task When_RequestIsFailed_Should_ReturnStatusCode500()
         {
             var client = new WebDavClient().SetWebDavDispatcher(Dispatcher.MockFaulted());
             var response = await client.Mkcol("http://example.com/new");
@@ -33,7 +34,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithDefaultArguments_Should_SendMkcolRequest()
+        public async Task When_IsCalledWithDefaultArguments_Should_SendMkcolRequest()
         {
             var requestUri = new Uri("http://example.com/new");
             var dispatcher = Dispatcher.Mock();
@@ -45,7 +46,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
+        public async Task When_IsCalledWithCancellationToken_Should_SendRequestWithIt()
         {
             var cts = new CancellationTokenSource();
             var dispatcher = Dispatcher.Mock();
@@ -57,7 +58,7 @@ namespace WebDav.Client.Tests.Methods
         }
 
         [Fact]
-        public async void When_IsCalledWithLockToken_Should_SetIfHeader()
+        public async Task When_IsCalledWithLockToken_Should_SetIfHeader()
         {
             var requestUri = new Uri("http://example.com/new");
             var dispatcher = Dispatcher.Mock();

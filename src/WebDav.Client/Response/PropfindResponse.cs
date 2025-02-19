@@ -32,7 +32,7 @@ namespace WebDav
         /// </summary>
         /// <param name="statusCode">The status code of the response.</param>
         /// <param name="description">The description of the response.</param>
-        public PropfindResponse(int statusCode, string description)
+        public PropfindResponse(int statusCode, string? description)
             : this(statusCode, description, new List<WebDavResource>())
         {
         }
@@ -43,7 +43,7 @@ namespace WebDav
         /// <param name="statusCode">The status code of the response.</param>
         /// <param name="description">The description of the response.</param>
         /// <param name="resources">The collection of WebDAV resources.</param>
-        public PropfindResponse(int statusCode, string description, IEnumerable<WebDavResource> resources)
+        public PropfindResponse(int statusCode, string? description, IEnumerable<WebDavResource> resources)
             : base(statusCode, description)
         {
             Guard.NotNull(resources, "resources");

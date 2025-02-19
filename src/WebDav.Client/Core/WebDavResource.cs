@@ -20,12 +20,12 @@ namespace WebDav
         /// <summary>
         /// Gets a collection locks on this resource.
         /// </summary>
-        public IReadOnlyCollection<ActiveLock> ActiveLocks { get; private set; }
+        public IReadOnlyCollection<ActiveLock>? ActiveLocks { get; private set; }
 
         /// <summary>
         /// Gets the content language of this resource.
         /// </summary>
-        public string ContentLanguage { get; private set; }
+        public string? ContentLanguage { get; private set; }
 
         /// <summary>
         /// Gets the content length of this resource.
@@ -35,7 +35,7 @@ namespace WebDav
         /// <summary>
         /// Gets the content type of this resource.
         /// </summary>
-        public string ContentType { get; private set; }
+        public string? ContentType { get; private set; }
 
         /// <summary>
         /// Gets the creation date of this resource.
@@ -45,17 +45,17 @@ namespace WebDav
         /// <summary>
         /// Gets the display name of this resource.
         /// </summary>
-        public string DisplayName { get; private set; }
+        public string? DisplayName { get; private set; }
 
         /// <summary>
         /// Gets the ETag of this resource.
         /// </summary>
-        public string ETag { get; private set; }
+        public string? ETag { get; private set; }
 
         /// <summary>
         /// Gets the URI of this resource.
         /// </summary>
-        public string Uri { get; private set; }
+        public string? Uri { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether this resource is a collection.
@@ -93,19 +93,19 @@ namespace WebDav
         /// </summary>
         public class Builder
         {
-            private IReadOnlyCollection<ActiveLock> _activeLocks;
-            private string _contentLanguage;
+            private IReadOnlyCollection<ActiveLock>? _activeLocks;
+            private string? _contentLanguage;
             private long? _contentLength;
-            private string _contentType;
+            private string? _contentType;
             private DateTime? _creationDate;
-            private string _displayName;
-            private string _eTag;
-            private string _uri;
+            private string? _displayName;
+            private string? _eTag;
+            private string? _uri;
             private bool _isCollection;
             private bool _isHidden;
             private DateTime? _lastModifiedDate;
-            private IReadOnlyCollection<WebDavProperty> _properties;
-            private IReadOnlyCollection<WebDavPropertyStatus> _propertyStatuses;
+            private IReadOnlyCollection<WebDavProperty>? _properties;
+            private IReadOnlyCollection<WebDavPropertyStatus>? _propertyStatuses;
 
             /// <summary>
             /// Sets the ActiveLocks parameter of an instance of the <see cref="WebDavResource"/> class.
@@ -119,7 +119,7 @@ namespace WebDav
             /// <summary>
             /// Sets the ContentLanguage parameter of an instance of the <see cref="WebDavResource"/> class.
             /// </summary>
-            public Builder WithContentLanguage(string contentLanguage)
+            public Builder WithContentLanguage(string? contentLanguage)
             {
                 _contentLanguage = contentLanguage;
                 return this;
@@ -137,7 +137,7 @@ namespace WebDav
             /// <summary>
             /// Sets the ContentType parameter of an instance of the <see cref="WebDavResource"/> class.
             /// </summary>
-            public Builder WithContentType(string contentType)
+            public Builder WithContentType(string? contentType)
             {
                 _contentType = contentType;
                 return this;
@@ -155,7 +155,7 @@ namespace WebDav
             /// <summary>
             /// Sets the DisplayName parameter of an instance of the <see cref="WebDavResource"/> class.
             /// </summary>
-            public Builder WithDisplayName(string displayName)
+            public Builder WithDisplayName(string? displayName)
             {
                 _displayName = displayName;
                 return this;
@@ -164,7 +164,7 @@ namespace WebDav
             /// <summary>
             /// Sets the ETag parameter of an instance of the <see cref="WebDavResource"/> class.
             /// </summary>
-            public Builder WithETag(string eTag)
+            public Builder WithETag(string? eTag)
             {
                 _eTag = eTag;
                 return this;
@@ -173,7 +173,7 @@ namespace WebDav
             /// <summary>
             /// Sets the Uri parameter of an instance of the <see cref="WebDavResource"/> class.
             /// </summary>
-            public Builder WithUri(string uri)
+            public Builder WithUri(string? uri)
             {
                 _uri = uri;
                 return this;
@@ -263,8 +263,8 @@ namespace WebDav
                     IsCollection = _isCollection,
                     IsHidden = _isHidden,
                     LastModifiedDate = _lastModifiedDate,
-                    Properties = _properties,
-                    PropertyStatuses = _propertyStatuses
+                    Properties = _properties!,
+                    PropertyStatuses = _propertyStatuses!
                 };
             }
         }

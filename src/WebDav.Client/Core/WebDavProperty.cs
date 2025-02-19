@@ -16,7 +16,7 @@ namespace WebDav
         {
             Guard.NotNullOrEmpty((name ?? "").ToString(), "name");
 
-            Name = name;
+            Name = name!;
             Value = value;
         }
 

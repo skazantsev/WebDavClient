@@ -63,7 +63,7 @@ namespace WebDav.Client.Tests.Response
             var response = parser.Parse(Responses.Propfind.ResponseWithoutProperties, 207, "Multi-Status");
             var element = response.Resources.ElementAt(0);
 
-            Assert.Equal(1, response.Resources.Count);
+            Assert.Single(response.Resources);
             Assert.False(element.IsCollection);
             Assert.False(element.IsHidden);
             Assert.Empty(element.ActiveLocks);
@@ -100,7 +100,7 @@ namespace WebDav.Client.Tests.Response
             var status = element.PropertyStatuses.ElementAt(0);
 
             Assert.True(status.IsSuccessful);
-            Assert.Equal(1, element.PropertyStatuses.Count);
+            Assert.Single(element.PropertyStatuses);
             Assert.Equal(200, status.StatusCode);
             Assert.Equal("testprop", status.Name);
             Assert.Equal("HTTP/1.1 200 OK", status.Description);
@@ -120,14 +120,14 @@ namespace WebDav.Client.Tests.Response
             Assert.False(element.IsCollection);
             Assert.False(element.IsHidden);
 
-            Assert.Equal(1, element.ActiveLocks.Count);
+            Assert.Single(element.ActiveLocks);
             Assert.Equal(ApplyTo.Lock.ResourceOnly, @lock.ApplyTo);
             Assert.Equal(LockScope.Exclusive, @lock.LockScope);
             Assert.Equal("urn:uuid:f81de2ad-7f3d-a1b2-4f3c-00a0c91a9d76", @lock.LockToken);
             Assert.Equal("@Me", @lock.Owner.Value);
-            Assert.IsType(typeof(PrincipalLockOwner), @lock.Owner);
+            Assert.IsType<PrincipalLockOwner>(@lock.Owner);
             Assert.Equal("http://www.example.com/1.txt", @lock.LockRoot);
-            Assert.Equal(null, @lock.Timeout);
+            Assert.Null(@lock.Timeout);
 
             Assert.Equal("en", element.ContentLanguage);
             Assert.Equal(4, element.ContentLength.Value);
@@ -253,7 +253,7 @@ namespace WebDav.Client.Tests.Response
             var parser = new PropfindResponseParser(new LockResponseParser());
             var response = parser.Parse(Responses.Propfind.ResponseWithoutXmlDeclaration, 207, "Multi-Status");
 
-            Assert.Equal(1, response.Resources.Count);
+            Assert.Single(response.Resources);
         }
 
         [Fact]
