@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <AssemblyVersion>2.8.0.0</AssemblyVersion>
-    <Version>2.8.0</Version>
+    <AssemblyVersion>2.9.0.0</AssemblyVersion>
+    <Version>2.9.0</Version>
     <AssemblyName>WebDav.Client</AssemblyName>
     <Title>WebDav.Client</Title>
     <Product>WebDav.Client</Product>
